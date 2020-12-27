@@ -5,6 +5,19 @@
 
 using namespace Rcpp;
 
+// permMin
+bool permMin(const NumericVector& X, const int& B, const double& truncTo);
+RcppExport SEXP _sumSome_permMin(SEXP XSEXP, SEXP BSEXP, SEXP truncToSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const int& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const double& >::type truncTo(truncToSEXP);
+    rcpp_result_gen = Rcpp::wrap(permMin(X, B, truncTo));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_hello_world
 List rcpp_hello_world();
 RcppExport SEXP _sumSome_rcpp_hello_world() {
@@ -17,6 +30,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_sumSome_permMin", (DL_FUNC) &_sumSome_permMin, 3},
     {"_sumSome_rcpp_hello_world", (DL_FUNC) &_sumSome_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };
