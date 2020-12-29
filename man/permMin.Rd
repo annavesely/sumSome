@@ -2,9 +2,9 @@
 % Please edit documentation in R/RcppExports.R
 \name{permMin}
 \alias{permMin}
-\title{Comparing Vector Elements to a Value}
+\title{Compare Vector Elements to Value}
 \usage{
-permMin (X, B, truncTo)
+permMin(X, B, truncTo)
 }
 \arguments{
 \item{X}{numeric vector}
@@ -14,11 +14,13 @@ permMin (X, B, truncTo)
 \item{truncTo}{numeric value}
 }
 \value{
-\code{permMin} returns \code{TRUE} if all elements of \code{X}, excluding the first one, are equal to \code{truncTo}, and returns \code{FALSE} otherwise.
+It returns \code{TRUE} if all elements of \code{X}, excluding the first one, are equal to \code{truncTo}, and returns \code{FALSE} otherwise.
 }
 \description{
-Internal function. It determines whether all the elements of a vector, eventually except the first one, are equal to a given value.
+Internal function, called in \code{sumCt.internal}.
+It determines whether all the elements of a vector, eventually except the first one, are equal to a given value.
 }
 \author{
 Anna Vesely
 }
+\keyword{internal}
