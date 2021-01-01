@@ -6,12 +6,13 @@ using namespace Rcpp;
 //' @description Internal function, called in \code{sumCt.internal}.
 //' It determines whether all the elements of a vector, eventually except the first one, are equal to a given value.
 //' @usage permMin(X, B, truncTo)
-//' @param X numeric vector
-//' @param B length of \code{X}
-//' @param truncTo numeric value
-//' @author Anna Vesely
-//' @return It returns \code{TRUE} if all elements of \code{X}, excluding the first one, are equal to \code{truncTo}, and returns \code{FALSE} otherwise.
-//' @keywords internal
+//' @param X numeric vector.
+//' @param B length of \code{X}.
+//' @param truncTo numeric value.
+//' @author Anna Vesely.
+//' @return It returns \code{TRUE} if all elements of \code{X}, excluding the first one, are equal to \code{truncTo},
+//' and returns \code{FALSE} otherwise.
+//' @noRd
 // [[Rcpp::export]]
 
 bool permMin (const NumericVector &X, const int &B, const double &truncTo){
@@ -27,13 +28,79 @@ bool permMin (const NumericVector &X, const int &B, const double &truncTo){
 
 
 
+
+//' @title First Selected Elements
+//' @description Internal function, called in \code{sortSum}.
+//' It selects the first elements of a vector that do not exceed a given threshold.
+//' @usage firstInS(z, s, X, f)
+//' @param z number of selected elements.
+//' @param s integer threshold.
+//' @param X integer vector.
+//' @param f length of \code{X}.
+//' @author Anna Vesely.
+//' @return It returns a ligical vector of length \code{f}, where \code{TRUE} values correspond
+//' to the first \code{z} elements of \code{X} that are not greater than \code{s}.
+//' @noRd
+
+LogicalVector firstInS (const int &z, const int &s, const IntegerVector &X, const int &f){
+  LogicalVector sel (f, FALSE);
+  int found = 0;
+  int i = 0;
+  while(found < z){
+    if(X[i] <= s){
+      sel[i] = TRUE;
+      ++found;
+    }
+    ++i;
+  }
+  return sel;
+}
+
+
+
+
+
+//' @title Element Selection
+//' @description Internal function, called in \code{buildMatrices}.
+//' It selects the elements of a vector that appear in a second vector.
+//' @usage selIndices (indices, X, H, f)
+//' @param indices integer vector.
+//' @param X integer vector.
+//' @param H length of \code{indices}.
+//' @param f length of \code{X}.
+//' @author Anna Vesely.
+//' @return It returns a logical vector of length \code{f}, where \code{TRUE} values correspond
+//' to elements of \code{X} that appear in \code{indices}.
+//' @noRd
+
+LogicalVector selIndices (const IntegerVector &indices, const IntegerVector &X,
+                          const int &H, const int &f){
+  LogicalVector out (f, FALSE); // TRUE if X[i] in indices
+  int found = 0; // number of indices found in X
+  int i = 0;
+  while(i < f && found < H){
+    for(int h = 0; h <= H-1; ++h){
+      if(X[i] == indices[h]){
+        out[i] = TRUE;
+        ++ found;
+        break;
+      }
+    }
+    ++i;
+  }
+  return out;
+}
+
+
+
+
 //' @title Sign of Vector Elements
 //' @description Internal function, called in \code{findCol}.
 //' It determines whether all the elements of a vector are non-negative.
 //' @usage allPos(X, B)
-//' @param X numeric vector
-//' @param B length of \code{X}
-//' @author Anna Vesely
+//' @param X numeric vector.
+//' @param B length of \code{X}.
+//' @author Anna Vesely.
 //' @return It returns \code{TRUE} if all elements of \code{X} are non-negative, and \code{FALSE} otherwise.
 //' @noRd
 
@@ -52,20 +119,20 @@ bool allPos(const NumericVector &X, const int &B){
 
 
 
-//' @title Sign of Matrix Columns
+//' @title Upper Bound Behavior
 //' @description Internal function, called in \code{cumulativeMatrices}.
-//' Given a matrix where columns are in decreasing order, it finds the last column having no negative elements,
-//' and the last column having at least one positive element.
+//' It characterizes the behavior of the upper bound in a subspace.
 //' @usage findCol(j1, j2, R, c, B)
-//' @param j1 integer value, not smaller than the index of the last column of \code{R} having no negative elements
-//' @param j2 integer value, not smaller than the index of the last column of \code{R} having at least one positive element
-//' @param R numeric matrix
-//' @param c number of columns in \code{R}
-//' @param B number of rows in \code{R}
-//' @author Anna Vesely
+//' @param j1 integer value, not smaller than the index of the last column of \code{R} having no negative elements.
+//' @param j2 integer value, not smaller than the index of the last column of \code{R} having at least one positive element.
+//' @param R matrix for the upper bound.
+//' @param c number of columns in \code{R}.
+//' @param B number of rows in \code{R}.
+//' @author Anna Vesely.
 //' @return It updates the values of \code{j1} and \code{j2}, as the indices of the last columns of \code{R}
 //' having no negative elements (\code{j1}) and containing at least one positive element (\code{j2}).
 //' If such a column does not exist, the corresponding index is set to 0.
+//' As a result, the upper bound is increasing up to size \code{j1}, and decreasing after size \code{j2}.
 //' @examples
 //' R <- matrix(c(rep(0,5), rep(1,4), rep(-1,1), rep(1,3), rep(-1,2), rep(1,2), rep(-1,3)), ncol=5, byrow=TRUE)
 //' findCol(5, 5, R, 5, 4) # j1=2, j2=4
@@ -98,176 +165,198 @@ void findCol (int &j1, int &j2, const NumericMatrix &R, const int &c, const int 
 
 
 
-//' @title Matrix of Cumulative Sums
+//' @title Matrices for a Bound
 //' @description Internal function, called in \code{buildMatrices}.
-//' It updates a matrix of comulative sums.
+//' It updates the matrices for the lower/upper bound in a subspace.
 //' @usage cumulativeMatrices(Asum, A, fixed, j1, j2, z, f, B, getJ)
-//' @param Asum numeric matrix
-//' @param A numeric matrix
-//' @param fixed numeric vector
-//' @param j1 integer value
-//' @param j2 integer value
-//' @param z number of selected columns
-//' @param f number of columns in \code{A}
-//' @param B number of rows in \code{A}
-//' @param getJ boolean, \code{TRUE} to update indices
-//' @author Anna Vesely
-//' @return It sums by row \code{fixed} and the first \code{z} columns of \code{A}, then combines by row
-//' the result and the remaining \code{f-z} columns of \code{A}.
-//' \code{Asum} is updated as the corresponding matrix of cumulative sums.
-//' If \code{getJ} is \code{TRUE}, then \code{j1} and \code{j2} are updated by applying \code{findCol}
-//' to the remaining \code{f-z} columns of \code{A}.
+//' @param Asum matrix of cumulative sums for the lower/upper bound.
+//' @param A matrix for the lower/upper bound.
+//' @param fixed numeric vector, sum by row of fixed columns.
+//' @param j1 integer value.
+//' @param j2 integer value.
+//' @param z number of selected columns, equal to \code{s-TD+1},
+//' where \code{TD} is a candidate value for the number of true discoveries.
+//' @param f total number of non-fixed variables.
+//' @param B number of transformations.
+//' @param getJ logical, \code{TRUE} to update \code{j1} and \code{j2}.
+//' @author Anna Vesely.
+//' @return It updates the matrices \code{Asum} and \code{A}
+//' in the original space or a subspace generated by the branch and bound procedure.
+//' If \code{getJ} is \code{TRUE}, it updates the indices \code{j1} and \code{j2}
+//' by applying \code{findCol} to \code{A}.
 //' @noRd
 
 void cumulativeMatrices(NumericMatrix &Asum, NumericMatrix &A, const NumericVector &fixed,
                         int &j1, int &j2, const int &z, const int &f, const int &B, const bool getJ){
   
   NumericVector firstCol = clone(fixed);
-  if(z > 0){firstCol += rowSums(A(_,Range(0, z-1)));}
-  NumericMatrix rest = A(_,Range(z, f-1));
-  Asum = cbind(firstCol, rest);
-  if(getJ){findCol(j1, j2, rest, f-z, B);}
+  if(z == 1){firstCol += A(_,0);}
+  if(z > 1){firstCol += rowSums(A(_,Range(0, z-1)));}
   
-  // Asum = cumulative sums of its own columns
-  for(int j = 1; j <= f-z; ++j){
-    Asum(_,j) = Asum(_,j) + Asum(_,j-1);
+  NumericMatrix temp (B, f-z+1);
+  Asum = temp;
+  
+  if(z == f){
+    Asum(_,0) = firstCol;
+    if(getJ){j1 = 0; j2 = 0;}
   }
+  else{
+    NumericMatrix rest (B, f-z);
+    if(z == f-1){rest(_,0) = A(_,z);}else{rest = A(_,Range(z, f-1));}
+    Asum = cbind(firstCol, rest);
+    if(getJ){findCol(j1, j2, rest, f-z, B);}
+    for(int j = 1; j <= f-z; ++j){Asum(_,j) = Asum(_,j) + Asum(_,j-1);} // Asum = cumulative sums of its own columns
+  }
+  
 }
 
 
 
 
 
-//' @title First Selected Elements
-//' @description Internal function, called in \code{buildMatrices}.
-//' It selects the first elements of a vector that do not exceed a given threshold.
-//' @usage firstInS(z, s, X, f)
-//' @param z number of selected elements
-//' @param s integer threshold
-//' @param X integer vector
-//' @param f length of \code{X}
-//' @author Anna Vesely
-//' @return It returns a boolean vector of length \code{f}, where \code{TRUE} values correspond
-//' to the first \code{z} elements of \code{X} that are not greater than \code{s}.
+//' @title Sorting and Cumulative Sums
+//' @description Internal function, called in \code{buildMatrices} and \code{checkTD}.
+//' It sorts the matrices that will be used to apply the shortcut in a subspace.
+//' @usage sortSum(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, B, getDsum)
+//' @param Dsum matrix of cumulative sums for the lower bound.
+//' @param Rsum matrix of cumulative sums for the upper bound.
+//' @param D matrix for the lower bound.
+//' @param I matrix of indices corresponding to elements in \code{R}.
+//' @param R matrix for the upper bound.
+//' @param fixed numeric vector, sum by row of fixed columns.
+//' @param j1 integer value.
+//' @param j2 integer value.
+//' @param z number of selected columns, equal to \code{s-TD+1},
+//' where \code{TD} is a candidate value for the number of true discoveries.
+//' @param s size of the subset of interest.
+//' @param f total number of non-fixed variables.
+//' @param B number of transformations.
+//' @param getDsum logical, \code{TRUE} to update \code{Dsum}.
+//' @author Anna Vesely.
+//' @return It returns a list with the matrices \code{Dtemp}, \code{Itemp} and \code{Rtemp},
+//' obtained from \code{D}, \code{I} and \code{R} by moving at the beginning
+//' the first \code{z} columns from the subset of interest. It updates \code{Rsum} and,
+//' \code{getDsum} is \code{TRUE}, \code{Dsum}.
+//' It updates the indices \code{j1} and \code{j2} by applying \code{findCol} to \code{R}.
 //' @noRd
 
-LogicalVector firstInS (const int &z, const int &s, const IntegerVector &X, const int &f){
-  LogicalVector sel (f, FALSE);
-  int found = 0;
-  int i = 0;
-  while(found < z){
-    if(X[i] <= s){
-      sel[i] = TRUE;
-      ++found;
-    }
-    ++i;
+List sortSum(NumericMatrix &Dsum, NumericMatrix &Rsum, const NumericMatrix &D, const IntegerMatrix &I,
+                   const NumericMatrix &R, const NumericVector &fixed, int &j1, int &j2, const int &z,
+                   const int &s, const int &f, const int &B,
+                   const bool getDsum){
+  
+  LogicalVector sel (f);
+  IntegerVector ind = Range(0, f-1); // indices
+  IntegerVector indS;
+  IntegerVector indC;
+  NumericMatrix Dtemp (B, f);
+  
+  // Dtemp = D where the first z elements from S are at the beginning
+  if(getDsum){
+    sel = firstInS (z, s, I(0,_), f);
+    indS = ind[sel];
+    indC = ind[!sel];
+    for(int i = 0; i <= z-1; ++i){Dtemp(_,i) = D(_,indS[i]);}
+    for(int i = 0; i <= f-z-1; ++i){Dtemp(_,z+i) = D(_,indC[i]);}
+    cumulativeMatrices(Dsum, Dtemp, fixed, j1, j2, z, f, B, FALSE);
   }
-  return sel;
-}
-
-
-
-
-
-//' @title Element Selection
-//' @description Internal function, called in \code{buildMatrices}.
-//' It selects the elements of a vector that appear in a second vector.
-//' @usage selIndices (indices, X, H, f)
-//' @param indices integer vector
-//' @param X integer vector
-//' @param H length of \code{indices}
-//' @param f length of \code{X}
-//' @author Anna Vesely
-//' @return It returns a boolean vector of length \code{f}, where \code{TRUE} values correspond
-//' to elements of \code{X} that appear in \code{indices}.
-//' @noRd
-
-LogicalVector selIndices (const IntegerVector &indices, const IntegerVector &X,
-                          const int &H, const int &f){
-  LogicalVector out (f, FALSE); // TRUE if X[i] in indices
-  int found = 0; // number of indices found in X
-  int i = 0;
-  while(i < f && found < H){
-    for(int h = 0; h <= H-1; ++h){
-      if(X[i] == indices[h]){
-        out[i] = TRUE;
-        ++ found;
-        break;
-      }
+  
+  // update R, Rsum and I
+  IntegerMatrix Itemp = clone(I);
+  NumericMatrix Rtemp = clone(R);
+  
+  // move the first z indices in S at the beginning
+  for(int b = 0; b <= B-1; ++b){
+    sel = firstInS (z, s, I(b,_), f);
+    indS = ind[sel];
+    indC = ind[!sel];
+    for(int i = 0; i <= z-1; ++i){
+      Itemp(b,i) = I(b,indS[i]);
+      Rtemp(b,i) = R(b,indS[i]);
     }
-    ++i;
+    for(int i = 0; i <= f-z-1; ++i){
+      Itemp(b,z+i) = I(b,indC[i]);
+      Rtemp(b,z+i) = R(b,indC[i]);
+    }
   }
+  
+  cumulativeMatrices(Rsum, Rtemp, fixed, j1, j2, z, f, B, TRUE);
+  
+  List out = List::create(Named("Dtemp") = Dtemp, Named("Itemp") = Itemp, Named("Rtemp") = Rtemp);
   return out;
 }
 
 
 
 
-
 //' @title Building Matrices
 //' @description Internal function, called in \code{goLeft}, \code{goRight} and \code{checkTD}.
-//' It updates the matrices that will be used in \code{checkTD} to apply the shortcut in a subspace.
+//' It updates the matrices that will be used to apply the shortcut in a subspace.
 //' @usage buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f0, B, getDsum)
-//' @param Dsum matrix of cumulative sums for the lower bound
-//' @param Rsum matrix of cumulative sums for the upper bound
-//' @param D matrix for the lower bound
-//' @param I matrix of indices corresponding to elements in \code{R}
-//' @param R matrix for the upper bound
-//' @param fixed numeric vector, sum by row of fixed columns
-//' @param j1 integer value
-//' @param j2 integer value
-//' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries
-//' @param s size of the subset under closed testing
-//' @param f number of non-fixed variables in the new subspace
-//' @param f0 number of non-fixed variables in the current space
-//' @param B number of transformations
-//' @param getDsum boolean, \code{TRUE} to update \code{Dsum} and \code{D} 
-//' @author Anna Vesely
-//' @return It updates the matrices \code{Rsum}, \code{I} and \code{R} used to compute the upper bound
+//' @param Dsum matrix of cumulative sums for the lower bound.
+//' @param Rsum matrix of cumulative sums for the upper bound.
+//' @param D matrix for the lower bound.
+//' @param I matrix of indices corresponding to elements in \code{R}.
+//' @param R matrix for the upper bound.
+//' @param fixed numeric vector, sum by row of fixed columns.
+//' @param j1 integer value.
+//' @param j2 integer value.
+//' @param z number of selected columns, equal to \code{s-TD+1},
+//' where \code{TD} is a candidate value for the number of true discoveries.
+//' @param s size of the subset of interest.
+//' @param f total number of non-fixed variables in the new subspace.
+//' @param f0 total number of non-fixed variables in the current space.
+//' @param B number of transformations.
+//' @param getDsum logical, \code{TRUE} to update \code{Dsum} and \code{D}.
+//' @author Anna Vesely.
+//' @return It updates the matrices \code{Rsum}, \code{I} and \code{R}
 //' in the original space or a subspace generated by the branch and bound procedure.
 //' It updates the indices \code{j1} and \code{j2} by applying \code{findCol} to \code{R}.
-//' If \code{getDsum} is \code{TRUE}, it updates the matrices \code{Dsum} and \code{D} used to compute the lower bound.
+//' If \code{getDsum} is \code{TRUE}, it updates the matrices \code{Dsum} and \code{D}.
 //' @noRd
+
 
 void buildMatrices(NumericMatrix &Dsum, NumericMatrix &Rsum, NumericMatrix &D, IntegerMatrix &I,
                    NumericMatrix &R, const NumericVector &fixed, int &j1, int &j2, const int &z,
                    const int &s, const int &f, const int &f0, const int &B,
                    const bool getDsum){
   
-  LogicalVector sel (f0);
-  IntegerVector ind = Range(0, f-1); // indices
-  IntegerVector indS;
-  IntegerVector indC;
+  NumericMatrix temp (B, 1);
+  List res;
+  
+  if(f == 0){
+    temp(_,0) = clone(fixed);
+    if(getDsum){Dsum = clone(temp);}
+    Rsum = clone(temp);
+    j1 = 0;
+    j2 = 0;
+  }
   
   // update D and Dsum, if required
   if(getDsum){
-    NumericMatrix Dtemp = D(_,Range(0, f-1));
-    if (z > 0){
-      sel = firstInS (z, s, I(0,_), f);
-      indS = ind[sel];
-      indC = ind[!sel];
-      for(int i = 0; i <= z-1; ++i){Dtemp(_,i) = D(_,indS[i]);}
-      for(int i = 0; i <= f-z-1; ++i){Dtemp(_,z+i) = D(_,indC[i]);}
+    if(f == 1){
+      temp(_,0) = D(_,0);
+      D = as<NumericMatrix>(clone(temp));
     }
-    D = clone(Dtemp);
-    cumulativeMatrices(Dsum, D, fixed, j1, j2, z, f, B, FALSE);
+    else{D = D(_,Range(0, f-1));}
+    res = sortSum(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, B, getDsum);
   }
   
   // update R, Rsum and I
-  IntegerMatrix Itemp (B, f);
-  NumericMatrix Rtemp(B, f);
-  
-  // if necessary, reduce dimension
-  if(f == f0){
-    Itemp = clone(I);
-    Rtemp = clone(R);
-  }else{
-    IntegerVector i = I(0,_); // row in I
+  if(f < f0){
+    IntegerMatrix Itemp (B, f);
+    NumericMatrix Rtemp(B, f);
+    
+    IntegerVector i = I(0,_); // row in I0
     IntegerVector itemp (f); // row in Itemp
     NumericVector r (f0); // row in R
     NumericVector rtemp (f); // row in Rtemp
-    IntegerVector indices = i[Range(f, f0-1)]; // last f0 - f indices in I
     
+    IntegerVector indices (f0 - f);
+    if(f0-f == 1){indices = i[f];}else{indices = i[Range(f, f0-1)];}// last f0-f indices in I
+    LogicalVector sel (f0);
+    
+    // remove last f0-f indices in I
     for(int b = 0; b <= B-1; ++b){
       i = I(b,_);
       r = R(b,_);
@@ -277,60 +366,39 @@ void buildMatrices(NumericMatrix &Dsum, NumericMatrix &Rsum, NumericMatrix &D, I
       Itemp(b,_) = itemp;
       Rtemp(b,_) = rtemp;
     }
-    I = I(_,Range(0,f-1));
-    R = R(_,Range(0,f-1));
+    I = as<IntegerMatrix>(clone(Itemp));
+    R = as<NumericMatrix>(clone(Rtemp));
   }
   
-  // move the first z indices in S at the beginning
-  if(z > 0){
-    for(int b = 0; b <= B-1; ++b){
-      sel = firstInS (z, s, Itemp(b,_), f);
-      indS = ind[sel];
-      indC = ind[!sel];
-      for(int i = 0; i <= z-1; ++i){
-        I(b,i) = Itemp(b,indS[i]);
-        R(b,i) = Rtemp(b,indS[i]);
-      }
-      for(int i = 0; i <= f-z-1; ++i){
-        I(b,z+i) = Itemp(b,indC[i]);
-        R(b,z+i) = Rtemp(b,indC[i]);
-      }
-    }
-  }else{
-    I <- clone(Itemp);
-    R <- clone(Rtemp);
-  }
-  
-  // compute cumulative sums and indices j1, j2
-  cumulativeMatrices(Rsum, R, fixed, j1, j2, z, f, B, TRUE);
+  res = sortSum(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, B, getDsum);
 }
 
 
 
 
 
-//' @title Creating Left Node by Removing Variable
+//' @title Left Node by Removing Variable
 //' @description Internal function, called in \code{checkTD}.
 //' It generates a left node, i.e. a subspace obtained by removing a variable in the branch and bound procedure.
 //' Moreover, it saves a list of elements characterizing the corresponding right node, obtained by fixing the variable.
 //' @usage goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS)
-//' @param vMin minimum size to be checked
-//' @param vMax maximum size to be checked
-//' @param Dsum matrix of cumulative sums for the lower bound
-//' @param Rsum matrix of cumulative sums for the upper bound
-//' @param D matrix for the lower bound
-//' @param I matrix of indices corresponding to elements in \code{R}
-//' @param R matrix for the upper bound
-//' @param fixed numeric vector, sum by row of fixed columns
-//' @param fixedLast numeric vector, column fixed in the last step
-//' @param j1 integer value
-//' @param j2 integer value
-//' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries
-//' @param s size of the subset under closed testing
-//' @param f number of non-fixed variables in the current space
-//' @param B number of transformations
-//' @param lastFromS boolean, \code{TRUE} if the removed variable is in the subset under closed testing
-//' @author Anna Vesely
+//' @param vMin minimum size to be checked.
+//' @param vMax maximum size to be checked.
+//' @param Dsum matrix of cumulative sums for the lower bound.
+//' @param Rsum matrix of cumulative sums for the upper bound.
+//' @param D matrix for the lower bound.
+//' @param I matrix of indices corresponding to elements in \code{R}.
+//' @param R matrix for the upper bound.
+//' @param fixed numeric vector, sum by row of fixed columns.
+//' @param fixedLast numeric vector, column fixed in the last step.
+//' @param j1 integer value.
+//' @param j2 integer value.
+//' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries.
+//' @param s size of the subset of interest.
+//' @param f total number of non-fixed variables in the current space.
+//' @param B number of transformations.
+//' @param lastFromS logical, \code{TRUE} if the removed variable is in the subset of interest.
+//' @author Anna Vesely.
 //' @return It updates \code{lastFromS}, the matrices \code{Rsum}, \code{I} and \code{R},
 //' and the indices \code{j1} and \code{j2} in the new left subspace.
 //' It returns a list containing the values of \code{z}, \code{vMin}, \code{vMax}, \code{fixed} and \code{f}
@@ -350,7 +418,7 @@ List goLeft (const int &vMin, const int &vMax, NumericMatrix &Dsum, NumericMatri
   int zNew = z;
   int vMinNew = vMin;
   int vMaxNew = vMax;
-  if(lastFromS){--zNew;}
+  if(lastFromS){zNew = std::max(zNew - 1, 0);}
   else{
     vMinNew = std::max(vMin - 1, 0);
     vMaxNew = std::max(vMax - 1, 0);
@@ -366,26 +434,26 @@ List goLeft (const int &vMin, const int &vMax, NumericMatrix &Dsum, NumericMatri
 
 
 
-//' @title Creating Right Node by Fixing Variable
+//' @title Right Node by Fixing Variable
 //' @description Internal function, called in \code{checkTD}.
 //' It generates a right node, i.e. a subspace obtained by fixing a variable in the branch and bound procedure,
 //' after closing the corresponding left node.
 //' @usage goRight(Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS)
-//' @param Dsum matrix of cumulative sums for the lower bound
-//' @param Rsum matrix of cumulative sums for the upper bound
-//' @param D matrix for the lower bound
-//' @param I matrix of indices corresponding to elements in \code{R}
-//' @param R matrix for the upper bound
-//' @param fixed numeric vector, sum by row of fixed columns
-//' @param fixedLast numeric vector, column fixed in the last step
-//' @param j1 integer value
-//' @param j2 integer value
-//' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries
-//' @param s size of the subset under closed testing
-//' @param f number of non-fixed variables in the current space
-//' @param B number of transformations
-//' @param lastFromS boolean, \code{TRUE} if the fixed variable is in the subset under closed testing
-//' @author Anna Vesely
+//' @param Dsum matrix of cumulative sums for the lower bound.
+//' @param Rsum matrix of cumulative sums for the upper bound.
+//' @param D matrix for the lower bound.
+//' @param I matrix of indices corresponding to elements in \code{R}.
+//' @param R matrix for the upper bound.
+//' @param fixed numeric vector, sum by row of fixed columns.
+//' @param fixedLast numeric vector, column fixed in the last step.
+//' @param j1 integer value.
+//' @param j2 integer value.
+//' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries.
+//' @param s size of the subset of interest.
+//' @param f total number of non-fixed variables in the current space.
+//' @param B number of transformations.
+//' @param lastFromS logical, \code{TRUE} if the fixed variable is in the subset of interest.
+//' @author Anna Vesely.
 //' @return It updates the matrices \code{Dsum}, \code{Rsum}, \code{D}, \code{I} and \code{R},
 //' and the indices \code{j1} and \code{j2} in the new right subspace.
 //' @noRd
@@ -395,10 +463,12 @@ void goRight (NumericMatrix &Dsum, NumericMatrix &Rsum,
               const NumericVector &fixedLast, int &j1, int &j2, const int &z, const int &s,
               const int &f, const int &B, const bool &lastFromS){
   
-  if(lastFromS){buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f, B, TRUE);}
+  NumericMatrix temp (B,1);
+  if(lastFromS || f == 0){buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f, B, TRUE);}
   else{
-    D = D(_,Range(0,f-1));
-    Dsum = Dsum(_,Range(0,f-z));
+    if(f == 1){temp(_,0) = D(_,0); D = clone(temp);}else{D = D(_,Range(0,f-1));}
+    if(z == f){temp(_,0) = Dsum(_,0); Dsum = clone(temp);}else{Dsum = Dsum(_,Range(0,f-z));}
+    
     for (int b = 0; b <= B-1; ++b){ // add fixedLast to Dsum and Rsum
       for (int i = 0; i <= f; ++i){
         Dsum(b,i) += fixedLast[b];
@@ -416,10 +486,10 @@ void goRight (NumericMatrix &Dsum, NumericMatrix &Rsum,
 //' @description Internal function, called in \code{computeBounds}.
 //' It determines whether the quantile of a vector is negative.
 //' @usage Q(X, k, B)
-//' @param X numeric vector
-//' @param k integer value
-//' @param B length of \code{X}
-//' @author Anna Vesely
+//' @param X numeric vector.
+//' @param k integer value.
+//' @param B length of \code{X}.
+//' @author Anna Vesely.
 //' @return It returns \code{TRUE} if the \code{k}-th smallest element of \code{X} is negative, and \code{FALSE} otherwise.
 //' @noRd
 
@@ -448,18 +518,18 @@ bool Q(const NumericVector &X, const int &k, const int &B){
 //' @description Internal function, called in \code{checkTD}.
 //' It applies the shortcut, checking the bounds for a given collection of sizes.
 //' @usage computeBounds(vMin, vMax, rej, indSizes, Dsum, Rsum, k, B, j1, j2, both)
-//' @param vMin minimum size to be checked
-//' @param vMax maximum size to be checked
-//' @param rej boolean, \code{TRUE} if no non-rejection has been found
-//' @param indSizes boolean, \code{TRUE} if the shortcut is unsure for some sizes
-//' @param Dsum matrix of cumulative sums for the lower bound
-//' @param Rsum matrix of cumulative sums for the upper bound
-//' @param k integer value that determines the quantiles
-//' @param B number of transformations
-//' @param j1 integer value
-//' @param j2 integer value
-//' @param both boolean, \code{TRUE} to check both bounds, \code{FALSE} to check only the upper bound
-//' @author Anna Vesely
+//' @param vMin minimum size to be checked.
+//' @param vMax maximum size to be checked.
+//' @param rej logical, \code{TRUE} if no non-rejection has been found.
+//' @param indSizes logical, \code{TRUE} if the shortcut is unsure for some sizes.
+//' @param Dsum matrix of cumulative sums for the lower bound.
+//' @param Rsum matrix of cumulative sums for the upper bound.
+//' @param k integer value that determines the quantiles.
+//' @param B number of transformations.
+//' @param j1 integer value.
+//' @param j2 integer value.
+//' @param both logical, \code{TRUE} to check both bounds, \code{FALSE} to check only the upper bound.
+//' @author Anna Vesely.
 //' @return It updates \code{rej} and \code{indSizes}, and eventually \code{vMin} and \code{vMax}.
 //' A non-rejection corresponds to \code{rej=FALSE} and \code{indSizes=FALSE},
 //' a rejection to \code{rej=TRUE} and \code{indSizes=FALSE}, and
@@ -470,8 +540,10 @@ void computeBounds(int &vMin, int &vMax, bool &rej, bool &indSizes,
                    NumericMatrix &Dsum, NumericMatrix &Rsum,
                    const int &k, const int &B, const int &j1, const int &j2, const bool both){
   
-  IntegerVector ind = Range(vMin, vMax);
-  int H = ind.length();
+  int H = vMax - vMin + 1;
+  IntegerVector ind (H);
+  if(H == 1){ind(0) = vMin;}
+  else{ind = Range(vMin, vMax);}
   bool low = TRUE;
   LogicalVector up (H, FALSE); // keeps track of unsure sizes
   
@@ -523,25 +595,27 @@ void computeBounds(int &vMin, int &vMax, bool &rej, bool &indSizes,
 
 //' @title Check Candidate TD Value
 //' @description Internal function, called in \code{bisectionTD}.
-//' It checks whether a candidate value is a valid lower confidence bound for the number of true discoveries within a subset.
+//' It checks whether a candidate value is a valid lower confidence bound for the number of true discoveries
+//' within a subset of interest.
 //' @usage checkTD(TD, D0, I0, R0, s, f0, k, B, BAB, nMax)
-//' @param TD candidate value for the number of true discoveries
-//' @param D0 matrix for the lower bound
-//' @param I0 matrix of indices corresponding to elements in \code{R0}
-//' @param R0 matrix for the upper bound
-//' @param s size of the subset under closed testing
-//' @param f0 number of variables
-//' @param k integer value that determines the quantiles
-//' @param B number of transformations
-//' @param BAB number of iterations
-//' @param nMax maximum number of iterations
-//' @author Anna Vesely
+//' @param TD candidate value for the number of true discoveries.
+//' @param D0 matrix for the lower bound.
+//' @param I0 matrix of indices corresponding to elements in \code{R0}.
+//' @param R0 matrix for the upper bound.
+//' @param s size of the subset of interest.
+//' @param f0 total number of variables.
+//' @param k integer value that determines the quantiles.
+//' @param B number of transformations.
+//' @param BAB number of iterations.
+//' @param nMax maximum number of iterations.
+//' @author Anna Vesely.
 //' @return It returns a list containing \code{rej} (\code{TRUE} if no non-rejection was found),
 //' \code{indSizes} (\code{TRUE} if the outcome is unsure) and \code{BAB} (number of iterations).
-//' \code{TD} is a valid confidence lower bound when \code{rej=TRUE} and \code{indSizes=FALSE},
+//' The candidate value \code{TD} is a valid confidence lower bound when \code{rej=TRUE} and \code{indSizes=FALSE},
 //' it is not when \code{rej=FALSE} and \code{indSizes=FALSE}, and
 //' the outcome is unsure when \code{rej=TRUE} and \code{indSizes=TRUE}.
-//' @keywords internal
+//' The number of iterations \code{BAB} is updated.
+//' @noRd
 // [[Rcpp::export]]
 
 List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, const NumericMatrix &R0,
@@ -550,16 +624,16 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
   
   ++BAB;
   int z = s - TD + 1;
-  NumericMatrix D = clone(D0);
-  IntegerMatrix I = clone(I0);
-  NumericMatrix R = clone(R0);
   NumericMatrix Dsum (B, f0 - z + 1);
   NumericMatrix Rsum (B, f0 - z + 1);
   int j1 = f0 - z;
   int j2 = f0 - z;
   NumericVector fixed (B);
   
-  buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f0, f0, B, TRUE); // getDsum = TRUE
+  List mat = sortSum(Dsum, Rsum, D0, I0, R0, fixed, j1, j2, z, s, f0, B, TRUE); // getDsum = TRUE
+  NumericMatrix D = as<NumericMatrix>(mat["Dtemp"]);
+  IntegerMatrix I = as<IntegerMatrix>(mat["Itemp"]);
+  NumericMatrix R = as<NumericMatrix>(mat["Rtemp"]);
   int vMin = 0;
   int vMax = f0 - z + 1;
   bool rej = TRUE;
@@ -627,6 +701,105 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
   out["rej"] = rej; out["indSizes"] = (rej && (indSizes || n>0)); out["BAB"] = BAB;
   return out;
 }
+
+
+
+
+
+//' @title Binary Search for the Number of True Discoveries
+//' @description Internal function, called in \code{sumSome.internal}.
+//' It employs a binary search to determine a lower confidence bound for the number of true discoveries
+//' within a subset of interest.
+//' @usage bisectionTD(D0, I0, R0, s, f0, k, B, nMax)
+//' @param D0 matrix for the lower bound.
+//' @param I0 matrix of indices corresponding to elements in \code{R0}.
+//' @param R0 matrix for the upper bound.
+//' @param s size of the subset of interest.
+//' @param f0 total number of variables.
+//' @param k integer value that determines the quantiles.
+//' @param B number of transformations.
+//' @param nMax maximum number of iterations.
+//' @author Anna Vesely.
+//' @return It returns a list containing \code{TDmin} (a valid lower confidence bound for the number of true discoveries),
+//' \code{TDmax} (the maximum bound that could be found under convergence of the algorithm),
+//' and \code{BAB} (number of iterations).
+//' @noRd
+// [[Rcpp::export]]
+
+List bisectionTD(const NumericMatrix &D0, const IntegerMatrix &I0, const NumericMatrix &R0,
+                 const int &s, const int &f0, const int &k, const int &B, const int &nMax){
+  
+  // NOTE: in the code, TDmax = smallest size with sure non-reject
+  // but in the outcome, TDmax = smallest size with sure non-reject - 1 = maximum possible TD value
+  List out = List::create(Named("TDmin") = 0, Named("TDmax") = s, Named("BAB") = 0); // [0,s]
+  int TDmin = 0;
+  int TDmax = s + 1; 
+  int BAB = 0;
+  
+  // check TD = 1
+  List res = checkTD(1, D0, I0, R0, s, f0, k, B, BAB, BAB+1);
+  if(!res["rej"]){out["TDmax"] = 0; out["BAB"] = BAB; return out;} // sure non-reject: [0,0]
+  else if(!res["indSizes"]){TDmin = 1;} // sure reject: [1,s]
+  
+  // check TD = s
+  res = checkTD(s, D0, I0, R0, s, f0, k, B, BAB, BAB+1);
+  if(!res["rej"]){TDmax = s;} // sure non-reject: [0,s-1]
+  else if(!res["indSizes"]){out["TDmin"] = s; out["BAB"] = BAB; return out;} // sure reject: [s,s]
+  
+  int TD;
+  int iMin = 0; // minimum size that leads to unsure
+  int iMax = 0; // maximum size that leads to unsure
+  bool cond = TRUE; // FALSE if we need to explore outside [iMin,iMax]
+  
+  while(TDmax - TDmin > 1 && BAB < nMax){
+    TD = (TDmax + TDmin)/2;
+    res = checkTD(TD, D0, I0, R0, s, f0, k, B, BAB, BAB+1);
+    if(!res["rej"]){TDmax = TD;} // sure non-reject: [TDmin,TD-1]
+    else if(!res["indSizes"]){TDmin = TD;} // sure reject: [TD,TDmax-1]
+    else{ // unsure outcome
+      iMin = TD;
+      iMax = TD;
+      cond = TRUE;
+      
+      // TDmin = maximum value that is surely rejected without BAB
+      while(iMin - TDmin > 1 && cond && BAB < nMax){
+        TD = (TDmin + iMin)/2;
+        res = checkTD(TD, D0, I0, R0, s, f0, k, B, BAB, BAB+1);
+        if(!res["rej"]){TDmax = TD; cond = FALSE;} // will explore [TDmin,TD-1]
+        else if(!res["indSizes"]){TDmin = TD;}
+        else{iMin = TD;}
+      }
+      
+      // TDmax = minimum value that is surely not rejected without BAB
+      while(TDmax - iMax > 1 && cond && BAB < nMax){
+        TD = (iMax + TDmax)/2;
+        res = checkTD(TD, D0, I0, R0, s, f0, k, B, BAB, BAB+1);
+        if(!res["rej"]){TDmax = TD;}
+        else if(!res["indSizes"]){TDmin = TD; cond = FALSE;} // will explore [TD,TDmax-1]
+        else{iMax = TD;}
+      }
+      
+      if(cond){
+        while(TDmax - TDmin > 1 && BAB < nMax){
+          TD = (TDmax + TDmin)/2;
+          res = checkTD(TD, D0, I0, R0, s, f0, k, B, BAB, nMax);
+          if(!res["rej"]){TDmax = TD;}
+          else if(!res["indSizes"]){TDmin = TD;}
+          else{break;}
+        }
+      }
+    }
+  }
+  out["TDmin"] = TDmin; out["TDmax"] = TDmax - 1; out["BAB"] = BAB;
+  return out;
+}
+
+
+
+
+
+
+
 
 
 

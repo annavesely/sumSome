@@ -2,41 +2,56 @@
 % Please edit documentation in R/transf.R
 \name{transf}
 \alias{transf}
-\title{Statistics Transformation}
+\title{Transformation of Statistics}
 \usage{
 transf(G, truncFrom, truncTo, option, r)
 }
 \arguments{
-\item{G}{matrix of statistics}
+\item{G}{numeric matrix of statistics.}
 
-\item{truncFrom}{truncation parameter: values less extreme than \code{truncFrom} are truncated}
+\item{truncFrom}{truncation parameter: values less extreme than \code{truncFrom} are truncated.
+If \code{NULL}, statistics are not truncated.}
 
-\item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}}
+\item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
+If \code{NULL}, statistics are not truncated.}
 
 \item{option}{direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}),
 or transformation (\code{squares} for generic statistics,
-and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values)}
+and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values).}
 
-\item{r}{parameter for the Vovk and Wang p-value transformation}
+\item{r}{parameter for Vovk and Wang's p-value transformation.}
 }
 \value{
-\code{transf} returns a list containing the truncated and transformed matrix \code{G}, and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
-Those are determined so that the most extreme values are always the greatest.
+\code{transf} returns a list containing the truncated and transformed matrix \code{G},
+and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
+An error message is returned if the transformation produces infinite values.
 }
 \description{
-Internal function. It truncates and transforms a matrix of statistics.
+Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+It truncates and transforms a matrix of statistics.
 }
 \details{
-The transformation is determined by the \code{option} as following. A generic value \code{x} is transformed to
-\code{x} for \code{greater}, \code{-x} for \code{lower}, \code{|x|} for \code{two.sided},
-\code{x^2} for \code{squares}, \code{-x} for \code{edgington}, \code{-log(x)} for \code{fisher},
-\code{log(1-x)} for \code{pearson}, \code{-qnorm(x)} for \code{liptak}, \code{tan(0.5 - x)/x} for \code{cauchy},
-and \code{- sign(r)x^r} for \code{vovk.wang}.
+Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
+
+Transformations are defined so that the most extreme values of the new statistics are always the greatest.
+A generic statistic \code{x} is transformed as following.
+\itemize{
+\item greater: \code{x}
+\item lower: \code{-x}
+\item two-sided: \code{|x|}
+\item squares: \code{x^2}
+\item Edgington: \code{-x}
+\item Fisher: \code{-log(x)}
+\item Pearson: \code{log(1-x)}
+\item Liptak: \code{-qnorm(x)}
+\item Cauchy: \code{tan(0.5 - x)/x}
+\item Vovk and Wang: \code{- sign(r)x^r}
+}
 
 Pearson's and Liptak's transformations produce infinite values in \code{1}.
-Hence when the \code{option} is \code{pearson} or \code{liptak}, the truncation parameter \code{truncTo} is coerced to be
-not greater than \code{1 -  .Machine$double.eps}.
+For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
 }
 \author{
-Anna Vesely
+Anna Vesely.
 }
+\keyword{internal}

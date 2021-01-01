@@ -1,26 +1,42 @@
-#' @title Statistics Transformation 
-#' @description Internal function. It truncates and transforms a matrix of statistics.
+#' @title Transformation of Statistics
+#' @description Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+#' It truncates and transforms a matrix of statistics.
 #' @usage transf(G, truncFrom, truncTo, option, r)
-#' @param G matrix of statistics
-#' @param truncFrom truncation parameter: values less extreme than \code{truncFrom} are truncated
-#' @param truncTo truncation parameter: truncated values are set to \code{truncTo}
-#' @param truncTo truncation parameter: truncated values are set to \code{truncTo}
+#' @param G numeric matrix of statistics.
+#' @param truncFrom truncation parameter: values less extreme than \code{truncFrom} are truncated.
+#' If \code{NULL}, statistics are not truncated.
+#' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
+#' If \code{NULL}, statistics are not truncated.
 #' @param option direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}),
 #' or transformation (\code{squares} for generic statistics,
-#' and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values)
-#' @param r parameter for the Vovk and Wang p-value transformation
-#' @details The transformation is determined by the \code{option} as following. A generic value \code{x} is transformed to
-#' \code{x} for \code{greater}, \code{-x} for \code{lower}, \code{|x|} for \code{two.sided},
-#' \code{x^2} for \code{squares}, \code{-x} for \code{edgington}, \code{-log(x)} for \code{fisher},
-#' \code{log(1-x)} for \code{pearson}, \code{-qnorm(x)} for \code{liptak}, \code{tan(0.5 - x)/x} for \code{cauchy},
-#' and \code{- sign(r)x^r} for \code{vovk.wang}.
+#' and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values).
+#' @param r parameter for Vovk and Wang's p-value transformation.
+#' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
+#' @details Transformations are defined so that the most extreme values of the new statistics are always the greatest.
+#' A generic statistic \code{x} is transformed as following.
+#' \itemize{
+#' \item greater: \code{x}
+#' \item lower: \code{-x}
+#' \item two-sided: \code{|x|}
+#' \item squares: \code{x^2}
+#' \item Edgington: \code{-x}
+#' \item Fisher: \code{-log(x)}
+#' \item Pearson: \code{log(1-x)}
+#' \item Liptak: \code{-qnorm(x)}
+#' \item Cauchy: \code{tan(0.5 - x)/x}
+#' \item Vovk and Wang: \code{- sign(r)x^r}
+#' }
 #' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
-#' Hence when the \code{option} is \code{pearson} or \code{liptak}, the truncation parameter \code{truncTo} is coerced to be
-#' not greater than \code{1 -  .Machine$double.eps}.
-#' @return \code{transf} returns a list containing the truncated and transformed matrix \code{G}, and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
-#' Those are determined so that the most extreme values are always the greatest.
-#' @author Anna Vesely
-#' @export
+#' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
+#' @return \code{transf} returns a list containing the truncated and transformed matrix \code{G},
+#' and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
+#' An error message is returned if the transformation produces infinite values.
+#' @author Anna Vesely.
+#' @keywords internal
+#' @importFrom stats qnorm
+#' @useDynLib sumSome, .registration=TRUE
+#' @importFrom Rcpp sourceCpp
+#' @importFrom Rcpp evalCpp
 
 
 
@@ -79,7 +95,7 @@ transf <- function(G, truncFrom, truncTo, option, r){
       truncTo <- - sign(r) * truncTo^r
     }
     
-    if(truncTo > truncFrom){stop("Invalid truncation parameters: truncTo must be more extreme than truncFrom")}
+    if(truncTo > truncFrom){stop("Invalid truncation parameters: truncTo cannot be more extreme than truncFrom")}
     
     for(i in seq(ncol(G))){
       for(b in seq(nrow(G))){
