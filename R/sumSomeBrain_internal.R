@@ -51,7 +51,8 @@
 #' }
 #' @author Anna Vesely.
 #' @importFrom RNifti readNifti
-#' @importFrom pARI signTest cluster_threshold
+#' @importFrom pARI signTest
+#' @importFrom ARIbrain cluster_threshold
 
 
 sumSomeBrain.internal <- function(copes, mask, clusters, thr, alternative,
