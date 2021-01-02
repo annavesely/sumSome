@@ -616,7 +616,6 @@ void computeBounds(int &vMin, int &vMax, bool &rej, bool &indSizes,
 //' the outcome is unsure when \code{rej=TRUE} and \code{indSizes=TRUE}.
 //' The number of iterations \code{BAB} is updated.
 //' @noRd
-// [[Rcpp::export]]
 
 List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, const NumericMatrix &R0,
              const int &s, const int &f0, const int &k, const int &B,

@@ -18,26 +18,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// checkTD
-List checkTD(const int& TD, const NumericMatrix& D0, const IntegerMatrix& I0, const NumericMatrix& R0, const int& s, const int& f0, const int& k, const int& B, int& BAB, const int& nMax);
-RcppExport SEXP _sumSome_checkTD(SEXP TDSEXP, SEXP D0SEXP, SEXP I0SEXP, SEXP R0SEXP, SEXP sSEXP, SEXP f0SEXP, SEXP kSEXP, SEXP BSEXP, SEXP BABSEXP, SEXP nMaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const int& >::type TD(TDSEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type D0(D0SEXP);
-    Rcpp::traits::input_parameter< const IntegerMatrix& >::type I0(I0SEXP);
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type R0(R0SEXP);
-    Rcpp::traits::input_parameter< const int& >::type s(sSEXP);
-    Rcpp::traits::input_parameter< const int& >::type f0(f0SEXP);
-    Rcpp::traits::input_parameter< const int& >::type k(kSEXP);
-    Rcpp::traits::input_parameter< const int& >::type B(BSEXP);
-    Rcpp::traits::input_parameter< int& >::type BAB(BABSEXP);
-    Rcpp::traits::input_parameter< const int& >::type nMax(nMaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(checkTD(TD, D0, I0, R0, s, f0, k, B, BAB, nMax));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bisectionTD
 List bisectionTD(const NumericMatrix& D0, const IntegerMatrix& I0, const NumericMatrix& R0, const int& s, const int& f0, const int& k, const int& B, const int& nMax);
 RcppExport SEXP _sumSome_bisectionTD(SEXP D0SEXP, SEXP I0SEXP, SEXP R0SEXP, SEXP sSEXP, SEXP f0SEXP, SEXP kSEXP, SEXP BSEXP, SEXP nMaxSEXP) {
@@ -59,7 +39,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_sumSome_permMin", (DL_FUNC) &_sumSome_permMin, 3},
-    {"_sumSome_checkTD", (DL_FUNC) &_sumSome_checkTD, 10},
     {"_sumSome_bisectionTD", (DL_FUNC) &_sumSome_bisectionTD, 8},
     {NULL, NULL, 0}
 };

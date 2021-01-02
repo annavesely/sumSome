@@ -1,13 +1,16 @@
 Package: sumSome
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
+Title: True Discovery Guarantee by Sum-Based Tests
 Version: 1.0
 Date: 2020-12-27
-Author: Your Name
-Maintainer: Your Name <your@email.com>
-Description: One paragraph description of what the package does as one or more full sentences.
+Author: Anna Vesely
+Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
+Description: sumSome contains functions to determine permutation-based true discovery guarantees, when using sum-based statistics.
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.5)
+Imports: 
+    Rcpp (>= 1.0.5),
+    pARI
+Remotes: angeella/pARI
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Encoding: UTF-8

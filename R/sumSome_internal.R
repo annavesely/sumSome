@@ -1,5 +1,5 @@
 #' @title True Discovery Guarantee (General Case)
-#' @description Internal function, called in \code{sumSome.stats}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+#' @description Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
 #' It determines a lower confidence bound for the number of true discoveries within a set of interest.
 #' The bound remains valid under post-hoc selection.
 #' @usage sumSome.internal(G, S, alpha, truncFrom, truncTo, nMax)
@@ -14,7 +14,7 @@
 #' @param nMax maximum number of iterations.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 #' @return \code{sumSome.internal} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-#' \code{summary} contains
+#' \code{summary} contains:
 #' \itemize{
 #' \item \code{size}: size of \code{S}
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}

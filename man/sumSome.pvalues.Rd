@@ -2,9 +2,10 @@
 % Please edit documentation in R/sumSome_pvalues.R
 \name{sumSome.pvalues}
 \alias{sumSome.pvalues}
-\title{True Discovery Guarantee for p-Values}
+\title{True Discovery Guarantee}
 \usage{
-sumSome.pvalues(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1, nMax = 10000)
+sumSome.pvalues(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1,
+                nMax = 10000)
 }
 \arguments{
 \item{G}{numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).}
@@ -19,11 +20,16 @@ If \code{NULL}, p-values are not truncated.}
 \item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
 If \code{NULL}, p-values are not truncated.}
 
+\item{type}{transformation of p-values (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\code{cauchy}, \code{vovk.wang})}
+
+\item{r}{parameter for Vovk and Wang's p-value transformation.}
+
 \item{nMax}{maximum number of iterations.}
 }
 \value{
 \code{sumSome.pvalues} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-The vector \code{summary} contains
+The vector \code{summary} contains:
 \itemize{
 \item \code{size}: size of \code{S}
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
@@ -33,7 +39,8 @@ The vector \code{summary} contains
 }
 }
 \description{
-This function determines a lower confidence bound for the number of true discoveries within a set of interest. The bound remains valid under post-hoc selection.
+This function determines a lower confidence bound for the number of true discoveries within a set of interest,
+when using p-values as test statistics. The bound remains valid under post-hoc selection.
 }
 \details{
 The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
@@ -47,15 +54,15 @@ An error message is returned if the p-value transformation produces infinite val
 }
 \examples{
 G <- matrix(
- c(0.05, 0.12, 0.21, 0.66, 0.66,
-  0.66, 0.50, 0.66, 0.79, 0.21,
-  0.01, 0.34, 0.79, 0.50, 0.66,
-  0.01, 0.66, 0.79, 0.66, 0.79,
-  0.79, 0.05, 0.66, 0.66, 0.50,
-  0.02, 0.79, 0.66, 0.50, 0.66),
-ncol=5, byrow=TRUE)
-S <- c(1,2)
-sumSome.pvalues(G, S, alpha = 0.4, type = "fisher")
+ c(0.05, 0.20, 0.24, 0.45, 0.54,
+   0.47, 0.34, 0.53, 0.99, 0.18,
+   0.14, 0.21, 0.98, 0.32, 0.47,
+   0.19, 0.45, 0.85, 0.50, 0.92,
+   0.99, 0.09, 0.52, 0.39, 0.37,
+   0.87, 0.89, 0.44, 0.38, 0.55),
+ ncol=5, byrow=TRUE)
+
+sumSome.pvalues(G, S = c(1,2), alpha = 0.4, type = "vovk.wang", r = -1)
 }
 \author{
 Anna Vesely.

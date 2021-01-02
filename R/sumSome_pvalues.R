@@ -1,6 +1,8 @@
-#' @title True Discovery Guarantee for p-Values
-#' @description This function determines a lower confidence bound for the number of true discoveries within a set of interest. The bound remains valid under post-hoc selection.
-#' @usage sumSome.pvalues(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1, nMax = 10000)
+#' @title True Discovery Guarantee
+#' @description This function determines a lower confidence bound for the number of true discoveries within a set of interest,
+#' when using p-values as test statistics. The bound remains valid under post-hoc selection.
+#' @usage sumSome.pvalues(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1,
+#'                 nMax = 10000)
 #' @param G numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' @param S vector of indices for the variables of interest.
 #' @param alpha significance level.
@@ -8,6 +10,9 @@
 #' If \code{NULL}, p-values are not truncated.
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, p-values are not truncated.
+#' @param type transformation of p-values (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+#' \code{cauchy}, \code{vovk.wang})
+#' @param r parameter for Vovk and Wang's p-value transformation.
 #' @param nMax maximum number of iterations.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 #' @details Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
@@ -15,7 +20,7 @@
 #' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
 #' @details An error message is returned if the p-value transformation produces infinite values.
 #' @return \code{sumSome.pvalues} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-#' The vector \code{summary} contains
+#' The vector \code{summary} contains:
 #' \itemize{
 #' \item \code{size}: size of \code{S}
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
@@ -26,15 +31,15 @@
 #' @author Anna Vesely.
 #' @examples
 #' G <- matrix(
-#'  c(0.05, 0.12, 0.21, 0.66, 0.66,
-#'   0.66, 0.50, 0.66, 0.79, 0.21,
-#'   0.01, 0.34, 0.79, 0.50, 0.66,
-#'   0.01, 0.66, 0.79, 0.66, 0.79,
-#'   0.79, 0.05, 0.66, 0.66, 0.50,
-#'   0.02, 0.79, 0.66, 0.50, 0.66),
-#' ncol=5, byrow=TRUE)
-#' S <- c(1,2)
-#' sumSome.pvalues(G, S, alpha = 0.4, type = "fisher")
+#'  c(0.05, 0.20, 0.24, 0.45, 0.54,
+#'    0.47, 0.34, 0.53, 0.99, 0.18,
+#'    0.14, 0.21, 0.98, 0.32, 0.47,
+#'    0.19, 0.45, 0.85, 0.50, 0.92,
+#'    0.99, 0.09, 0.52, 0.39, 0.37,
+#'    0.87, 0.89, 0.44, 0.38, 0.55),
+#'  ncol=5, byrow=TRUE)
+#'
+#' sumSome.pvalues(G, S = c(1,2), alpha = 0.4, type = "vovk.wang", r = -1)
 #' @export
 
 

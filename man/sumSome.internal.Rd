@@ -24,7 +24,7 @@ If \code{NULL}, statistics are not truncated.}
 }
 \value{
 \code{sumSome.internal} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-\code{summary} contains
+\code{summary} contains:
 \itemize{
 \item \code{size}: size of \code{S}
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
@@ -34,7 +34,7 @@ If \code{NULL}, statistics are not truncated.}
 }
 }
 \description{
-Internal function, called in \code{sumSome.stats}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
 It determines a lower confidence bound for the number of true discoveries within a set of interest.
 The bound remains valid under post-hoc selection.
 }

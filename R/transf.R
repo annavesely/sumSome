@@ -34,9 +34,9 @@
 #' @author Anna Vesely.
 #' @keywords internal
 #' @importFrom stats qnorm
-#' @useDynLib sumSome, .registration=TRUE
 #' @importFrom Rcpp sourceCpp
 #' @importFrom Rcpp evalCpp
+#' @useDynLib sumSome, .registration=TRUE
 
 
 

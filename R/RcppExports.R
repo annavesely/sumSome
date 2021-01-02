@@ -225,21 +225,6 @@ NULL
 #' @noRd
 NULL
 
-#' @title Compare Vector Elements to Value
-#' @description Internal function, called in \code{sumCt.internal}.
-#' It determines whether all the elements of a vector, eventually except the first one, are equal to a given value.
-#' @usage permMin(X, B, truncTo)
-#' @param X numeric vector.
-#' @param B length of \code{X}.
-#' @param truncTo numeric value.
-#' @author Anna Vesely.
-#' @return It returns \code{TRUE} if all elements of \code{X}, excluding the first one, are equal to \code{truncTo},
-#' and returns \code{FALSE} otherwise.
-#' @noRd
-permMin <- function(X, B, truncTo) {
-    .Call(`_sumSome_permMin`, X, B, truncTo)
-}
-
 #' @title Check Candidate TD Value
 #' @description Internal function, called in \code{bisectionTD}.
 #' It checks whether a candidate value is a valid lower confidence bound for the number of true discoveries
@@ -263,8 +248,21 @@ permMin <- function(X, B, truncTo) {
 #' the outcome is unsure when \code{rej=TRUE} and \code{indSizes=TRUE}.
 #' The number of iterations \code{BAB} is updated.
 #' @noRd
-checkTD <- function(TD, D0, I0, R0, s, f0, k, B, BAB, nMax) {
-    .Call(`_sumSome_checkTD`, TD, D0, I0, R0, s, f0, k, B, BAB, nMax)
+NULL
+
+#' @title Compare Vector Elements to Value
+#' @description Internal function, called in \code{sumCt.internal}.
+#' It determines whether all the elements of a vector, eventually except the first one, are equal to a given value.
+#' @usage permMin(X, B, truncTo)
+#' @param X numeric vector.
+#' @param B length of \code{X}.
+#' @param truncTo numeric value.
+#' @author Anna Vesely.
+#' @return It returns \code{TRUE} if all elements of \code{X}, excluding the first one, are equal to \code{truncTo},
+#' and returns \code{FALSE} otherwise.
+#' @noRd
+permMin <- function(X, B, truncTo) {
+    .Call(`_sumSome_permMin`, X, B, truncTo)
 }
 
 #' @title Binary Search for the Number of True Discoveries
