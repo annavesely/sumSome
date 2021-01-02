@@ -1,8 +1,8 @@
 #' @title True Discovery Guarantee (General Case)
-#' @description Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+#' @description Internal function, called in \code{sumSome}, \code{sumSome.pvals} and \code{sumBrain.internal}.
 #' It determines a lower confidence bound for the number of true discoveries within a set of interest.
 #' The bound remains valid under post-hoc selection.
-#' @usage sumSome.internal(G, S, alpha, truncFrom, truncTo, nMax)
+#' @usage sum.internal(G, S, alpha, truncFrom, truncTo, nMax)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' Extreme values are the greatest.
 #' @param S vector of indices for the variables of interest.
@@ -13,7 +13,7 @@
 #' If \code{NULL}, statistics are not truncated.
 #' @param nMax maximum number of iterations.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @return \code{sumSome.internal} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
+#' @return \code{sum.internal} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
 #' \code{summary} contains:
 #' \itemize{
 #' \item \code{size}: size of \code{S}
@@ -26,7 +26,7 @@
 #' @keywords internal
 
 
-sumSome.internal <- function(G, S, alpha, truncFrom, truncTo, nMax){
+sum.internal <- function(G, S, alpha, truncFrom, truncTo, nMax){
   
   B <- nrow(G)
   f <- ncol(G)

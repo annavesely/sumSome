@@ -1,8 +1,8 @@
-#' @title True Discovery Guarantee
+#' @title True Discovery Guarantee for p-Value Combinations
 #' @description This function determines a lower confidence bound for the number of true discoveries within a set of interest,
 #' when using p-values as test statistics. The bound remains valid under post-hoc selection.
-#' @usage sumSome.pvalues(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1,
-#'                 nMax = 10000)
+#' @usage sumSome.pvals(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1,
+#'          nMax = 10000)
 #' @param G numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' @param S vector of indices for the variables of interest.
 #' @param alpha significance level.
@@ -19,7 +19,7 @@
 #' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
 #' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
 #' @details An error message is returned if the p-value transformation produces infinite values.
-#' @return \code{sumSome.pvalues} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
+#' @return \code{sumSome.pvals} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
 #' The vector \code{summary} contains:
 #' \itemize{
 #' \item \code{size}: size of \code{S}
@@ -39,16 +39,16 @@
 #'    0.87, 0.89, 0.44, 0.38, 0.55),
 #'  ncol=5, byrow=TRUE)
 #'
-#' sumSome.pvalues(G, S = c(1,2), alpha = 0.4, type = "vovk.wang", r = -1)
+#' sumSome.pvals(G, S = c(1,2), alpha = 0.4, type = "vovk.wang", r = -1)
 #' @export
 
 
-sumSome.pvalues <- function(G, S, alpha=0.05, truncFrom=alpha, truncTo=1,
+sumSome.pvals <- function(G, S, alpha=0.05, truncFrom=alpha, truncTo=1,
                             type="fisher", r=1, nMax=10000){
   
   type = match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
   res <- transf(G, truncFrom, truncTo, type, r)
   rm(G)
-  out <- sumSome.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)
+  out <- sum.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)
   return(out)
 }

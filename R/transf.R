@@ -1,5 +1,5 @@
 #' @title Transformation of Statistics
-#' @description Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+#' @description Internal function, called in \code{sum.stats}, \code{sum.pvals} and \code{sumBrain.internal}.
 #' It truncates and transforms a matrix of statistics.
 #' @usage transf(G, truncFrom, truncTo, option, r)
 #' @param G numeric matrix of statistics.

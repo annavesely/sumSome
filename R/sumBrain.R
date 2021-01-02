@@ -1,8 +1,8 @@
-#' @title True Discovery Guarantee for Brain Imaging
+#' @title True Discovery Guarantee for Brain Imaging with t-Scores
 #' @description This function determines a true discovery guarantee for fMRI cluster analysis, using t-scores.
-#' @usage sumSomeBrain(copes, mask = NULL, clusters = NULL, thr = 3.2, alternative = "two.sided", alpha = 0.05,
-#'              B = 1000, seed = NULL, truncFrom = thr, truncTo = 0, squares = FALSE, nMax = 10000,
-#'              silent = FALSE)
+#' @usage sumBrain(copes, mask = NULL, clusters = NULL, thr = 3.2, alternative = "two.sided", alpha = 0.05,
+#'          B = 1000, seed = NULL, truncFrom = thr, truncTo = 0, squares = FALSE, nMax = 10000,
+#'          silent = FALSE)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain.
 #' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
@@ -21,7 +21,7 @@
 #' @param silent logical, \code{FALSE} to print the summary.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 #' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
-#' @return \code{sumSomeBrain} returns a list containing \code{summary} (matrix),
+#' @return \code{sumBrain} returns a list containing \code{summary} (matrix),
 #' \code{clusters} (3D numeric array of cluster indices), and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
 #' The matrix \code{summary} contains, for each cluster:
@@ -35,24 +35,28 @@
 #' }
 #' @author Anna Vesely.
 #' @examples
+#' # if needed, install the package fMRIdata from Github
 #' devtools::install_github("angeella/fMRIdata")
+#' 
 #' library(fMRIdata)
 #' library(RNifti)
 #' 
-#' out <- sumSomeBrain(copes = Auditory_copes, mask = Auditory_mask, clusters = Auditory_clusterTH3_2,
-#'                     seed = 42, nMax = 30)
+#' # the following requires some minutes
+#' out <- sumBrain(copes = Auditory_copes, mask = Auditory_mask, clusters = Auditory_clusterTH3_2,
+#'                 B = 100, seed = 42, nMax = 30)
 #' 
+#' # write the TDP map as Nifti file
 #' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
 #' @export
 
 
-sumSomeBrain <- function(copes, mask=NULL, clusters=NULL, thr=3.2, alternative="two.sided",
+sumBrain <- function(copes, mask=NULL, clusters=NULL, thr=3.2, alternative="two.sided",
                          alpha=0.05, B=1000, seed=NULL, truncFrom=thr, truncTo=0, squares=FALSE,
                          nMax=10000, silent=FALSE){
   
-  out <- sumSomeBrain.internal(copes, mask, clusters, thr, alternative,
-                               alpha, B, seed, truncFrom, truncTo, pvalues=FALSE,
-                               type="vovk.wang", r=1, squares, rand=FALSE, nMax, silent)
+  out <- sumBrain.internal(copes, mask, clusters, thr, alternative,
+                           alpha, B, seed, truncFrom, truncTo, pvalues=FALSE,
+                           type="vovk.wang", r=1, squares, rand=FALSE, nMax, silent)
   
   return(out)
 }

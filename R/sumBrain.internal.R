@@ -1,8 +1,8 @@
 #' @title True Discovery Guarantee for Brain Imaging
-#' @description Internal function, called in \code{sumSomeBrain} and \code{sumSomeBrain.pvalues}.
+#' @description Internal function, called in \code{sumBrain} and \code{sumBrain.pvals}.
 #' It determines a true discovery guarantee for fMRI cluster analysis.
-#' @usage sumSomeBrain.internal(copes, mask, clusters, thr, alternative, alpha, B, seed, truncFrom, truncTo,
-#'                       pvalues, type, r, squares, rand, nMax, silent)
+#' @usage sumBrain.internal(copes, mask, clusters, thr, alternative, alpha, B, seed, truncFrom, truncTo,
+#'                   pvalues, type, r, squares, rand, nMax, silent)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain.
 #' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
@@ -37,7 +37,7 @@
 #' }
 #' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
 #' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
-#' @return \code{sumSomeBrain.internal} returns a list containing \code{summary} (matrix),
+#' @return \code{sumBrain.internal} returns a list containing \code{summary} (matrix),
 #' \code{clusters} (3D numeric array of cluster indices), and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
 #' The matrix \code{summary} contains, for each cluster:
@@ -55,7 +55,7 @@
 #' @importFrom ARIbrain cluster_threshold
 
 
-sumSomeBrain.internal <- function(copes, mask, clusters, thr, alternative,
+sumBrain.internal <- function(copes, mask, clusters, thr, alternative,
                                   alpha, B, seed, truncFrom, truncTo, pvalues,
                                   type, r, squares, rand, nMax, silent){
   
@@ -154,7 +154,7 @@ sumSomeBrain.internal <- function(copes, mask, clusters, thr, alternative,
     sel[mask==0] <- FALSE
     S <- which(sel[mask != 0])
     
-    out <- sumSome.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)$summary
+    out <- sum.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)$summary
     TDPmap <- TDPmap + (sel * round(out["TD"] * 100/ out["size"]))
     
     # cluster summary

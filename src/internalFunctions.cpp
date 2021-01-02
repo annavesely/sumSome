@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 
 //' @title Compare Vector Elements to Value
-//' @description Internal function, called in \code{sumCt.internal}.
+//' @description Internal function, called in \code{sum.internal}.
 //' It determines whether all the elements of a vector, eventually except the first one, are equal to a given value.
 //' @usage permMin(X, B, truncTo)
 //' @param X numeric vector.
@@ -706,7 +706,7 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
 
 
 //' @title Binary Search for the Number of True Discoveries
-//' @description Internal function, called in \code{sumSome.internal}.
+//' @description Internal function, called in \code{sum.internal}.
 //' It employs a binary search to determine a lower confidence bound for the number of true discoveries
 //' within a subset of interest.
 //' @usage bisectionTD(D0, I0, R0, s, f0, k, B, nMax)

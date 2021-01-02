@@ -42,6 +42,6 @@ sumSome <- function(G, S, alternative="greater", alpha=0.05, truncFrom=NULL, tru
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
   res <- transf(G, truncFrom, truncTo, alternative, 1)
   rm(G)
-  out <- sumSome.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)
+  out <- sum.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)
   return(out)
 }

@@ -1,8 +1,8 @@
-#' @title True Discovery Guarantee for Brain Imaging
+#' @title True Discovery Guarantee for Brain Imaging with p-Values
 #' @description This function determines a true discovery guarantee for fMRI cluster analysis, using p-values.
-#' @usage sumSomeBrain.pvalues(copes, mask = NULL, clusters = NULL, thr = 3.2, alternative = "two.sided",
-#'                      alpha = 0.05, B = 1000, seed = NULL, truncFrom = alpha, truncTo = 1, type = "fisher",
-#'                      r = 1, rand = FALSE, nMax = 10000, silent = FALSE)
+#' @usage sumBrain.pvals(copes, mask = NULL, clusters = NULL, thr = 3.2, alternative = "two.sided",
+#'                alpha = 0.05, B = 1000, seed = NULL, truncFrom = alpha, truncTo = 1, type = "fisher",
+#'                r = 1, rand = FALSE, nMax = 10000, silent = FALSE)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain.
 #' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
@@ -35,7 +35,7 @@
 #' }
 #' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
 #' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
-#' @return \code{sumSomeBrain.pvalues} returns a list containing \code{summary} (matrix),
+#' @return \code{sumBrain.pvals} returns a list containing \code{summary} (matrix),
 #' \code{clusters} (3D numeric array of cluster indices), and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
 #' The matrix \code{summary} contains, for each cluster:
@@ -49,23 +49,27 @@
 #' }
 #' @author Anna Vesely.
 #' @examples
+#' # if needed, install the package fMRIdata from Github
 #' devtools::install_github("angeella/fMRIdata")
+#' 
 #' library(fMRIdata)
 #' 
-#' out <- sumSomeBrain.pvalues(copes = Auditory_copes, mask = Auditory_mask, clusters = Auditory_clusterTH3_2,
-#'                             seed = 42, type = "vovk.wang", r=-1, nMax = 30)
+#' # the following requires some minutes
+#' out <- sumBrain.pvals(copes = Auditory_copes, mask = Auditory_mask, clusters = Auditory_clusterTH3_2,
+#'                       B = 100, seed = 42, type = "fisher", nMax = 30)
 #' 
+#' # write the TDP map as Nifti file
 #' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
 #' @export
 
 
-sumSomeBrain.pvalues <- function(copes, mask=NULL, clusters=NULL, thr=3.2, alternative="two.sided",
+sumBrain.pvals <- function(copes, mask=NULL, clusters=NULL, thr=3.2, alternative="two.sided",
                                  alpha=0.05, B=1000, seed=NULL, truncFrom=alpha, truncTo=1, type="vovk.wang",
                                  r=1, rand=FALSE, nMax=10000, silent=FALSE){
   
-  out <- sumSomeBrain.internal(copes, mask, clusters, thr, alternative,
-                               alpha, B, seed, truncFrom, truncTo, pvalues=TRUE,
-                               type, r, squares=FALSE, rand, nMax, silent)
+  out <- sumBrain.internal(copes, mask, clusters, thr, alternative,
+                           alpha, B, seed, truncFrom, truncTo, pvalues=TRUE,
+                           type, r, squares=FALSE, rand, nMax, silent)
   
   return(out)
 }

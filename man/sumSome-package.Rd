@@ -1,22 +1,18 @@
 \name{sumSome-package}
 \alias{sumSome-package}
-\alias{sumSome}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  True Discovery Guarantee by Sum-Based Tests
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
-}
-\details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  \code{sumSome} provides permutation-based true discovery guarantees, using sum-based global statistics 
+  (sum of t-scores, p-value combinations etc.). As a main feature, it produces simultaneous lower confidence bounds
+  for the number of active voxels in different clusters for fMRI cluster analysis.
 }
 \author{
-Your Name, email optional.
+Anna Vesely.
 
-Maintainer: Your Name <your@email.com>
+Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
 }
 \references{
   This optional section can contain literature or other references for
@@ -24,11 +20,12 @@ Maintainer: Your Name <your@email.com>
 }
 \keyword{ package }
 \seealso{
-  Optional links to other man pages
+  Generic statistics: \code{\link{sumSome}}
+  
+  p-value combinations: \code{\link{sumSome.pvals}}
+  
+  Brain imaging with t-scores: \code{\link{sumBrain}}
+  
+  Brain imaging with p-values: \code{\link{sumBrain.pvals}}
 }
-\examples{
-  \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
-  }
-}
+

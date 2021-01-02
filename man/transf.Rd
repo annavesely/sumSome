@@ -27,7 +27,7 @@ and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
 An error message is returned if the transformation produces infinite values.
 }
 \description{
-Internal function, called in \code{sumSome}, \code{sumSome.pvalues} and \code{sumSomeBrain.internal}.
+Internal function, called in \code{sum.stats}, \code{sum.pvals} and \code{sumBrain.internal}.
 It truncates and transforms a matrix of statistics.
 }
 \details{
