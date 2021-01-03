@@ -10,7 +10,7 @@
 #' are combined into a single cluster.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.
-#' @param B number of permutations.
+#' @param B number of permutations, including the identity.
 #' @param seed seed.
 #' @param truncFrom truncation parameter: values greater than \code{truncFrom} are truncated.
 #' If \code{NULL}, p-values are not truncated.

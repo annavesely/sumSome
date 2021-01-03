@@ -8,7 +8,7 @@ sum.internal(G, S, alpha, truncFrom, truncTo, nMax)
 }
 \arguments{
 \item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
-Extreme values are the greatest.}
+The first transformation is the identity. Extreme values are the greatest.}
 
 \item{S}{vector of indices for the variables of interest.}
 

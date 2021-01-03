@@ -7,7 +7,8 @@
 sumSome(G, S, alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL, nMax = 10000)
 }
 \arguments{
-\item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).}
+\item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
+The first transformation is the identity.}
 
 \item{S}{vector of indices for the variables of interest.}
 

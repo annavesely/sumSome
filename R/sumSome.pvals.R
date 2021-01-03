@@ -4,6 +4,7 @@
 #' @usage sumSome.pvals(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "fisher", r = 1,
 #'          nMax = 10000)
 #' @param G numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
+#' The first transformation is the identity.
 #' @param S vector of indices for the variables of interest.
 #' @param alpha significance level.
 #' @param truncFrom truncation parameter: values greater than \code{truncFrom} are truncated.

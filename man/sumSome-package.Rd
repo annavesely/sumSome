@@ -27,5 +27,7 @@ Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
   Brain imaging with t-scores: \code{\link{sumBrain}}
   
   Brain imaging with p-values: \code{\link{sumBrain.pvals}}
+  
+  Simulate data to test \code{sumSome} or \code{sumSome.pvals}: \code{\link{simData}}
 }
 

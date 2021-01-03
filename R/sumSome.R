@@ -3,6 +3,7 @@
 #' The bound remains valid under post-hoc selection.
 #' @usage sumSome(G, S, alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL, nMax = 10000)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
+#' The first transformation is the identity.
 #' @param S vector of indices for the variables of interest.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.

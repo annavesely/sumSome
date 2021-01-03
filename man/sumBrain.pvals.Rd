@@ -22,7 +22,7 @@ are combined into a single cluster.}
 
 \item{alpha}{significance level.}
 
-\item{B}{number of permutations.}
+\item{B}{number of permutations, including the identity.}
 
 \item{seed}{seed.}
 

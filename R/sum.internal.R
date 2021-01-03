@@ -4,7 +4,7 @@
 #' The bound remains valid under post-hoc selection.
 #' @usage sum.internal(G, S, alpha, truncFrom, truncTo, nMax)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
-#' Extreme values are the greatest.
+#' The first transformation is the identity. Extreme values are the greatest.
 #' @param S vector of indices for the variables of interest.
 #' @param alpha significance level.
 #' @param truncFrom truncation parameter: values less extreme than \code{truncFrom} are truncated.

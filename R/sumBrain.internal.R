@@ -10,7 +10,7 @@
 #' are combined into a single cluster.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.
-#' @param B number of permutations.
+#' @param B number of permutations, including the identity.
 #' @param seed seed.
 #' @param truncFrom truncation parameter: values less extreme than \code{truncFrom} are truncated.
 #' If \code{NULL}, statistics are not truncated.
@@ -92,7 +92,7 @@ sumBrain.internal <- function(copes, mask, clusters, thr, alternative,
   # check alpha and B
   if(!is.numeric(alpha) || !is.finite(alpha)){stop("alpha must be a number in (0,1)")}
   if(alpha <= 0 || alpha >= 1){stop("alpha must be a number in (0,1)")}
-  if(!is.numeric(B) || !is.finite(B)){stop("B must be a finite integer")}
+  if(!is.numeric(B) || !is.finite(B) || B <= 0){stop("B must be a positive integer")}
   B <- round(B)
   if(B < (1/alpha)){stop("1/alpha cannot exceed the number of transformations")}
   
