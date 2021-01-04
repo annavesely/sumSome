@@ -434,54 +434,6 @@ List goLeft (const int &vMin, const int &vMax, NumericMatrix &Dsum, NumericMatri
 
 
 
-//' @title Right Node by Fixing Variable
-//' @description Internal function, called in \code{checkTD}.
-//' It generates a right node, i.e. a subspace obtained by fixing a variable in the branch and bound procedure,
-//' after closing the corresponding left node.
-//' @usage goRight(Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS)
-//' @param Dsum matrix of cumulative sums for the lower bound.
-//' @param Rsum matrix of cumulative sums for the upper bound.
-//' @param D matrix for the lower bound.
-//' @param I matrix of indices corresponding to elements in \code{R}.
-//' @param R matrix for the upper bound.
-//' @param fixed numeric vector, sum by row of fixed columns.
-//' @param fixedLast numeric vector, column fixed in the last step.
-//' @param j1 integer value.
-//' @param j2 integer value.
-//' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries.
-//' @param s size of the subset of interest.
-//' @param f total number of non-fixed variables in the current space.
-//' @param B number of transformations.
-//' @param lastFromS logical, \code{TRUE} if the fixed variable is in the subset of interest.
-//' @author Anna Vesely.
-//' @return It updates the matrices \code{Dsum}, \code{Rsum}, \code{D}, \code{I} and \code{R},
-//' and the indices \code{j1} and \code{j2} in the new right subspace.
-//' @noRd
-
-void goRight (NumericMatrix &Dsum, NumericMatrix &Rsum,
-              NumericMatrix &D, IntegerMatrix &I, NumericMatrix &R, const NumericVector &fixed,
-              const NumericVector &fixedLast, int &j1, int &j2, const int &z, const int &s,
-              const int &f, const int &B, const bool &lastFromS){
-  
-  NumericMatrix temp (B,1);
-  if(lastFromS || f == 0){buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f, B, TRUE);}
-  else{
-    if(f == 1){temp(_,0) = D(_,0); D = clone(temp);}else{D = D(_,Range(0,f-1));}
-    if(z == f){temp(_,0) = Dsum(_,0); Dsum = clone(temp);}else{Dsum = Dsum(_,Range(0,f-z));}
-    
-    for (int b = 0; b <= B-1; ++b){ // add fixedLast to Dsum and Rsum
-      for (int i = 0; i <= f; ++i){
-        Dsum(b,i) += fixedLast[b];
-        Rsum(b,i) += fixedLast[b];
-      }
-    }
-  }
-}
-
-
-
-
-
 //' @title Sign of Quantile
 //' @description Internal function, called in \code{computeBounds}.
 //' It determines whether the quantile of a vector is negative.
@@ -670,7 +622,7 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
       vMin = node["vMin"];
       vMax = node["vMax"];
       fixed = node["fixed"];
-      goRight(Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS);
+      buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f, B, TRUE);
       computeBounds(vMin, vMax, rej, indSizes, Dsum, Rsum, k, B, j1, j2, TRUE);
       --n;
     }

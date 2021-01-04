@@ -165,31 +165,6 @@ NULL
 #' @noRd
 NULL
 
-#' @title Right Node by Fixing Variable
-#' @description Internal function, called in \code{checkTD}.
-#' It generates a right node, i.e. a subspace obtained by fixing a variable in the branch and bound procedure,
-#' after closing the corresponding left node.
-#' @usage goRight(Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS)
-#' @param Dsum matrix of cumulative sums for the lower bound.
-#' @param Rsum matrix of cumulative sums for the upper bound.
-#' @param D matrix for the lower bound.
-#' @param I matrix of indices corresponding to elements in \code{R}.
-#' @param R matrix for the upper bound.
-#' @param fixed numeric vector, sum by row of fixed columns.
-#' @param fixedLast numeric vector, column fixed in the last step.
-#' @param j1 integer value.
-#' @param j2 integer value.
-#' @param z number of selected columns, equal to \code{s-TD+1}, where \code{TD} is a candidate value for the number of true discoveries.
-#' @param s size of the subset of interest.
-#' @param f total number of non-fixed variables in the current space.
-#' @param B number of transformations.
-#' @param lastFromS logical, \code{TRUE} if the fixed variable is in the subset of interest.
-#' @author Anna Vesely.
-#' @return It updates the matrices \code{Dsum}, \code{Rsum}, \code{D}, \code{I} and \code{R},
-#' and the indices \code{j1} and \code{j2} in the new right subspace.
-#' @noRd
-NULL
-
 #' @title Sign of Quantile
 #' @description Internal function, called in \code{computeBounds}.
 #' It determines whether the quantile of a vector is negative.
