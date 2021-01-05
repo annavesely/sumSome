@@ -39,13 +39,16 @@
 #' devtools::install_github("angeella/fMRIdata")
 #' 
 #' library(fMRIdata)
-#' library(RNifti)
+#' data("Auditory_copes")
+#' data("Auditory_mask")
+#' data("Auditory_clusterTH3_2")
 #' 
 #' # the following requires some minutes
 #' out <- sumBrain(copes = Auditory_copes, mask = Auditory_mask, clusters = Auditory_clusterTH3_2,
 #'                 B = 100, seed = 42, nMax = 30)
 #' 
 #' # write the TDP map as Nifti file
+#' library(RNifti)
 #' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
 #' @export
 

@@ -83,12 +83,16 @@ For such transformations, \code{truncTo} is coerced to be not greater than \code
 devtools::install_github("angeella/fMRIdata")
 
 library(fMRIdata)
+data("Auditory_copes")
+data("Auditory_mask")
+data("Auditory_clusterTH3_2")
 
 # the following requires some minutes
 out <- sumBrain.pvals(copes = Auditory_copes, mask = Auditory_mask, clusters = Auditory_clusterTH3_2,
                       B = 100, seed = 42, type = "fisher", nMax = 30)
 
 # write the TDP map as Nifti file
+library(RNifti)
 RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
 }
 \author{

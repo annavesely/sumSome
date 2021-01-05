@@ -110,7 +110,7 @@ NULL
 NULL
 
 #' @title Building Matrices
-#' @description Internal function, called in \code{goLeft}, \code{goRight} and \code{checkTD}.
+#' @description Internal function, called in \code{goLeft} and \code{checkTD}.
 #' It updates the matrices that will be used to apply the shortcut in a subspace.
 #' @usage buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f0, B, getDsum)
 #' @param Dsum matrix of cumulative sums for the lower bound.
@@ -140,7 +140,7 @@ NULL
 #' @description Internal function, called in \code{checkTD}.
 #' It generates a left node, i.e. a subspace obtained by removing a variable in the branch and bound procedure.
 #' Moreover, it saves a list of elements characterizing the corresponding right node, obtained by fixing the variable.
-#' @usage goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS)
+#' @usage goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B)
 #' @param vMin minimum size to be checked.
 #' @param vMax maximum size to be checked.
 #' @param Dsum matrix of cumulative sums for the lower bound.
@@ -156,9 +156,8 @@ NULL
 #' @param s size of the subset of interest.
 #' @param f total number of non-fixed variables in the current space.
 #' @param B number of transformations.
-#' @param lastFromS logical, \code{TRUE} if the removed variable is in the subset of interest.
 #' @author Anna Vesely.
-#' @return It updates \code{lastFromS}, the matrices \code{Rsum}, \code{I} and \code{R},
+#' @return It updates the matrices \code{Rsum}, \code{I} and \code{R},
 #' and the indices \code{j1} and \code{j2} in the new left subspace.
 #' It returns a list containing the values of \code{z}, \code{vMin}, \code{vMax}, \code{fixed} and \code{f}
 #' in the corresponding right subspace. 

@@ -290,7 +290,7 @@ List sortSum(NumericMatrix &Dsum, NumericMatrix &Rsum, const NumericMatrix &D, c
 
 
 //' @title Building Matrices
-//' @description Internal function, called in \code{goLeft}, \code{goRight} and \code{checkTD}.
+//' @description Internal function, called in \code{goLeft} and \code{checkTD}.
 //' It updates the matrices that will be used to apply the shortcut in a subspace.
 //' @usage buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f0, B, getDsum)
 //' @param Dsum matrix of cumulative sums for the lower bound.
@@ -339,7 +339,6 @@ void buildMatrices(NumericMatrix &Dsum, NumericMatrix &Rsum, NumericMatrix &D, I
       D = as<NumericMatrix>(clone(temp));
     }
     else{D = D(_,Range(0, f-1));}
-    res = sortSum(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, B, getDsum);
   }
   
   // update R, Rsum and I
@@ -381,7 +380,7 @@ void buildMatrices(NumericMatrix &Dsum, NumericMatrix &Rsum, NumericMatrix &D, I
 //' @description Internal function, called in \code{checkTD}.
 //' It generates a left node, i.e. a subspace obtained by removing a variable in the branch and bound procedure.
 //' Moreover, it saves a list of elements characterizing the corresponding right node, obtained by fixing the variable.
-//' @usage goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS)
+//' @usage goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B)
 //' @param vMin minimum size to be checked.
 //' @param vMax maximum size to be checked.
 //' @param Dsum matrix of cumulative sums for the lower bound.
@@ -397,9 +396,8 @@ void buildMatrices(NumericMatrix &Dsum, NumericMatrix &Rsum, NumericMatrix &D, I
 //' @param s size of the subset of interest.
 //' @param f total number of non-fixed variables in the current space.
 //' @param B number of transformations.
-//' @param lastFromS logical, \code{TRUE} if the removed variable is in the subset of interest.
 //' @author Anna Vesely.
-//' @return It updates \code{lastFromS}, the matrices \code{Rsum}, \code{I} and \code{R},
+//' @return It updates the matrices \code{Rsum}, \code{I} and \code{R},
 //' and the indices \code{j1} and \code{j2} in the new left subspace.
 //' It returns a list containing the values of \code{z}, \code{vMin}, \code{vMax}, \code{fixed} and \code{f}
 //' in the corresponding right subspace. 
@@ -408,9 +406,9 @@ void buildMatrices(NumericMatrix &Dsum, NumericMatrix &Rsum, NumericMatrix &D, I
 List goLeft (const int &vMin, const int &vMax, NumericMatrix &Dsum, NumericMatrix &Rsum,
              NumericMatrix &D, IntegerMatrix &I, NumericMatrix &R, const NumericVector &fixed,
              NumericVector &fixedLast, int &j1, int &j2, const int &z, const int &s,
-             int &f, const int &B, bool &lastFromS){
+             int &f, const int &B){
   
-  lastFromS = (I(0,f-1) <= s); // true if the index removed is in S
+  bool lastFromS = (I(0,f-1) <= s); // true if the index removed is in S
   --f;
   buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f+1, B, FALSE); // getDsum = FALSE
   
@@ -585,6 +583,11 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
   NumericMatrix D = as<NumericMatrix>(mat["Dtemp"]);
   IntegerMatrix I = as<IntegerMatrix>(mat["Itemp"]);
   NumericMatrix R = as<NumericMatrix>(mat["Rtemp"]);
+  
+  NumericMatrix D0sort = clone(D);
+  IntegerMatrix I0sort = clone(I0);
+  I0sort(0,_) = I(0,_);
+
   int vMin = 0;
   int vMax = f0 - z + 1;
   bool rej = TRUE;
@@ -597,7 +600,6 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
   
   NumericVector fixedLast (B);
   int f = f0;
-  bool lastFromS = FALSE;
   
   List rightNodes (nMax - BAB); // list of right nodes (z, vMin, vMax, fixed, f)
   int n = 0; // number of right nodes that need to be checked
@@ -608,23 +610,10 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
     // while the outcome is unsure, remove variables and explore the upper bound
     while(indSizes && BAB < nMax){
       ++BAB;
-      node = goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B, lastFromS);
+      node = goLeft(vMin, vMax, Dsum, Rsum, D, I, R, fixed, fixedLast, j1, j2, z, s, f, B);
       computeBounds(vMin, vMax, rej, indSizes, Dsum, Rsum, k, B, j1, j2, FALSE);
+      rightNodes[n] = clone(node); // add node to the list
       ++n;
-      if(indSizes){rightNodes[n-1] = clone(node);} // add node to the list
-    }
-    
-    // proceed with the node on the right of the last closed node
-    // everything is the same, eventually except z, vMin, vMax, fixed
-    if(BAB < nMax){
-      ++BAB;
-      z = node["z"];
-      vMin = node["vMin"];
-      vMax = node["vMax"];
-      fixed = node["fixed"];
-      buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f, B, TRUE);
-      computeBounds(vMin, vMax, rej, indSizes, Dsum, Rsum, k, B, j1, j2, TRUE);
-      --n;
     }
     
     // if the first right node is closed, explore right nodes from the list
@@ -637,8 +626,8 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
       vMax = node["vMax"];
       fixed = node["fixed"];
       f = node["f"];
-      D = clone(D0);
-      I = clone(I0);
+      D = clone(D0sort);
+      I = clone(I0sort);
       R = clone(R0);
       j1 = f0 - z;
       j2 = f0 - z;
