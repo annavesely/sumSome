@@ -1,5 +1,5 @@
 #' @title True Discovery Guarantee (General Case)
-#' @description Internal function, called in \code{sumSome}, \code{sumSome.pvals} and \code{sumBrain.internal}.
+#' @description Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
 #' It determines a lower confidence bound for the number of true discoveries within a set of interest.
 #' The bound remains valid under post-hoc selection.
 #' @usage sum.internal(G, S, alpha, truncFrom, truncTo, nMax)
@@ -12,8 +12,10 @@
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, statistics are not truncated.
 #' @param nMax maximum number of iterations.
-#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @return \code{sum.internal} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
+#' @details Truncation parameters should be such that \code{truncTo} is not greater than \code{truncFrom}.
+#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
+#' \code{B} is the number of data transformations (rows in \code{G}).
+#' @return \code{discoveries} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
 #' \code{summary} contains:
 #' \itemize{
 #' \item \code{size}: size of \code{S}
@@ -23,10 +25,10 @@
 #' \item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
 #' }
 #' @author Anna Vesely.
-#' @keywords internal
+#' @export
 
 
-sum.internal <- function(G, S, alpha, truncFrom, truncTo, nMax){
+sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
   
   B <- nrow(G)
   f <- ncol(G)
@@ -85,8 +87,9 @@ sum.internal <- function(G, S, alpha, truncFrom, truncTo, nMax){
   f <- ncol(I)
   
   b <- bisectionTD(D, I, R, s, f, k, B, nMax)
-  summary <- c(s, b$TDmin, b$TDmax, round(b$TDmin * 100/s, 1), round(b$TDmax * 100/s, 1))
-  names(summary) <- c("size", "TD", "maxTD", "TDP", "maxTDP")
-  out <- list("summary" = summary, "iterations" = b$BAB)
+  out <- sumSome(s, b$TDmin, b$TDmax, round(b$TDmin/s, 2), round(b$TDmax/s, 2), b$BAB)
+  #summary <- c(s, b$TDmin, b$TDmax, round(b$TDmin * 100/s, 1), round(b$TDmax * 100/s, 1))
+  #names(summary) <- c("size", "TD", "maxTD", "TDP", "maxTDP")
+  #out <- list("summary" = summary, "iterations" = b$BAB)
   return(out)
 }

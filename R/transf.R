@@ -1,5 +1,5 @@
 #' @title Transformation of Statistics
-#' @description Internal function, called in \code{sum.stats}, \code{sum.pvals} and \code{sumBrain.internal}.
+#' @description Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
 #' It truncates and transforms a matrix of statistics.
 #' @usage transf(G, truncFrom, truncTo, option, r)
 #' @param G numeric matrix of statistics.
@@ -11,7 +11,6 @@
 #' or transformation (\code{squares} for generic statistics,
 #' and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values).
 #' @param r parameter for Vovk and Wang's p-value transformation.
-#' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
 #' @details Transformations are defined so that the most extreme values of the new statistics are always the greatest.
 #' A generic statistic \code{x} is transformed as following.
 #' \itemize{
@@ -26,11 +25,12 @@
 #' \item Cauchy: \code{tan(0.5 - x)/x}
 #' \item Vovk and Wang: \code{- sign(r)x^r}
 #' }
-#' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
-#' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
+#' An error message is returned if the transformation produces infinite values.
+#' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
+#' As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
+#' \code{truncTo} should be strictly smaller than 1.
 #' @return \code{transf} returns a list containing the truncated and transformed matrix \code{G},
 #' and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
-#' An error message is returned if the transformation produces infinite values.
 #' @author Anna Vesely.
 #' @keywords internal
 #' @importFrom stats qnorm
@@ -67,8 +67,6 @@ transf <- function(G, truncFrom, truncTo, option, r){
     if(pvalues && (truncFrom < 0 || truncFrom > 1)){stop("truncFrom must be a number in [0,1]")}
     if(pvalues && (truncTo < 0 || truncTo > 1)){stop("truncTo must be a number in [0,1]")}
     
-    eps <- .Machine$double.eps
-    
     if(option == "lower" || option == "edgington"){
       truncFrom <- - truncFrom
       truncTo <- - truncTo
@@ -82,11 +80,11 @@ transf <- function(G, truncFrom, truncTo, option, r){
       truncFrom <- - log(truncFrom)
       truncTo <- - log(truncTo)
     }else if(option == "pearson"){
-      truncFrom <- max(log(1-truncFrom), log(eps))
-      truncTo <- max(log(1-truncTo), log(eps))
+      truncFrom <- log(1-truncFrom)
+      truncTo <- log(1-truncTo)
     }else if(option == "liptak"){
-      truncFrom <- max(qnorm(1-truncFrom), qnorm(eps))
-      truncTo <- max(qnorm(1-truncTo), qnorm(eps))
+      truncFrom <- qnorm(1-truncFrom)
+      truncTo <- qnorm(1-truncTo)
     }else if(option == "cauchy"){
       truncFrom <- tan(0.5-truncFrom)/truncFrom
       truncTo <- tan(0.5-truncTo)/truncTo

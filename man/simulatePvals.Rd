@@ -9,10 +9,10 @@ simulatePvals(type = "fisher", r = 1, rho = c(0,0.33,0.66,0.99), prop = c(0.1,0.
               nMax = 10000, nSim = 1000, silent = FALSE)
 }
 \arguments{
-\item{type}{transformation of p-values (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\item{type}{p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
 \code{cauchy}, \code{vovk.wang})}
 
-\item{r}{parameter for Vovk and Wang's p-value transformation.}
+\item{r}{parameter for Vovk and Wang's p-value combination.}
 
 \item{rho}{vector of levels of equicorrelation between pairs of variables.}
 
@@ -34,7 +34,7 @@ simulatePvals(type = "fisher", r = 1, rho = c(0,0.33,0.66,0.99), prop = c(0.1,0.
 If \code{NULL}, p-values are not truncated.}
 
 \item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
-If \code{NULL}, p-values are not truncated.}
+If \code{NULL}, it is set to 0.5 for Pearson's and Liptak's methods, and 1 in the other cases.}
 
 \item{nMax}{maximum number of iterations.}
 
@@ -65,10 +65,6 @@ with seed equal to 1,...,\code{nSim}.
 Then it determines a lower confidence bound for the number of true discoveries
 within the set of non-null hypotheses.
 
-The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-
-Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
-
 A p-value \code{p} is transformed as following.
 \itemize{
 \item Edgington: \code{-p}
@@ -78,9 +74,13 @@ A p-value \code{p} is transformed as following.
 \item Cauchy: \code{tan(0.5 - p)/p}
 \item Vovk and Wang: \code{- sign(r)p^r}
 }
+An error message is returned if the transformation produces infinite values.
 
-Pearson's and Liptak's transformations produce infinite values in \code{1}.
-For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
+Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
+As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
+\code{truncTo} should be strictly smaller than 1.
+
+The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 }
 \examples{
 # 16 scenarions, 10 simulations each

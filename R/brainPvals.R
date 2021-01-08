@@ -22,8 +22,6 @@
 #' @param rand logical, \code{TRUE} to compute p-values by permutation distribution.
 #' @param nMax maximum number of iterations.
 #' @param silent logical, \code{FALSE} to print the summary.
-#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @details Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
 #' @details A p-value \code{p} is transformed as following.
 #' \itemize{
 #' \item Edgington: \code{-p}
@@ -33,8 +31,11 @@
 #' \item Cauchy: \code{tan(0.5 - p)/p}
 #' \item Vovk and Wang: \code{- sign(r)p^r}
 #' }
-#' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
-#' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
+#' An error message is returned if the transformation produces infinite values.
+#' @details Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
+#' As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
+#' \code{truncTo} should be strictly smaller than 1.
+#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 #' @return \code{sumBrain.pvals} returns a list containing \code{summary} (matrix),
 #' \code{clusters} (3D numeric array of cluster indices), and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
@@ -67,13 +68,13 @@
 #' @export
 
 
-sumBrain.pvals <- function(copes, mask=NULL, clusters=NULL, thr=3.2, alternative="two.sided",
-                                 alpha=0.05, B=1000, seed=NULL, truncFrom=alpha, truncTo=1, type="vovk.wang",
-                                 r=1, rand=FALSE, nMax=10000, silent=FALSE){
+brainPvals <- function(copes, mask= NULL, alternative="two.sided", alpha=0.05, B=1000, seed=NULL,
+                        truncFrom=alpha, truncTo=NULL, type="vovk.wang", r=0, rand=FALSE){
   
-  out <- sumBrain.internal(copes, mask, clusters, thr, alternative,
-                           alpha, B, seed, truncFrom, truncTo, pvalues=TRUE,
-                           type, r, squares=FALSE, rand, nMax, silent)
-  
+  out <- brainFlip(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues=TRUE,
+                   type, r, squares=FALSE, rand)
   return(out)
 }
+
+
+

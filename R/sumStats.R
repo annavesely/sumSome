@@ -12,8 +12,9 @@
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, statistics are not truncated.
 #' @param nMax maximum number of iterations.
-#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 #' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
+#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
+#' \code{B} is the number of data transformations (rows in \code{G}).
 #' @return \code{sumSome} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
 #' The vector \code{summary} contains:
 #' \itemize{
@@ -38,11 +39,12 @@
 #' @export
 
 
-sumSome <- function(G, S, alternative="greater", alpha=0.05, truncFrom=NULL, truncTo=NULL, nMax=10000){
+sumStats <- function(G, S, alternative="greater", alpha=0.05, truncFrom=NULL, truncTo=NULL, nMax=10000){
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
-  res <- transf(G, truncFrom, truncTo, alternative, 1)
+  res <- transf(G, alpha, truncFrom, truncTo, alternative, 1)
   rm(G)
-  out <- sum.internal(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)
+  
+  out <- sumTest(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)
   return(out)
 }

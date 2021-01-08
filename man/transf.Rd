@@ -24,15 +24,12 @@ and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy
 \value{
 \code{transf} returns a list containing the truncated and transformed matrix \code{G},
 and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
-An error message is returned if the transformation produces infinite values.
 }
 \description{
-Internal function, called in \code{sum.stats}, \code{sum.pvals} and \code{sumBrain.internal}.
+Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
 It truncates and transforms a matrix of statistics.
 }
 \details{
-Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
-
 Transformations are defined so that the most extreme values of the new statistics are always the greatest.
 A generic statistic \code{x} is transformed as following.
 \itemize{
@@ -47,9 +44,11 @@ A generic statistic \code{x} is transformed as following.
 \item Cauchy: \code{tan(0.5 - x)/x}
 \item Vovk and Wang: \code{- sign(r)x^r}
 }
+An error message is returned if the transformation produces infinite values.
 
-Pearson's and Liptak's transformations produce infinite values in \code{1}.
-For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
+Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
+As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
+\code{truncTo} should be strictly smaller than 1.
 }
 \author{
 Anna Vesely.

@@ -5,9 +5,9 @@
 #' @usage simulatePvals(type = "fisher", r = 1, rho = c(0,0.33,0.66,0.99), prop = c(0.1,0.2,0.3,0.4), m = 1000,
 #'               B = 200, n = 50, alpha = 0.05, power = 0.8, rand = FALSE, truncFrom = alpha, truncTo = 1,
 #'               nMax = 10000, nSim = 1000, silent = FALSE)
-#' @param type transformation of p-values (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+#' @param type p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
 #' \code{cauchy}, \code{vovk.wang})
-#' @param r parameter for Vovk and Wang's p-value transformation.
+#' @param r parameter for Vovk and Wang's p-value combination.
 #' @param rho vector of levels of equicorrelation between pairs of variables.
 #' @param prop vector of proportions of non-null hypotheses.
 #' @param m total number of variables.
@@ -19,7 +19,7 @@
 #' @param truncFrom truncation parameter: values greater than \code{truncFrom} are truncated.
 #' If \code{NULL}, p-values are not truncated.
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
-#' If \code{NULL}, p-values are not truncated.
+#' If \code{NULL}, it is set to 0.5 for Pearson's and Liptak's methods, and 1 in the other cases.
 #' @param nMax maximum number of iterations.
 #' @param nSim number of simulations per scenario.
 #' @param silent logical, \code{FALSE} to print the summary.
@@ -28,8 +28,6 @@
 #' with seed equal to 1,...,\code{nSim}.
 #' Then it determines a lower confidence bound for the number of true discoveries
 #' within the set of non-null hypotheses.
-#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @details Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
 #' @details A p-value \code{p} is transformed as following.
 #' \itemize{
 #' \item Edgington: \code{-p}
@@ -39,8 +37,11 @@
 #' \item Cauchy: \code{tan(0.5 - p)/p}
 #' \item Vovk and Wang: \code{- sign(r)p^r}
 #' }
-#' @details Pearson's and Liptak's transformations produce infinite values in \code{1}.
-#' For such transformations, \code{truncTo} is coerced to be not greater than \code{1 -  .Machine$double.eps}.
+#' An error message is returned if the transformation produces infinite values.
+#' @details Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
+#' As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
+#' \code{truncTo} should be strictly smaller than 1.
+#' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 #' @return \code{simulatePvals} returns two lists, \code{results} and \code{summary}.
 #' The list \code{results} contains, for each value of \code{prop}, the matrices
 #' \code{TD}, \code{iterations} and \code{convergence}, which describe the results
