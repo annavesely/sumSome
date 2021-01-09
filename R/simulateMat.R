@@ -30,6 +30,7 @@
 #' G <- simulateMat(prop = 0.6, m = 5, B = 10, alpha = 0.4, seed = 42)
 #' 
 #' sumSome.pvals(G, S = c(1,2,3), alpha = 0.4, type = "vovk.wang", r = -1)
+#' @importFrom pARI signTest
 #' @export
 
 

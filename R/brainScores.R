@@ -20,6 +20,7 @@
 #' In \code{G}, columns correspond to variables, and rows to permutations.
 #' The first permutation is the identity.
 #' @author Anna Vesely.
+#' @export
 
 
 brainScores <- function(copes, mask= NULL, alternative="two.sided", alpha=0.05, B=1000, seed=NULL,
