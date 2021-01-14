@@ -98,7 +98,7 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   scores <- scores[which(mask != 0),]
   if(!is.numeric(scores) || !all(is.finite(scores))){stop("copes should contain numeric values for voxels inside the brain")}
   
-  st <- pARI::signTest(scores, B, alternative, rand) # sign flipping
+  st <- pARI::signTest(scores, B, alternative, rand=rand) # sign flipping
   rm(scores)
   
   if(!pvalues){
