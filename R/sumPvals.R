@@ -2,7 +2,7 @@
 #' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest, when using p-values as test statistics.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = min(alpha, 0.5)
+#' @usage sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = min(alpha, 0.5),
 #'          type = "vovk.wang", r = 0, nMax = 10000)
 #' @param G numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity.
