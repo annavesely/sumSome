@@ -1,5 +1,5 @@
 #' @title Transformation of Statistics
-#' @description Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
+#' @description Internal function.
 #' It truncates and transforms a matrix of statistics.
 #' @usage transf(G, truncFrom, truncTo, option, r)
 #' @param G numeric matrix of statistics.
@@ -10,7 +10,7 @@
 #' @param option direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}),
 #' or transformation (\code{squares} for generic statistics,
 #' and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values).
-#' @param r parameter for Vovk and Wang's p-value transformation.
+#' @param r parameter for Vovk and Wang's p-value combination.
 #' @details Transformations are defined so that the most extreme values of the new statistics are always the greatest.
 #' A generic statistic \code{x} is transformed as following.
 #' \itemize{
@@ -32,7 +32,7 @@
 #' @return \code{transf} returns a list containing the truncated and transformed matrix \code{G},
 #' and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
 #' @author Anna Vesely.
-#' @keywords internal
+#' @keywords Internal
 #' @importFrom stats qnorm
 #' @importFrom Rcpp sourceCpp
 #' @importFrom Rcpp evalCpp
@@ -44,7 +44,7 @@ transf <- function(G, truncFrom, truncTo, option, r){
   
   pvalues <- !(option %in% c("greater", "lower", "two.sided", "squares"))
   
-  if(!is.matrix(G) || !is.numeric(G) || !is.finite(G)){stop("G must be a matrix of finite numbers")}
+  if(!is.matrix(G) || !is.numeric(G) || !all(is.finite(G))){stop("G must be a matrix of finite numbers")}
   if(pvalues && (!all(G >= 0) || !all(G <= 1))){stop("G must be a matrix of pvalues")}
   
   if(!is.numeric(r) || !is.finite(r)){stop("r must be a finite number")}

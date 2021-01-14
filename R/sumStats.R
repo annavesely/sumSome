@@ -1,7 +1,9 @@
-#' @title True Discovery Guarantee
-#' @description This function determines a lower confidence bound for the number of true discoveries within a set of interest.
-#' The bound remains valid under post-hoc selection.
-#' @usage sumSome(G, S, alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL, nMax = 10000)
+#' @title True Discovery Guarantee for Generic Statistics
+#' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
+#' and the false discovery proportion within a set of interest.
+#' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
+#' @usage sumStats(G, S = seq(ncol(G)), alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
+#'          nMax = 10000)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity.
 #' @param S vector of indices for the variables of interest.
@@ -15,34 +17,44 @@
 #' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
 #' \code{B} is the number of data transformations (rows in \code{G}).
-#' @return \code{sumSome} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-#' The vector \code{summary} contains:
+#' @return \code{sumStats} returns an object of class \code{sumSome}, containing
 #' \itemize{
+#' \item \code{total}: total number of variables (columns in \code{G})
 #' \item \code{size}: size of \code{S}
+#' \item \code{alpha}: significance level
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-#' \item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion in \code{S}
-#' \item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
+#' \item \code{iterations}: number of iterations of the algorithm
 #' }
 #' @author Anna Vesely.
 #' @examples
-#' G <- matrix(
-#'  c(6,5,4,1,1,
-#'    1,2,1,0,4,
-#'    8,3,0,2,1,
-#'    8,1,0,1,0,
-#'    0,6,1,1,2,
-#'    7,0,1,2,1),
-#'  ncol=5, byrow=TRUE)
+#' # generate matrix of t-scores for 5 variables and 10 permutations
+#' G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, pvalues = FALSE, seed = 42)
 #'  
-#' sumSome(G, S = c(1,2), alternative = "greater", alpha = 0.4, truncFrom = 2, truncTo = 0)
+#' # subset of interest (variables 1 and 2)
+#' S <- c(1,2)
+#'  
+#' # create object of class sumSome
+#' res <- sumStats(G, S, alpha = 0.4, truncFrom = 0.7, truncTo = 0)
+#' 
+#' res
+#' summary(res)
+#' 
+#' # lower confidence bound for the number of true discoveries in S
+#' discoveries(res)
+#' 
+#' # lower confidence bound for the true discovery proportion in S
+#' tdp(res)
+#' 
+#' # upper confidence bound for the false discovery proportion in S
+#' fdp(res)
 #' @export
 
 
-sumStats <- function(G, S, alternative="greater", alpha=0.05, truncFrom=NULL, truncTo=NULL, nMax=10000){
+sumStats <- function(G, S=seq(ncol(G)), alternative="greater", alpha=0.05, truncFrom=NULL, truncTo=NULL, nMax=10000){
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
-  res <- transf(G, alpha, truncFrom, truncTo, alternative, 1)
+  res <- transf(G, truncFrom, truncTo, alternative, 1)
   rm(G)
   
   out <- sumTest(res$G, S, alpha, res$truncFrom, res$truncTo, nMax)

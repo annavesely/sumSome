@@ -1,13 +1,14 @@
-#' @title True Discovery Guarantee (General Case)
-#' @description Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
-#' It determines a lower confidence bound for the number of true discoveries within a set of interest.
-#' The bound remains valid under post-hoc selection.
-#' @usage sum.internal(G, S, alpha, truncFrom, truncTo, nMax)
+#' @title True Discovery Guarantee
+#' @description Internal function.
+#' It determines confidence bounds for the number of true discoveries, the true discovery proportion
+#' and the false discovery proportion within a set of interest.
+#' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
+#' @usage sumTest(G, S, alpha, truncFrom, truncTo, nMax)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity. Extreme values are the greatest.
 #' @param S vector of indices for the variables of interest.
 #' @param alpha significance level.
-#' @param truncFrom truncation parameter: values less extreme than \code{truncFrom} are truncated.
+#' @param truncFrom truncation parameter: values smaller than \code{truncFrom} are truncated.
 #' If \code{NULL}, statistics are not truncated.
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, statistics are not truncated.
@@ -15,23 +16,24 @@
 #' @details Truncation parameters should be such that \code{truncTo} is not greater than \code{truncFrom}.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
 #' \code{B} is the number of data transformations (rows in \code{G}).
-#' @return \code{discoveries} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-#' \code{summary} contains:
+#' @return \code{sumTest} returns an object of class \code{sumSome}, containing
 #' \itemize{
+#' \item \code{total}: total number of variables (columns in \code{G})
 #' \item \code{size}: size of \code{S}
+#' \item \code{alpha}: significance level
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-#' \item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion in \code{S}
-#' \item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
+#' \item \code{iterations}: number of iterations of the algorithm
 #' }
 #' @author Anna Vesely.
-#' @export
+#' @keywords Internal
 
 
 sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
   
   B <- nrow(G)
   f <- ncol(G)
+  f0 <- f
   
   if(!is.vector(S) || !is.numeric(S)){stop("S must be a vector of finite integers")}
   if(!all(floor(S)==S)){stop("S must be a vector of finite integers")}
@@ -87,9 +89,6 @@ sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
   f <- ncol(I)
   
   b <- bisectionTD(D, I, R, s, f, k, B, nMax)
-  out <- sumSome(s, b$TDmin, b$TDmax, round(b$TDmin/s, 2), round(b$TDmax/s, 2), b$BAB)
-  #summary <- c(s, b$TDmin, b$TDmax, round(b$TDmin * 100/s, 1), round(b$TDmax * 100/s, 1))
-  #names(summary) <- c("size", "TD", "maxTD", "TDP", "maxTDP")
-  #out <- list("summary" = summary, "iterations" = b$BAB)
+  out <- sumSome(f0, s, alpha, b$TDmin, b$TDmax, b$BAB)
   return(out)
 }

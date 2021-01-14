@@ -19,14 +19,14 @@ If \code{NULL}, statistics are not truncated.}
 or transformation (\code{squares} for generic statistics,
 and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values).}
 
-\item{r}{parameter for Vovk and Wang's p-value transformation.}
+\item{r}{parameter for Vovk and Wang's p-value combination.}
 }
 \value{
 \code{transf} returns a list containing the truncated and transformed matrix \code{G},
 and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
 }
 \description{
-Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
+Internal function.
 It truncates and transforms a matrix of statistics.
 }
 \details{
@@ -53,4 +53,4 @@ As Pearson's and Liptak's transformations produce infinite values in 1, for such
 \author{
 Anna Vesely.
 }
-\keyword{internal}
+\keyword{Internal}

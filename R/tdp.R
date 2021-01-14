@@ -1,11 +1,11 @@
-#' @title Confidence Bound for the Number of True Discoveries
-#' @description This function determines a lower confidence bound for the number of true discoveries
+#' @title Confidence Bound for the TDP
+#' @description This function determines a lower confidence bound for the true discovery proportion
 #' within a set of interest. The bound remains valid under post-hoc selection.
-#' @usage discoveries(sumSome)
+#' @usage tdp(sumSome)
 #' @param sumSome an object of class \code{sumSome}, as returned by
 #' the functions \code{\link{sumStats}} and \code{\link{sumPvals}}.
-#' @return \code{discoveries} returns a lower (1-\code{alpha})-confidence bound
-#' for the number of true discoveries in the set.
+#' @return \code{tdp} returns a lower (1-\code{alpha})-confidence bound
+#' for the true discovery proportion in the set.
 #' @author Anna Vesely.
 #' @examples
 #' # generate matrix of p-values for 5 variables and 10 permutations
@@ -31,15 +31,15 @@
 #' fdp(res)
 #' @export
 
-discoveries <- function(sumSome){
-  UseMethod("discoveries")
+tdp <- function(sumSome){
+  UseMethod("tdp")
 }
 
 
 
-#' @rdname discoveries
+#' @rdname tdp
 #' @export
 
-discoveries.sumSome = function(sumSome) {
-  return(sumSome$TD)
+tdp.sumSome = function(sumSome) {
+  return(sumSome$TD/sumSome$size)
 }

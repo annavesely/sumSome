@@ -1,5 +1,6 @@
 \name{sumSome-package}
 \alias{sumSome-package}
+\alias{sumSome}
 \docType{package}
 \title{
   True Discovery Guarantee by Sum-Based Tests
@@ -20,14 +21,12 @@ Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
 }
 \keyword{ package }
 \seealso{
-  Generic statistics: \code{\link{sumSome}}
+  True discovery guarantee: \code{\link{sumStats}}, \code{\link{sumPvals}}
   
-  p-value combinations: \code{\link{sumSome.pvals}}
+  Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
   
-  Brain imaging with t-scores: \code{\link{sumBrain}}
+  True discovery guarantee for cluster analysis: \code{\link{clusterAnalysis}}
   
-  Brain imaging with p-values: \code{\link{sumBrain.pvals}}
-  
-  Simulate data: \code{\link{simulateMat}}, \code{\link{simulatePvals}}
+  Simulate data: \code{\link{simData}}
 }
 

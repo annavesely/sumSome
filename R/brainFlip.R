@@ -1,13 +1,11 @@
-#' @title True Discovery Guarantee for Brain Imaging
-#' @description Internal function, called in \code{sumBrain} and \code{sumBrain.pvals}.
-#' It determines a true discovery guarantee for fMRI cluster analysis.
-#' @usage sumBrain.internal(copes, mask, clusters, thr, alternative, alpha, B, seed, truncFrom, truncTo,
-#'                   pvalues, type, r, squares, rand, nMax, silent)
+#' @title Permutation Statistics for Brain Imaging
+#' @description Internal function.
+#' It computes test statistics for different permutations of brain imaging data.
+#' A voxel's statistic is calculated by performing the one-sample t test
+#' for the null hypothesis that its mean contrast over the different subjects is zero.
+#' @usage brainFlip(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues, type, r, squares, rand)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain, or character for a Nifti file name.
-#' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
-#' @param thr threshold used to compute the clusters: adjacent t-scores more extreme than \code{thr}
-#' are combined into a single cluster.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.
 #' @param B number of permutations, including the identity.
@@ -17,13 +15,11 @@
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, statistics are not truncated.
 #' @param pvalues logical, \code{TRUE} to use p-values, \code{FALSE} to use t-scores.
-#' @param type transformation of p-values (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+#' @param type p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
 #' \code{cauchy}, \code{vovk.wang})
 #' @param r parameter for Vovk and Wang's p-value transformation.
 #' @param squares logical, \code{TRUE} to use squared t-scores.
 #' @param rand logical, \code{TRUE} to compute p-values by permutation distribution.
-#' @param nMax maximum number of iterations.
-#' @param silent logical, \code{FALSE} to print the summary.
 #' @details A p-value \code{p} is transformed as following.
 #' \itemize{
 #' \item Edgington: \code{-p}
@@ -38,22 +34,19 @@
 #' As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
 #' \code{truncTo} should be strictly smaller than 1.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @return \code{sumBrain.internal} returns a list containing \code{summary} (matrix),
-#' \code{clusters} (3D numeric array of cluster indices), and
-#' \code{TDPmap} (3D numeric array of the true discovery proportions).
-#' The matrix \code{summary} contains, for each cluster:
+#' @return \code{brainFlip} returns an object of class \code{sumBrain}, containing
 #' \itemize{
-#' \item \code{size}: size of the cluster
-#' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
-#' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-#' \item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion
-#' \item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
-#' \item \code{dim1}, \code{dim2}, \code{dim3}: coordinates of the center of mass.
+#' \item \code{statistics}: numeric matrix of statistics, where columns correspond to voxels inside the brain, and rows to permutations.
+#' The first permutation is the identity
+#' \item \code{mask}: 3D logical array, where \code{TRUE} values correspond to voxels inside the brain
+#' \item \code{alpha}: significance level
+#' \item \code{truncFrom}: transformed first truncation parameter
+#' \item \code{truncTo}: transformed second truncation parameter
 #' }
 #' @author Anna Vesely.
+#' @keywords Internal
 #' @importFrom RNifti readNifti
 #' @importFrom pARI signTest
-#' @importFrom ARIbrain cluster_threshold
 
 
 brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues,
@@ -81,7 +74,7 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   if(!is.numeric(alpha) || !is.finite(alpha)){stop("alpha must be a number in (0,1)")}
   if(alpha <= 0 || alpha >= 1){stop("alpha must be a number in (0,1)")}
   if(!is.numeric(B) || !is.finite(B) || B <= 0){stop("B must be a positive integer")}
-  B <- round(B)
+  B <- ceiling(B)
   if(B < (1/alpha)){stop("1/alpha cannot exceed the number of transformations")}
   
   if(!is.null(seed)){
@@ -103,6 +96,8 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   rm(img)
   
   scores <- scores[which(mask != 0),]
+  if(!is.numeric(scores) || !all(is.finite(scores))){stop("copes should contain numeric values for voxels inside the brain")}
+  
   st <- pARI::signTest(scores, B, alternative, rand) # sign flipping
   rm(scores)
   

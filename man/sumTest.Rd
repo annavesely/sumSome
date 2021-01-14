@@ -2,9 +2,9 @@
 % Please edit documentation in R/sumTest.R
 \name{sumTest}
 \alias{sumTest}
-\title{True Discovery Guarantee (General Case)}
+\title{True Discovery Guarantee}
 \usage{
-sum.internal(G, S, alpha, truncFrom, truncTo, nMax)
+sumTest(G, S, alpha, truncFrom, truncTo, nMax)
 }
 \arguments{
 \item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
@@ -14,7 +14,7 @@ The first transformation is the identity. Extreme values are the greatest.}
 
 \item{alpha}{significance level.}
 
-\item{truncFrom}{truncation parameter: values less extreme than \code{truncFrom} are truncated.
+\item{truncFrom}{truncation parameter: values smaller than \code{truncFrom} are truncated.
 If \code{NULL}, statistics are not truncated.}
 
 \item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
@@ -23,20 +23,21 @@ If \code{NULL}, statistics are not truncated.}
 \item{nMax}{maximum number of iterations.}
 }
 \value{
-\code{discoveries} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-\code{summary} contains:
+\code{sumTest} returns an object of class \code{sumSome}, containing
 \itemize{
+\item \code{total}: total number of variables (columns in \code{G})
 \item \code{size}: size of \code{S}
+\item \code{alpha}: significance level
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
 \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-\item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion in \code{S}
-\item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
+\item \code{iterations}: number of iterations of the algorithm
 }
 }
 \description{
-Internal function, called in \code{sumSome}, \code{sumSomePvals} and \code{sumBrain.internal}.
-It determines a lower confidence bound for the number of true discoveries within a set of interest.
-The bound remains valid under post-hoc selection.
+Internal function.
+It determines confidence bounds for the number of true discoveries, the true discovery proportion
+and the false discovery proportion within a set of interest.
+The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \details{
 Truncation parameters should be such that \code{truncTo} is not greater than \code{truncFrom}.
@@ -47,3 +48,4 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1), w
 \author{
 Anna Vesely.
 }
+\keyword{Internal}

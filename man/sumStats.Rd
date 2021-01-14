@@ -2,9 +2,10 @@
 % Please edit documentation in R/sumStats.R
 \name{sumStats}
 \alias{sumStats}
-\title{True Discovery Guarantee}
+\title{True Discovery Guarantee for Generic Statistics}
 \usage{
-sumSome(G, S, alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL, nMax = 10000)
+sumStats(G, S = seq(ncol(G)), alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
+         nMax = 10000)
 }
 \arguments{
 \item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
@@ -25,19 +26,20 @@ If \code{NULL}, statistics are not truncated.}
 \item{nMax}{maximum number of iterations.}
 }
 \value{
-\code{sumSome} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-The vector \code{summary} contains:
+\code{sumStats} returns an object of class \code{sumSome}, containing
 \itemize{
+\item \code{total}: total number of variables (columns in \code{G})
 \item \code{size}: size of \code{S}
+\item \code{alpha}: significance level
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
 \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-\item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion in \code{S}
-\item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
+\item \code{iterations}: number of iterations of the algorithm
 }
 }
 \description{
-This function determines a lower confidence bound for the number of true discoveries within a set of interest.
-The bound remains valid under post-hoc selection.
+This function determines confidence bounds for the number of true discoveries, the true discovery proportion
+and the false discovery proportion within a set of interest.
+The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \details{
 Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
@@ -46,16 +48,26 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1), w
 \code{B} is the number of data transformations (rows in \code{G}).
 }
 \examples{
-G <- matrix(
- c(6,5,4,1,1,
-   1,2,1,0,4,
-   8,3,0,2,1,
-   8,1,0,1,0,
-   0,6,1,1,2,
-   7,0,1,2,1),
- ncol=5, byrow=TRUE)
+# generate matrix of t-scores for 5 variables and 10 permutations
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, pvalues = FALSE, seed = 42)
  
-sumSome(G, S = c(1,2), alternative = "greater", alpha = 0.4, truncFrom = 2, truncTo = 0)
+# subset of interest (variables 1 and 2)
+S <- c(1,2)
+ 
+# create object of class sumSome
+res <- sumStats(G, S, alpha = 0.4, truncFrom = 0.7, truncTo = 0)
+
+res
+summary(res)
+
+# lower confidence bound for the number of true discoveries in S
+discoveries(res)
+
+# lower confidence bound for the true discovery proportion in S
+tdp(res)
+
+# upper confidence bound for the false discovery proportion in S
+fdp(res)
 }
 \author{
 Anna Vesely.

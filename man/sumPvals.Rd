@@ -4,8 +4,8 @@
 \alias{sumPvals}
 \title{True Discovery Guarantee for p-Value Combinations}
 \usage{
-sumSomePvals(G, S, alpha = 0.05, truncFrom = alpha, truncTo = 1, type = "vovk.wang", r = 0,
-             nMax = 10000)
+sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = min(alpha, 0.5)
+         type = "vovk.wang", r = 0, nMax = 10000)
 }
 \arguments{
 \item{G}{numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
@@ -19,7 +19,7 @@ The first transformation is the identity.}
 If \code{NULL}, p-values are not truncated.}
 
 \item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
-If \code{NULL}, it is set to 0.5 for Pearson's and Liptak's methods, and 1 in the other cases.}
+If \code{NULL}, p-values are not truncated.}
 
 \item{type}{p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
 \code{cauchy}, \code{vovk.wang})}
@@ -29,19 +29,20 @@ If \code{NULL}, it is set to 0.5 for Pearson's and Liptak's methods, and 1 in th
 \item{nMax}{maximum number of iterations.}
 }
 \value{
-\code{sumSomePvals} returns a list containing \code{summary} (vector) and \code{iterations} (number of iterations).
-The vector \code{summary} contains:
+\code{sumPvals} returns an object of class \code{sumSome}, containing
 \itemize{
+\item \code{total}: total number of variables (columns in \code{G})
 \item \code{size}: size of \code{S}
+\item \code{alpha}: significance level
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
 \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-\item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion in \code{S}
-\item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
+\item \code{iterations}: number of iterations of the algorithm
 }
 }
 \description{
-This function determines a lower confidence bound for the number of true discoveries within a set of interest,
-when using p-values as test statistics. The bound remains valid under post-hoc selection.
+This function determines confidence bounds for the number of true discoveries, the true discovery proportion
+and the false discovery proportion within a set of interest, when using p-values as test statistics.
+The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \details{
 A p-value \code{p} is transformed as following.
@@ -63,17 +64,27 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1), w
 \code{B} is the number of data transformations (rows in \code{G}).
 }
 \examples{
-G <- matrix(
- c(0.05, 0.20, 0.24, 0.45, 0.54,
-   0.47, 0.34, 0.53, 0.99, 0.18,
-   0.14, 0.21, 0.98, 0.32, 0.47,
-   0.19, 0.45, 0.85, 0.50, 0.92,
-   0.99, 0.09, 0.52, 0.39, 0.37,
-   0.87, 0.89, 0.44, 0.38, 0.55),
- ncol=5, byrow=TRUE)
+# generate matrix of p-values for 5 variables and 10 permutations
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, seed = 42)
+
+# subset of interest (variables 1 and 2)
+S <- c(1,2)
  
-# harmonic mean (Vovk and Wang with r=-1)
-sumSomePvals(G, S = c(1,2), alpha = 0.4, r = -1)
+# create object of class sumSome
+# combination: harmonic mean (Vovk and Wang with r = -1)
+res <- sumPvals(G, S, alpha = 0.4, r = -1)
+
+res
+summary(res)
+
+# lower confidence bound for the number of true discoveries in S
+discoveries(res)
+
+# lower confidence bound for the true discovery proportion in S
+tdp(res)
+
+# upper confidence bound for the false discovery proportion in S
+fdp(res)
 }
 \author{
 Anna Vesely.

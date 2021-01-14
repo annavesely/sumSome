@@ -1,9 +1,11 @@
-#' @title Matrix of Scores for Brain Imaging
+#' @title Permutation t-Scores for Brain Imaging
 #' @description This function computes t-scores for different permutations of brain imaging data.
+#' A voxel's score is calculated by performing the one-sample t test
+#' for the null hypothesis that its mean contrast over the different subjects is zero.
 #' @usage brainScores(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 1000, seed = NULL,
-#' truncFrom = 3.2, truncTo = 0, squares = FALSE)
+#'             truncFrom = 3.2, truncTo = 0, squares = FALSE)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
-#' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain.
+#' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain, or character for a Nifti file name.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.
 #' @param B number of permutations, including the identity.
@@ -12,14 +14,41 @@
 #' If \code{NULL}, statistics are not truncated.
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, statistics are not truncated.
-#' @param squares logical, \code{TRUE} to compute squared t-scores.
+#' @param squares logical, \code{TRUE} to use squared t-scores.
 #' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @return \code{brainScores} returns a list containing the matrix of t-scores \code{G},
-#' and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
-#' In \code{G}, columns correspond to variables, and rows to permutations.
-#' The first permutation is the identity.
+#' @return \code{brainScores} returns an object of class \code{sumBrain}, containing
+#' \itemize{
+#' \item \code{statistics}: numeric matrix of t-scores, where columns correspond to voxels inside the brain, and rows to permutations.
+#' The first permutation is the identity
+#' \item \code{mask}: 3D logical array, where \code{TRUE} values correspond to voxels inside the brain
+#' \item \code{alpha}: significance level
+#' \item \code{truncFrom}: transformed first truncation parameter
+#' \item \code{truncTo}: transformed second truncation parameter
+#' }
 #' @author Anna Vesely.
+#' @examples
+#' # if needed, install the package fMRIdata from Github
+#' devtools::install_github("angeella/fMRIdata")
+#' 
+#' library(fMRIdata)
+#' data("Auditory_copes")
+#' data("Auditory_mask")
+#' data("Auditory_clusterTH3_2")
+#' 
+#' # create object of class sumBrain
+#' res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, B = 200, seed = 42)
+#' 
+#' res
+#' summary(res)
+#' 
+#' # confidence bound for the number of true discoveries and the true discovery proportion within clusters
+#' # (may require some minutes)
+#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax=50, silent=FALSE)
+#' 
+#' # write the TDP map as Nifti file
+#' library(RNifti)
+#' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
 #' @export
 
 

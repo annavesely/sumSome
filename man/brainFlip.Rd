@@ -2,10 +2,9 @@
 % Please edit documentation in R/brainFlip.R
 \name{brainFlip}
 \alias{brainFlip}
-\title{True Discovery Guarantee for Brain Imaging}
+\title{Permutation Statistics for Brain Imaging}
 \usage{
-sumBrain.internal(copes, mask, clusters, thr, alternative, alpha, B, seed, truncFrom, truncTo,
-                  pvalues, type, r, squares, rand, nMax, silent)
+brainFlip(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues, type, r, squares, rand)
 }
 \arguments{
 \item{copes}{list of 3D numeric arrays (contrasts maps for each subject).}
@@ -28,7 +27,7 @@ If \code{NULL}, statistics are not truncated.}
 
 \item{pvalues}{logical, \code{TRUE} to use p-values, \code{FALSE} to use t-scores.}
 
-\item{type}{transformation of p-values (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\item{type}{p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
 \code{cauchy}, \code{vovk.wang})}
 
 \item{r}{parameter for Vovk and Wang's p-value transformation.}
@@ -36,33 +35,23 @@ If \code{NULL}, statistics are not truncated.}
 \item{squares}{logical, \code{TRUE} to use squared t-scores.}
 
 \item{rand}{logical, \code{TRUE} to compute p-values by permutation distribution.}
-
-\item{clusters}{3D numeric array of cluster indices, or character for a Nifti file name.}
-
-\item{thr}{threshold used to compute the clusters: adjacent t-scores more extreme than \code{thr}
-are combined into a single cluster.}
-
-\item{nMax}{maximum number of iterations.}
-
-\item{silent}{logical, \code{FALSE} to print the summary.}
 }
 \value{
-\code{sumBrain.internal} returns a list containing \code{summary} (matrix),
-\code{clusters} (3D numeric array of cluster indices), and
-\code{TDPmap} (3D numeric array of the true discovery proportions).
-The matrix \code{summary} contains, for each cluster:
+\code{brainFlip} returns an object of class \code{sumBrain}, containing
 \itemize{
-\item \code{size}: size of the cluster
-\item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
-\item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-\item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion
-\item \code{maxTD}: maximum value of \code{TDP} that could be found under convergence of the algorithm
-\item \code{dim1}, \code{dim2}, \code{dim3}: coordinates of the center of mass.
+\item \code{statistics}: numeric matrix of statistics, where columns correspond to voxels inside the brain, and rows to permutations.
+The first permutation is the identity
+\item \code{mask}: 3D logical array, where \code{TRUE} values correspond to voxels inside the brain
+\item \code{alpha}: significance level
+\item \code{truncFrom}: transformed first truncation parameter
+\item \code{truncTo}: transformed second truncation parameter
 }
 }
 \description{
-Internal function, called in \code{sumBrain} and \code{sumBrain.pvals}.
-It determines a true discovery guarantee for fMRI cluster analysis.
+Internal function.
+It computes test statistics for different permutations of brain imaging data.
+A voxel's statistic is calculated by performing the one-sample t test
+for the null hypothesis that its mean contrast over the different subjects is zero.
 }
 \details{
 A p-value \code{p} is transformed as following.
@@ -85,3 +74,4 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 \author{
 Anna Vesely.
 }
+\keyword{Internal}
