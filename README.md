@@ -13,10 +13,8 @@ Generate matrix of permutation p-values
 ``` r
 library(sumSome)
 
-seed <- 42
 alpha <- 0.4 # significance level
-
-G <- simData(prop = 0.6, m = 5, B = 10, alpha = alpha, seed)
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = alpha, seed = 42)
 ```
 Determine the subset of interest
 
