@@ -26,7 +26,7 @@
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
 #' @author Anna Vesely.
-#' @keywords Internal
+#' @export
 
 
 sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){

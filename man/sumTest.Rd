@@ -48,4 +48,3 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1), w
 \author{
 Anna Vesely.
 }
-\keyword{Internal}

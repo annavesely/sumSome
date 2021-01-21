@@ -4,7 +4,7 @@
 \alias{sumPvals}
 \title{True Discovery Guarantee for p-Value Combinations}
 \usage{
-sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = min(alpha, 0.5)
+sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = min(alpha, 0.5),
          type = "vovk.wang", r = 0, nMax = 10000)
 }
 \arguments{
