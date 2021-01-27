@@ -66,11 +66,12 @@ summary(res)
 
 # confidence bound for the number of true discoveries and the true discovery proportion within clusters
 # (may require some minutes)
-out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax=50, silent=FALSE)
+out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax = 50)
 
-# write the TDP map as Nifti file
+# write the TDP map as Nifti file: download mask.nii.gz in the working directory
+# from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
 library(RNifti)
-RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
+RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
 }
 \author{
 Anna Vesely.

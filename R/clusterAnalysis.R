@@ -30,18 +30,19 @@
 #' data("Auditory_clusterTH3_2")
 #' 
 #' # create object of class sumBrain
-#' res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, B = 200, seed = 42)
+#' res <- brainScores(copes = Auditory_copes, mask = "mask.nii.gz", B = 200, seed = 42)
 #' 
 #' res
 #' summary(res)
 #' 
 #' # confidence bound for the number of true discoveries and the true discovery proportion within clusters
 #' # (may require some minutes)
-#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax=50, silent=FALSE)
+#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax = 50)
 #' 
-#' # write the TDP map as Nifti file
+#' # write the TDP map as Nifti file: download mask.nii.gz in the working directory
+#' # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
 #' library(RNifti)
-#' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
+#' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
 #' @importFrom RNifti readNifti
 #' @export
 
@@ -65,23 +66,20 @@ clusterAnalysis <- function(sumBrain, clusters, nMax=1000, silent=FALSE){
     if(is.character(clusters)){clusters = RNifti::readNifti(clusters)}
     if(!all(dim(clusters) == imgDim)){stop("Incorrect clusters dimensions")}
   }else{
-    clusters <- array(mask, imgDim)
+    clusters <- mask
   }
   
   clusterId <- sort(unique(as.vector(clusters[mask != 0])), decreasing=TRUE) # define number of clusters
   
   M <- matrix(NA, nrow=length(clusterId), ncol=8)
   colnames(M) <- c("size", "TD", "maxTD", "TDP", "maxTDP", "dim1", "dim2", "dim3")
-  rownames(M) <- clusterId
-  TDPmap <- array(0, imgDim)
+  rownames(M) <- paste("cl", clusterId, sep="")
   
   for(i in seq(length(clusterId))){
     sel <- (clusters == clusterId[i])
     sel[mask==0] <- FALSE
     S <- which(sel[mask != 0])
-    
     out <- sumTest(G, S, alpha, truncFrom, truncTo, nMax)
-    TDPmap <- TDPmap + (sel * round(out$TD/out$size, 3))
     
     # cluster summary
     cl <- which(sel, arr.ind=TRUE)
@@ -89,6 +87,15 @@ clusterAnalysis <- function(sumBrain, clusters, nMax=1000, silent=FALSE){
     centerInd <- which.min(colSums((t(cl) - meanCoord)^2))
     centerCoord <- cl[centerInd,]
     M[i,] <- c(out$size, out$TD, out$maxTD, round(out$TD/out$size, 3), round(out$maxTD/out$size, 3), centerCoord)
+  }
+  
+  # write TDPmap
+  TDPmap <- clusters
+  vals <- as.numeric(M[,4])
+  vals[length(clusterId)] <- 0
+  
+  for(i in seq(length(clusterId))){
+    TDPmap[TDPmap==clusterId[i]] <- vals[i]
   }
   
   if(!silent){print(M)}
