@@ -81,14 +81,14 @@ clusterAnalysis <- function(sumBrain, clusters, nMax=1000, silent=FALSE){
     S <- which(sel[mask != 0])
     
     out <- sumTest(G, S, alpha, truncFrom, truncTo, nMax)
-    TDPmap <- TDPmap + (sel * (out$TDP * 100))
+    TDPmap <- TDPmap + (sel * round(out$TD * 100/ out$size))
     
     # cluster summary
     cl <- which(sel, arr.ind=TRUE)
     meanCoord <- colMeans(cl)
     centerInd <- which.min(colSums((t(cl) - meanCoord)^2))
     centerCoord <- cl[centerInd,]
-    M[i,] <- c(out$size, out$TD, out$maxTD, round(out$TD/out$size, 2), round(out$maxTD/out$size, 2), centerCoord)
+    M[i,] <- c(out$size, out$TD, out$maxTD, round(out$TD/out$size, 3), round(out$maxTD/out$size, 3), centerCoord)
   }
   
   if(!silent){print(M)}
