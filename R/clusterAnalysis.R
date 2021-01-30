@@ -2,7 +2,7 @@
 #' @description This function determines a true discovery guarantee for fMRI cluster analysis.
 #' It computes confidence bounds for the number of true discoveries and the true discovery proportion
 #' within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage clusterAnalysis(sumBrain, clusters, nMax = 1000, silent = FALSE)
+#' @usage clusterAnalysis(sumBrain, clusters, nMax = 50, silent = FALSE)
 #' @param sumBrain an object of class sumBrain, as returned by the functions \code{\link{brainScores}} and \code{\link{brainPvals}}.
 #' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
 #' If NULL, the whole brain is considered.
@@ -30,14 +30,14 @@
 #' data("Auditory_clusterTH3_2")
 #' 
 #' # create object of class sumBrain
-#' res <- brainScores(copes = Auditory_copes, mask = "mask.nii.gz", B = 200, seed = 42)
+#' res <- brainScores(copes = Auditory_copes, mask = "mask.nii.gz", seed = 42)
 #' 
 #' res
 #' summary(res)
 #' 
 #' # confidence bound for the number of true discoveries and the true discovery proportion within clusters
 #' # (may require some minutes)
-#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax = 50)
+#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
 #' 
 #' # write the TDP map as Nifti file: download mask.nii.gz in the working directory
 #' # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
@@ -47,7 +47,7 @@
 #' @export
 
 
-clusterAnalysis <- function(sumBrain, clusters, nMax=1000, silent=FALSE){
+clusterAnalysis <- function(sumBrain, clusters, nMax=50, silent=FALSE){
   
   if(class(sumBrain) != "sumBrain"){stop("sumBrain should be an object of class sumBrain")}
   

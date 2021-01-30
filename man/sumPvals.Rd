@@ -5,7 +5,7 @@
 \title{True Discovery Guarantee for p-Value Combinations}
 \usage{
 sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = min(alpha, 0.5),
-         type = "vovk.wang", r = 0, nMax = 10000)
+         type = "vovk.wang", r = 0, nMax = 50)
 }
 \arguments{
 \item{G}{numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).

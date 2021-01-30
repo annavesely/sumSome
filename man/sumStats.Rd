@@ -5,7 +5,7 @@
 \title{True Discovery Guarantee for Generic Statistics}
 \usage{
 sumStats(G, S = seq(ncol(G)), alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
-         nMax = 10000)
+         nMax = 50)
 }
 \arguments{
 \item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).

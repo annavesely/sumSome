@@ -2,7 +2,7 @@
 #' @description This function computes t-scores for different permutations of brain imaging data.
 #' A voxel's score is calculated by performing the one-sample t test
 #' for the null hypothesis that its mean contrast over the different subjects is zero.
-#' @usage brainScores(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 1000, seed = NULL,
+#' @usage brainScores(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200, seed = NULL,
 #'             truncFrom = 3.2, truncTo = 0, squares = FALSE)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain, or character for a Nifti file name.
@@ -37,14 +37,14 @@
 #' data("Auditory_clusterTH3_2")
 #' 
 #' # create object of class sumBrain
-#' res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, B = 200, seed = 42)
+#' res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
 #' 
 #' res
 #' summary(res)
 #' 
 #' # confidence bound for the number of true discoveries and the true discovery proportion within clusters
 #' # (may require some minutes)
-#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2, nMax = 50)
+#' out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
 #' 
 #' # write the TDP map as Nifti file: download mask.nii.gz in the working directory
 #' # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
@@ -53,7 +53,7 @@
 #' @export
 
 
-brainScores <- function(copes, mask= NULL, alternative="two.sided", alpha=0.05, B=1000, seed=NULL,
+brainScores <- function(copes, mask= NULL, alternative="two.sided", alpha=0.05, B=200, seed=NULL,
                         truncFrom=3.2, truncTo=0, squares=FALSE){
   
   out <- brainFlip(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues=FALSE,
