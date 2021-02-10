@@ -64,7 +64,8 @@ Finally, we may write the TDP map as a Nifti file. In this case, we need the Nif
 
 ``` r
 library(RNifti)
-RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
+maskNifti <- "mask.nii.gz" # name of mask nifti file
+RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 ```
 
 
