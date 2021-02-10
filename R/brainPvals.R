@@ -3,7 +3,7 @@
 #' A voxel's p-value is calculated by performing the one-sample t test
 #' for the null hypothesis that its mean contrast over the different subjects is zero.
 #' @usage brainPvals(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200, seed = NULL,
-#'            truncFrom = alpha, truncTo = min(alpha, 0.5), type = "vovk.wang", r = 0, rand = FALSE)
+#'            truncFrom = alpha, truncTo = max(alpha, 0.5), type = "vovk.wang", r = 0, rand = FALSE)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain, or character for a Nifti file name.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
@@ -69,7 +69,7 @@
 
 
 brainPvals <- function(copes, mask= NULL, alternative="two.sided", alpha=0.05, B=200, seed=NULL,
-                        truncFrom=alpha, truncTo=min(alpha, 0.5), type="vovk.wang", r=0, rand=FALSE){
+                        truncFrom=alpha, truncTo=max(alpha, 0.5), type="vovk.wang", r=0, rand=FALSE){
   
   out <- brainFlip(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues=TRUE,
                    type, r, squares=FALSE, rand)

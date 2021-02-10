@@ -16,8 +16,7 @@ Anna Vesely.
 Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
+  Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests.
 }
 \keyword{ package }
 \seealso{
