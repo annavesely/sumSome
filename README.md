@@ -10,7 +10,7 @@ As a main feature, the package produces simultaneous lower confidence bounds for
 
 ## Installation
 
-The latest version of sumSome can be istalled with:
+The latest version of the package can be istalled with:
 
 ``` r
 if (!requireNamespace("dynamicTreeCut", quietly = TRUE)){install.packages("dynamicTreeCut")}
