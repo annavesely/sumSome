@@ -116,5 +116,5 @@ Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discover
 
 # Did you find some bugs?
 
-Please write to anna.vesely[\at]phd[\dot]unipd[\dot]it.
+Please write to anna.vesely@phd.unipd.it.
 
