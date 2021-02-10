@@ -46,7 +46,8 @@ summary(res)
 
 ``` r
 res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05,
-                  B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0, rand = FALSE)
+                  B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0,
+                  rand = FALSE)
 res
 summary(res)
 ```
@@ -67,7 +68,7 @@ RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz")
 ```
 
 
-## Use on Simulated Data
+## General Setting
 The analysis employs a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
 
 ``` r 
@@ -105,4 +106,14 @@ tdp(res) # lower confidence bound for the TDP
 fdp(res) # upper confidence bound for the FDP
 ```
 
+# References
+Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
+
+Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 80(1):137-155.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests.
+
+# Did you find some bugs?
+
+Please write to anna.vesely[\at]phd[\dot]unipd[\dot]it.
 
