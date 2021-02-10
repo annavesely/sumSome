@@ -2,7 +2,7 @@ sumSome is the package developed to quickly perform permutation-based closed tes
 
 The method allows to construct lower confidence bounds for the proportion of true discoveries (TDP), simultaneously over all subsets of hypotheses. Simultaneity ensures control of the TDP even when the subset of interest is selected post hoc, after seeing the data.
 
-As a main feature, the package produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Moreover, it allows to analyze data in a general setting, starting from the collection of individual statistics for different tranformations of the data.
+As a main feature, the package produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Moreover, it allows to analyze data in a general setting, starting from the collection of individual statistics for different transformations of the data.
 
 
 ## Installation
