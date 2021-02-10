@@ -1,7 +1,7 @@
 # sumSome
 [![DOI](https://zenodo.org/badge/324800427.svg)](https://zenodo.org/badge/latestdoi/324800427)
 
-sumSome is the package developed to quickly perform permutation-based closed testing by sum tests. The procedure applies to any global test such that a group statistic may be written as a sum of contributions per feature (sum of t-scores, p-value combinations etc.). It adapts to the unknown joint distribution of the data through random permutations.
+sumSome is the package developed to quickly perform permutation-based closed testing by sum tests. The procedure applies to any global test which is sum-based, i.e. such that a group statistic may be written as a sum of contributions per feature (sum of t-scores, p-value combinations etc.). It adapts to the unknown joint distribution of the data through random permutations.
 
 The method allows to construct lower confidence bounds for the proportion of true discoveries (TDP), simultaneously over all subsets of hypotheses. Simultaneity ensures control of the TDP even when the subset of interest is selected post hoc, after seeing the data.
 
