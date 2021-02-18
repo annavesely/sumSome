@@ -77,10 +77,9 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   B <- ceiling(B)
   if(B < (1/alpha)){stop("1/alpha cannot exceed the number of transformations")}
   
-  if(!is.null(seed)){
-    if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}
-    set.seed(round(seed))
-  }
+  if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
+  else{seed <- sample(seq(10^10), 1)}
+  set.seed(round(seed))
   
   # create image
   img <- array(NA, c(imgDim, n))
@@ -98,7 +97,7 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   scores <- scores[which(mask != 0),]
   if(!is.numeric(scores) || !all(is.finite(scores))){stop("copes should contain numeric values for voxels inside the brain")}
   
-  st <- pARI::signTest(scores, B, alternative, rand=rand) # sign flipping
+  st <- pARI::signTest(scores, B, alternative, seed=seed, rand=rand) # sign flipping
   rm(scores)
   
   if(!pvalues){

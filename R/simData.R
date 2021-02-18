@@ -69,10 +69,9 @@ simData <- function(prop, m=1000, B=200, rho=0, n=50, alpha=0.05, power=0.8, pva
   if(alpha <= 0 || alpha >= 1){stop("alpha must be a number in (0,1)")}
   if(power < 0 || power > 1){stop("power must be a number in [0,1]")}
   
-  if(!is.null(seed)){
-    if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}
-    set.seed(round(seed))
-  }
+  if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
+  else{seed <- sample(seq(10^10), 1)}
+  set.seed(round(seed))
   
   pi0 <- 1 - prop
   X <- pARI::simulateData(pi0=pi0, m=m, n=n, rho=rho, power=power, alpha=alpha)
