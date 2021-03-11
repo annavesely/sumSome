@@ -45,12 +45,12 @@ summary.sumSome <- function(sumSome){
   TDP <- as.character(round(sumSome$TD/sumSome$size, 2))
   conf <- as.character(1 - sumSome$alpha)
   conv <- ifelse(sumSome$TD == sumSome$maxTD, "converged", "did not converge")
-  iter <- as.character(sumSome$iterations)
+  iter <- ifelse(sumSome$iterations==1, "1 iteration", paste(as.character(sumSome$iterations), " iterations", sep=""))
   
   print(sumSome)
   cat("\n", sep="")
   cat("With ", conf, " confidence: at least ", TD, " (a proportion of ", TDP, ").\n", sep="")
-  cat("Algorithm ", conv, " after ", iter, " iterations.\n", sep="")
+  cat("Algorithm ", conv, " after ", iter, ".\n", sep="")
 }
 
 
