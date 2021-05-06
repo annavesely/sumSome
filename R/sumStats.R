@@ -2,11 +2,11 @@
 #' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage sumStats(G, S = seq(ncol(G)), alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
+#' @usage sumStats(G, S = NULL, alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
 #'          nMax = 50)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity.
-#' @param S vector of indices for the variables of interest.
+#' @param S vector of indices for the variables of interest (if not specified, all variables).
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.
 #' @param truncFrom truncation parameter: values less extreme than \code{truncFrom} are truncated.
@@ -51,7 +51,9 @@
 #' @export
 
 
-sumStats <- function(G, S=seq(ncol(G)), alternative="greater", alpha=0.05, truncFrom=NULL, truncTo=NULL, nMax=50){
+sumStats <- function(G, S=NULL, alternative="greater", alpha=0.05, truncFrom=NULL, truncTo=NULL, nMax=50){
+  
+  if(is.null(S)){S <- seq(ncol(G))}
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
   res <- transf(G, truncFrom, truncTo, alternative, 1)

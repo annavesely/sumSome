@@ -2,11 +2,11 @@
 #' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest, when using p-values as test statistics.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = max(alpha, 0.5),
+#' @usage sumPvals(G, S = NULL, alpha = 0.05, truncFrom = alpha, truncTo = max(alpha, 0.5),
 #'          type = "vovk.wang", r = 0, nMax = 50)
 #' @param G numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity.
-#' @param S vector of indices for the variables of interest.
+#' @param S vector of indices for the variables of interest (if not specified, all variables).
 #' @param alpha significance level.
 #' @param truncFrom truncation parameter: values greater than \code{truncFrom} are truncated.
 #' If \code{NULL}, p-values are not truncated.
@@ -67,6 +67,8 @@
 
   
 sumPvals <- function(G, S=seq(ncol(G)), alpha=0.05, truncFrom=alpha, truncTo=max(alpha, 0.5), type="vovk.wang", r=0, nMax=50){
+  
+  if(is.null(S)){S <- seq(ncol(G))}
   
   type = match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
   res <- transf(G, truncFrom, truncTo, type, r)
