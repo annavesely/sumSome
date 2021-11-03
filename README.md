@@ -42,8 +42,8 @@ summary(res)
 
 ``` r
 res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided",
-                  alpha = 0.05, B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang",
-                  r = 0)
+                  alpha = 0.05, B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5,
+                  type = "vovk.wang", r = 0)
 res
 summary(res)
 ```
