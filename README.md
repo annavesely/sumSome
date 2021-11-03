@@ -78,8 +78,7 @@ Then we may analyze any subset of hypotheses, storing the results into a ```sumS
 
 ``` r
 S <- c(1,2) # subset of interest
-res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5,
-                nMax = 50)
+res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5)
 res
 summary(res)
 ```
@@ -88,8 +87,7 @@ summary(res)
 
 ``` r
 S <- c(1,2) # subset of interest
-res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0,
-               nMax = 50)
+res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0)
 res
 summary(res)
 ```
