@@ -32,8 +32,8 @@ First, we compute permutation test statistics for each voxel inside the brain, t
 **1.** The function ```brainScores``` computes t-statistics:
 
 ``` r
-res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05, B = 200,
-                   seed = 42, truncFrom = 3.2, truncTo = 0)
+res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided",
+                   alpha = 0.05, B = 200, seed = 42, truncFrom = 3.2, truncTo = 0)
 res
 summary(res)
 ```
@@ -41,8 +41,8 @@ summary(res)
 **2.** The function ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
 
 ``` r
-res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05, B = 200,
-                  seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0)
+res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05,
+                  B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0)
 res
 summary(res)
 ```
@@ -77,7 +77,8 @@ Then we may analyze any subset of hypotheses, storing the results into a ```sumS
 
 ``` r
 S <- c(1,2) # subset of interest
-res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, nMax = 50)
+res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5,
+                nMax = 50)
 res
 summary(res)
 ```
@@ -86,7 +87,8 @@ summary(res)
 
 ``` r
 S <- c(1,2) # subset of interest
-res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0, nMax = 50)
+res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0,
+               nMax = 50)
 res
 summary(res)
 ```
