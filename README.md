@@ -41,8 +41,9 @@ summary(res)
 **2.** The function ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
 
 ``` r
-res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05,
-                  B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0)
+res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided",
+                  alpha = 0.05, B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang",
+                  r = 0)
 res
 summary(res)
 ```
