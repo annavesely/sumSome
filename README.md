@@ -1,7 +1,7 @@
 # sumSome
 [![DOI](https://zenodo.org/badge/324800427.svg)](https://zenodo.org/badge/latestdoi/324800427)
 
-sumSome is the package developed to quickly perform permutation-based closed testing by sum tests. The procedure applies to any global test which is sum-based, i.e. such that a group statistic may be written as a sum of contributions per feature (sum of t-scores, p-value combinations etc.). It adapts to the unknown joint distribution of the data through random permutations.
+sumSome is the package developed to quickly perform permutation-based closed testing by sum tests. The procedure applies to any global test which is sum-based, i.e., such that a group statistic may be written as a sum of contributions per feature (sum of t-scores, p-value combinations etc.). It adapts to the unknown joint distribution of the data through random permutations.
 
 The method allows to construct lower confidence bounds for the proportion of true discoveries (TDP), simultaneously over all subsets of hypotheses. Simultaneity ensures control of the TDP even when the subset of interest is selected post hoc, after seeing the data.
 
@@ -10,25 +10,18 @@ As a main feature, the package produces simultaneous lower confidence bounds for
 
 ## Installation
 
-The latest version of the package can be istalled with:
+The latest version of the package can be installed with:
 
 ``` r
-if (!requireNamespace("dynamicTreeCut", quietly = TRUE)){install.packages("dynamicTreeCut")}
-if (!requireNamespace("BiocManager", quietly = TRUE)){install.packages("BiocManager")}
-BiocManager::install(c("Biobase","genefilter"))
-
-library(dynamicTreeCut)
-library(Biobase)
-library(genefilter)
 devtools::install_github("annavesely/sumSome")
 ```
 
 
 ## fMRI Data
-The analysis makes use of the list of copes (constrast maps for each subject) and the mask. Different fMRI datasets may be found in the package [fMRIdata](https://github.com/angeella/fMRIdata). Here, we use data from the [Auditory dataset](https://openneuro.org/datasets/ds000116/versions/00003).
+The analysis makes use of the list of copes (constrast maps for each subject) and the mask. Different fMRI datasets may be found in the package [fMRIdata](https://github.com/angeella/fMRIdata). As an example, here we use data from the [Auditory dataset](https://openneuro.org/datasets/ds000116/versions/00003).
 
 ``` r
-devtools::install_github("angeella/fMRIdata")
+if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
 library(fMRIdata)
 data("Auditory_copes") # list of copes
 data("Auditory_mask") # mask
@@ -40,7 +33,7 @@ First, we compute permutation test statistics for each voxel inside the brain, t
 
 ``` r
 res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05, B = 200,
-                   seed = 42, truncFrom = 3.2, truncTo = 0, squares = FALSE)
+                   seed = 42, truncFrom = 3.2, truncTo = 0)
 res
 summary(res)
 ```
@@ -49,7 +42,7 @@ summary(res)
 
 ``` r
 res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided", alpha = 0.05, B = 200,
-                  seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0, rand = FALSE)
+                  seed = 42, truncFrom = 0.05, truncTo = 0.5, type = "vovk.wang", r = 0)
 res
 summary(res)
 ```
@@ -75,7 +68,7 @@ RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 The analysis employs a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
 
 ``` r 
-G <- simData(prop = 0.6, m = 5, B = 10, rho = 0, n = 50, alpha = 0.4, power = 0.8, pvalues = TRUE, seed = 42)
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, pvalues = TRUE, seed = 42)
 ```
 
 Then we may analyze any subset of hypotheses, storing the results into a ```sumSome``` object. There are two options, as follows.
@@ -84,7 +77,7 @@ Then we may analyze any subset of hypotheses, storing the results into a ```sumS
 
 ``` r
 S <- c(1,2) # subset of interest
-res <- sumStats(G = G, S = S, alternative = "greater", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, nMax = 50)
+res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, nMax = 50)
 res
 summary(res)
 ```
@@ -111,7 +104,7 @@ Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. 
 
 Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 80(1):137-155.
 
-Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests.
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print, arXiv: 2102.11759.
 
 # Did you find some bugs?
 
