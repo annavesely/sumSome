@@ -2,8 +2,8 @@
 #' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage sumStats(G, S = NULL, alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
-#'          nMax = 50)
+#' @usage sumStats(G, S = NULL, alternative = "greater", alpha = 0.05,
+#'          truncFrom = NULL, truncTo = NULL, nMax = 50)
 #' @param G numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity.
 #' @param S vector of indices for the variables of interest (if not specified, all variables).

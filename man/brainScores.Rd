@@ -4,8 +4,8 @@
 \alias{brainScores}
 \title{Permutation t-Scores for Brain Imaging}
 \usage{
-brainScores(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200, seed = NULL,
-            truncFrom = 3.2, truncTo = 0, squares = FALSE)
+brainScores(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200,
+            seed = NULL, truncFrom = 3.2, truncTo = 0, squares = FALSE)
 }
 \arguments{
 \item{copes}{list of 3D numeric arrays (contrasts maps for each subject).}

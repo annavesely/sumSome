@@ -9,11 +9,11 @@
 #' @param S vector of indices for the variables of interest (if not specified, all variables).
 #' @param alpha significance level.
 #' @param truncFrom truncation parameter: values greater than \code{truncFrom} are truncated.
-#' If \code{NULL}, p-values are not truncated.
+#' If \code{NULL}, it is set to \code{alpha}.
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, p-values are not truncated.
-#' @param type p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
-#' \code{cauchy}, \code{vovk.wang})
+#' @param type p-value combination among \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+#' \code{cauchy}, \code{vovk.wang} (see details).
 #' @param r parameter for Vovk and Wang's p-value combination.
 #' @param nMax maximum number of iterations.
 #' @details A p-value \code{p} is transformed as following.
@@ -66,9 +66,14 @@
 #' @export
 
   
-sumPvals <- function(G, S=seq(ncol(G)), alpha=0.05, truncFrom=alpha, truncTo=max(alpha, 0.5), type="vovk.wang", r=0, nMax=50){
+sumPvals <- function(G, S=NULL, alpha=0.05, truncFrom=NULL, truncTo=0.5, type="vovk.wang", r=0, nMax=50){
   
   if(is.null(S)){S <- seq(ncol(G))}
+  
+  if(!is.null(truncTo) && is.null(truncFrom)){
+    truncFrom <- alpha
+    truncTo <- max(alpha, truncTo)
+  }
   
   type = match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
   res <- transf(G, truncFrom, truncTo, type, r)

@@ -44,7 +44,7 @@ data("Auditory_mask")
 data("Auditory_clusterTH3_2")
 
 # create object of class sumBrain
-res <- brainScores(copes = Auditory_copes, mask = "mask.nii.gz", seed = 42)
+res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
 
 res
 summary(res)

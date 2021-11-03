@@ -4,14 +4,14 @@
 \alias{sumStats}
 \title{True Discovery Guarantee for Generic Statistics}
 \usage{
-sumStats(G, S = seq(ncol(G)), alternative = "greater", alpha = 0.05, truncFrom = NULL, truncTo = NULL,
-         nMax = 50)
+sumStats(G, S = NULL, alternative = "greater", alpha = 0.05,
+         truncFrom = NULL, truncTo = NULL, nMax = 50)
 }
 \arguments{
 \item{G}{numeric matrix of statistics, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 The first transformation is the identity.}
 
-\item{S}{vector of indices for the variables of interest.}
+\item{S}{vector of indices for the variables of interest (if not specified, all variables).}
 
 \item{alternative}{direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).}
 

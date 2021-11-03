@@ -4,8 +4,9 @@
 \alias{brainPvals}
 \title{Permutation p-Values for Brain Imaging}
 \usage{
-brainPvals(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200, seed = NULL,
-           truncFrom = alpha, truncTo = max(alpha, 0.5), type = "vovk.wang", r = 0, rand = FALSE)
+brainPvals(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200, 
+           seed = NULL, truncFrom = alpha, truncTo = max(alpha, 0.5),
+           type = "vovk.wang", r = 0, rand = FALSE)
 }
 \arguments{
 \item{copes}{list of 3D numeric arrays (contrasts maps for each subject).}
@@ -21,13 +22,13 @@ brainPvals(copes, mask = NULL, alternative = "two.sided", alpha = 0.05, B = 200,
 \item{seed}{seed.}
 
 \item{truncFrom}{truncation parameter: values greater than \code{truncFrom} are truncated.
-If \code{NULL}, p-values are not truncated.}
+If \code{NULL}, it is set to \code{alpha}.}
 
 \item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
 If \code{NULL}, p-values are not truncated.}
 
-\item{type}{p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
-\code{cauchy}, \code{vovk.wang})}
+\item{type}{p-value combination among \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\code{cauchy}, \code{vovk.wang} (see details).}
 
 \item{r}{parameter for Vovk and Wang's p-value combination.}
 

@@ -15,8 +15,8 @@
 #' @param truncTo truncation parameter: truncated values are set to \code{truncTo}.
 #' If \code{NULL}, statistics are not truncated.
 #' @param pvalues logical, \code{TRUE} to use p-values, \code{FALSE} to use t-scores.
-#' @param type p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
-#' \code{cauchy}, \code{vovk.wang})
+#' @param type p-value combination among \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+#' \code{cauchy}, \code{vovk.wang} (see details).
 #' @param r parameter for Vovk and Wang's p-value transformation.
 #' @param squares logical, \code{TRUE} to use squared t-scores.
 #' @param rand logical, \code{TRUE} to compute p-values by permutation distribution.

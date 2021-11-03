@@ -27,8 +27,8 @@ If \code{NULL}, statistics are not truncated.}
 
 \item{pvalues}{logical, \code{TRUE} to use p-values, \code{FALSE} to use t-scores.}
 
-\item{type}{p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
-\code{cauchy}, \code{vovk.wang})}
+\item{type}{p-value combination among \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\code{cauchy}, \code{vovk.wang} (see details).}
 
 \item{r}{parameter for Vovk and Wang's p-value transformation.}
 

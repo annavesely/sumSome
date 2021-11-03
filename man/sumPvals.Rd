@@ -4,25 +4,25 @@
 \alias{sumPvals}
 \title{True Discovery Guarantee for p-Value Combinations}
 \usage{
-sumPvals(G, S = seq(ncol(G)), alpha = 0.05, truncFrom = alpha, truncTo = max(alpha, 0.5),
+sumPvals(G, S = NULL, alpha = 0.05, truncFrom = alpha, truncTo = max(alpha, 0.5),
          type = "vovk.wang", r = 0, nMax = 50)
 }
 \arguments{
 \item{G}{numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 The first transformation is the identity.}
 
-\item{S}{vector of indices for the variables of interest.}
+\item{S}{vector of indices for the variables of interest (if not specified, all variables).}
 
 \item{alpha}{significance level.}
 
 \item{truncFrom}{truncation parameter: values greater than \code{truncFrom} are truncated.
-If \code{NULL}, p-values are not truncated.}
+If \code{NULL}, it is set to \code{alpha}.}
 
 \item{truncTo}{truncation parameter: truncated values are set to \code{truncTo}.
 If \code{NULL}, p-values are not truncated.}
 
-\item{type}{p-value combination (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
-\code{cauchy}, \code{vovk.wang})}
+\item{type}{p-value combination among \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\code{cauchy}, \code{vovk.wang} (see details).}
 
 \item{r}{parameter for Vovk and Wang's p-value combination.}
 
