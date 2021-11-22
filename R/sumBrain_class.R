@@ -27,8 +27,8 @@ sumBrain <- function(G, mask, alpha, truncFrom, truncTo){
 
 
 #' @export
-print.sumBrain <- function(sumBrain){
-  col <- ncol(sumBrain$statistics)
+print.sumBrain <- function(x, ...){
+  col <- ncol(x$statistics)
   f <- ifelse(col==1, "1 voxel", paste(as.character(col), " voxels", sep=""))
   cat("A sumBrain object containing brain imaging data with ", f, ".\n", sep="")
   cat("Use clusterAnalysis() for cluster analysis using this object.\n", sep="")
@@ -40,11 +40,11 @@ print.sumBrain <- function(sumBrain){
 
 
 #' @export
-summary.sumBrain <- function(sumBrain){
-  alpha <- as.character(sumBrain$alpha)
-  B <- as.character(nrow(sumBrain$statistics))
+summary.sumBrain <- function(object, ...){
+  alpha <- as.character(object$alpha)
+  B <- as.character(nrow(object$statistics))
   
-  print(sumBrain)
+  print(object)
   cat("\n", sep="")
   cat("Significance level: ", alpha, ".\n", sep="")
   cat("Number of permutations: ", B, ".\n", sep="")

@@ -17,7 +17,7 @@
 #' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
 #' \code{B} is the number of data transformations (rows in \code{G}).
-#' @return \code{sumStats} returns an object of class \code{sumSome}, containing
+#' @return \code{sumStats} returns an object of class \code{sumObj}, containing
 #' \itemize{
 #' \item \code{total}: total number of variables (columns in \code{G})
 #' \item \code{size}: size of \code{S}
@@ -34,7 +34,7 @@
 #' # subset of interest (variables 1 and 2)
 #' S <- c(1,2)
 #'  
-#' # create object of class sumSome
+#' # create object of class sumObj
 #' res <- sumStats(G, S, alpha = 0.4, truncFrom = 0.7, truncTo = 0)
 #' 
 #' res

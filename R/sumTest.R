@@ -16,7 +16,7 @@
 #' @details Truncation parameters should be such that \code{truncTo} is not greater than \code{truncFrom}.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
 #' \code{B} is the number of data transformations (rows in \code{G}).
-#' @return \code{sumTest} returns an object of class \code{sumSome}, containing
+#' @return \code{sumTest} returns an object of class \code{sumObj}, containing
 #' \itemize{
 #' \item \code{total}: total number of variables (columns in \code{G})
 #' \item \code{size}: size of \code{S}
@@ -26,7 +26,7 @@
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
 #' @author Anna Vesely.
-#' @export
+#' @keywords Internal
 
 
 sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
@@ -89,6 +89,6 @@ sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
   f <- ncol(I)
   
   b <- bisectionTD(D, I, R, s, f, k, B, nMax)
-  out <- sumSome(f0, s, alpha, b$TDmin, b$TDmax, b$BAB)
+  out <- sumObj(f0, s, alpha, b$TDmin, b$TDmax, b$BAB)
   return(out)
 }

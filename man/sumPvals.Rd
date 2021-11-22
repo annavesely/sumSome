@@ -4,7 +4,7 @@
 \alias{sumPvals}
 \title{True Discovery Guarantee for p-Value Combinations}
 \usage{
-sumPvals(G, S = NULL, alpha = 0.05, truncFrom = alpha, truncTo = max(alpha, 0.5),
+sumPvals(G, S = NULL, alpha = 0.05, truncFrom = NULL, truncTo = 0.5,
          type = "vovk.wang", r = 0, nMax = 50)
 }
 \arguments{
@@ -29,7 +29,7 @@ If \code{NULL}, p-values are not truncated.}
 \item{nMax}{maximum number of iterations.}
 }
 \value{
-\code{sumPvals} returns an object of class \code{sumSome}, containing
+\code{sumPvals} returns an object of class \code{sumObj}, containing
 \itemize{
 \item \code{total}: total number of variables (columns in \code{G})
 \item \code{size}: size of \code{S}
@@ -70,7 +70,7 @@ G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, seed = 42)
 # subset of interest (variables 1 and 2)
 S <- c(1,2)
  
-# create object of class sumSome
+# create object of class sumObj
 # combination: harmonic mean (Vovk and Wang with r = -1)
 res <- sumPvals(G, S, alpha = 0.4, r = -1)
 

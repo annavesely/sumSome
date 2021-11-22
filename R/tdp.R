@@ -1,8 +1,8 @@
 #' @title Confidence Bound for the TDP
 #' @description This function determines a lower confidence bound for the true discovery proportion
 #' within a set of interest. The bound remains valid under post-hoc selection.
-#' @usage tdp(sumSome)
-#' @param sumSome an object of class \code{sumSome}, as returned by
+#' @usage tdp(object)
+#' @param object an object of class \code{sumObj}, as returned by
 #' the functions \code{\link{sumStats}} and \code{\link{sumPvals}}.
 #' @return \code{tdp} returns a lower (1-\code{alpha})-confidence bound
 #' for the true discovery proportion in the set.
@@ -14,7 +14,7 @@
 #' # subset of interest (variables 1 and 2)
 #' S <- c(1,2)
 #'  
-#' # create object of class sumSome
+#' # create object of class sumObj
 #' # combination: harmonic mean (Vovk and Wang with r = -1)
 #' res <- sumPvals(G, S, alpha = 0.4, r = -1)
 #' 
@@ -31,7 +31,7 @@
 #' fdp(res)
 #' @export
 
-tdp <- function(sumSome){
+tdp <- function(object){
   UseMethod("tdp")
 }
 
@@ -40,6 +40,6 @@ tdp <- function(sumSome){
 #' @rdname tdp
 #' @export
 
-tdp.sumSome = function(sumSome) {
-  return(sumSome$TD/sumSome$size)
+tdp.sumObj = function(object) {
+  return(object$TD/object$size)
 }

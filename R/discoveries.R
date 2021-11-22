@@ -1,8 +1,8 @@
 #' @title Confidence Bound for the Number of True Discoveries
 #' @description This function determines a lower confidence bound for the number of true discoveries
 #' within a set of interest. The bound remains valid under post-hoc selection.
-#' @usage discoveries(sumSome)
-#' @param sumSome an object of class \code{sumSome}, as returned by
+#' @usage discoveries(object)
+#' @param object an object of class \code{sumObj}, as returned by
 #' the functions \code{\link{sumStats}} and \code{\link{sumPvals}}.
 #' @return \code{discoveries} returns a lower (1-\code{alpha})-confidence bound
 #' for the number of true discoveries in the set.
@@ -14,7 +14,7 @@
 #' # subset of interest (variables 1 and 2)
 #' S <- c(1,2)
 #'  
-#' # create object of class sumSome
+#' # create object of class sumObj
 #' # combination: harmonic mean (Vovk and Wang with r = -1)
 #' res <- sumPvals(G, S, alpha = 0.4, r = -1)
 #' 
@@ -31,7 +31,7 @@
 #' fdp(res)
 #' @export
 
-discoveries <- function(sumSome){
+discoveries <- function(object){
   UseMethod("discoveries")
 }
 
@@ -40,6 +40,6 @@ discoveries <- function(sumSome){
 #' @rdname discoveries
 #' @export
 
-discoveries.sumSome = function(sumSome) {
-  return(sumSome$TD)
+discoveries.sumObj = function(object) {
+  return(object$TD)
 }

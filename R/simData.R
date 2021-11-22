@@ -29,7 +29,7 @@
 #' # subset of interest (variables 1 and 2)
 #' S <- c(1,2)
 #'  
-#' # create object of class sumSome
+#' # create object of class sumObj
 #' # combination: harmonic mean (Vovk and Wang with r = -1)
 #' res <- sumPvals(G, S, alpha = 0.4, r = -1)
 #' 

@@ -2,7 +2,7 @@
 #' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest, when using p-values as test statistics.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage sumPvals(G, S = NULL, alpha = 0.05, truncFrom = alpha, truncTo = max(alpha, 0.5),
+#' @usage sumPvals(G, S = NULL, alpha = 0.05, truncFrom = NULL, truncTo = 0.5,
 #'          type = "vovk.wang", r = 0, nMax = 50)
 #' @param G numeric matrix of p-values, where columns correspond to variables, and rows to data transformations (e.g. permutations).
 #' The first transformation is the identity.
@@ -31,7 +31,7 @@
 #' \code{truncTo} should be strictly smaller than 1.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1), where
 #' \code{B} is the number of data transformations (rows in \code{G}).
-#' @return \code{sumPvals} returns an object of class \code{sumSome}, containing
+#' @return \code{sumPvals} returns an object of class \code{sumObj}, containing
 #' \itemize{
 #' \item \code{total}: total number of variables (columns in \code{G})
 #' \item \code{size}: size of \code{S}
@@ -48,7 +48,7 @@
 #' # subset of interest (variables 1 and 2)
 #' S <- c(1,2)
 #'  
-#' # create object of class sumSome
+#' # create object of class sumObj
 #' # combination: harmonic mean (Vovk and Wang with r = -1)
 #' res <- sumPvals(G, S, alpha = 0.4, r = -1)
 #' 
@@ -70,10 +70,7 @@ sumPvals <- function(G, S=NULL, alpha=0.05, truncFrom=NULL, truncTo=0.5, type="v
   
   if(is.null(S)){S <- seq(ncol(G))}
   
-  if(!is.null(truncTo) && is.null(truncFrom)){
-    truncFrom <- alpha
-    truncTo <- max(alpha, truncTo)
-  }
+  if(is.null(truncFrom)){truncFrom <- alpha}
   
   type = match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
   res <- transf(G, truncFrom, truncTo, type, r)

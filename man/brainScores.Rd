@@ -49,31 +49,6 @@ Truncation parameters should be such that \code{truncTo} is not more extreme tha
 
 The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 }
-\examples{
-\donttest{
-# use data from the package fMRIdata
-if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
-library(fMRIdata)
-data("Auditory_copes")
-data("Auditory_mask")
-data("Auditory_clusterTH3_2")
-
-# create object of class sumBrain
-res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
-
-res
-summary(res)
-
-# confidence bound for the number of true discoveries and the true discovery proportion within clusters
-# (may require some minutes)
-out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
-
-# write the TDP map as Nifti file: download mask.nii.gz in the working directory
-# from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
-library(RNifti)
-RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
-}
-}
 \author{
 Anna Vesely.
 }

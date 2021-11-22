@@ -9,21 +9,6 @@
 #' @return \code{findClusters} returns a 3D numeric array, with integer values corresponding to clusters,
 #' and 0 to other voxels.
 #' @author Anna Vesely.
-#' @examples
-#' \donttest{
-#' # use data from the package fMRIdata
-#' if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
-#' library(fMRIdata)
-#' data("Auditory_copes")
-#' data("Auditory_mask")
-#' 
-#' # cluster map where t scores are grater than 4, in absolute value
-#' res <- findClusters(copes = Auditory_copes, mask = Auditory_mask, thr = 4)
-#' 
-#' # write the cluster map as Nifti file
-#' library(RNifti)
-#' RNifti::writeNifti(res$clusters, file = "clMap.nii.gz")
-#' }
 #' @export
 #' @importFrom RNifti readNifti
 #' @importFrom pARI signTest

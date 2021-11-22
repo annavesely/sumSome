@@ -23,7 +23,7 @@ If \code{NULL}, statistics are not truncated.}
 \item{nMax}{maximum number of iterations.}
 }
 \value{
-\code{sumTest} returns an object of class \code{sumSome}, containing
+\code{sumTest} returns an object of class \code{sumObj}, containing
 \itemize{
 \item \code{total}: total number of variables (columns in \code{G})
 \item \code{size}: size of \code{S}
@@ -48,3 +48,4 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1), w
 \author{
 Anna Vesely.
 }
+\keyword{Internal}

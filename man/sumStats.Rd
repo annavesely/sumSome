@@ -26,7 +26,7 @@ If \code{NULL}, statistics are not truncated.}
 \item{nMax}{maximum number of iterations.}
 }
 \value{
-\code{sumStats} returns an object of class \code{sumSome}, containing
+\code{sumStats} returns an object of class \code{sumObj}, containing
 \itemize{
 \item \code{total}: total number of variables (columns in \code{G})
 \item \code{size}: size of \code{S}
@@ -54,7 +54,7 @@ G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, pvalues = FALSE, seed = 42)
 # subset of interest (variables 1 and 2)
 S <- c(1,2)
  
-# create object of class sumSome
+# create object of class sumObj
 res <- sumStats(G, S, alpha = 0.4, truncFrom = 0.7, truncTo = 0)
 
 res
