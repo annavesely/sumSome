@@ -35,9 +35,8 @@ It computes confidence bounds for the number of true discoveries and the true di
 within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \examples{
-# if needed, install the package fMRIdata from Github
-devtools::install_github("angeella/fMRIdata")
-
+# use data from the package fMRIdata
+if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
 library(fMRIdata)
 data("Auditory_copes")
 data("Auditory_mask")

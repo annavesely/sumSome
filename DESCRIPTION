@@ -10,7 +10,6 @@ License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),
     pARI
-Remotes: angeella/pARI
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Encoding: UTF-8
