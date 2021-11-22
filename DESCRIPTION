@@ -9,7 +9,9 @@ Description: sumSome contains functions to determine permutation-based true disc
 License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),
-    pARI
+    pARI,
+    ARIbrain,
+    RNifti
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Encoding: UTF-8
