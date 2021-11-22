@@ -10,9 +10,9 @@
 #' and 0 to other voxels.
 #' @author Anna Vesely.
 #' @examples
-#' # if needed, install the package fMRIdata from Github
-#' devtools::install_github("angeella/fMRIdata")
-#' 
+#' \donttest{
+#' # use data from the package fMRIdata
+#' if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
 #' library(fMRIdata)
 #' data("Auditory_copes")
 #' data("Auditory_mask")
@@ -23,6 +23,7 @@
 #' # write the cluster map as Nifti file
 #' library(RNifti)
 #' RNifti::writeNifti(res$clusters, file = "clMap.nii.gz")
+#' }
 #' @export
 #' @importFrom RNifti readNifti
 #' @importFrom pARI signTest

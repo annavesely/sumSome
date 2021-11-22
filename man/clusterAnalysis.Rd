@@ -35,6 +35,7 @@ It computes confidence bounds for the number of true discoveries and the true di
 within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \examples{
+\donttest{
 # use data from the package fMRIdata
 if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
 library(fMRIdata)
@@ -56,6 +57,7 @@ out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
 # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
 library(RNifti)
 RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+}
 }
 \author{
 Anna Vesely.

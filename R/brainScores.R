@@ -28,6 +28,7 @@
 #' }
 #' @author Anna Vesely.
 #' @examples
+#' \donttest{
 #' # use data from the package fMRIdata
 #' if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
 #' library(fMRIdata)
@@ -49,6 +50,7 @@
 #' # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
 #' library(RNifti)
 #' RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+#' }
 #' @export
 
 

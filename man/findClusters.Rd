@@ -25,9 +25,9 @@ and 0 to other voxels.
 This function determines spatially connected clusters, where t-scores are more extreme than a given threshold.
 }
 \examples{
-# if needed, install the package fMRIdata from Github
-devtools::install_github("angeella/fMRIdata")
-
+\donttest{
+# use data from the package fMRIdata
+if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
 library(fMRIdata)
 data("Auditory_copes")
 data("Auditory_mask")
@@ -38,6 +38,7 @@ res <- findClusters(copes = Auditory_copes, mask = Auditory_mask, thr = 4)
 # write the cluster map as Nifti file
 library(RNifti)
 RNifti::writeNifti(res$clusters, file = "clMap.nii.gz")
+}
 }
 \author{
 Anna Vesely.

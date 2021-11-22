@@ -71,6 +71,7 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 \examples{
 # use data from the package fMRIdata
 if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
+\donttest{
 library(fMRIdata)
 data("Auditory_copes")
 data("Auditory_mask")
@@ -90,6 +91,7 @@ out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
 # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
 library(RNifti)
 RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+}
 }
 \author{
 Anna Vesely.
