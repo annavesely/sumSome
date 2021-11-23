@@ -68,6 +68,41 @@ As Pearson's and Liptak's transformations produce infinite values in 1, for such
 
 The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 }
+\examples{
+# # use data from the package fMRIdata
+# if(!requireNamespace("fMRIdata", quietly = TRUE)){
+#   devtools::install_github("angeella/fMRIdata")
+# }
+# library(fMRIdata)
+# data("Auditory_copes")
+# data("Auditory_mask")
+# data("Auditory_clusterTH3_2")
+
+# # create object of class sumBrain (combination: Cauchy)
+# res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, type = "cauchy", seed = 42)
+# res
+# summary(res)
+
+# # confidence bound for the number of true discoveries and the TDP within clusters
+# (may require some minutes)
+# out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
+
+# # write the TDP map as Nifti file: download mask.nii.gz in the working directory
+# # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
+# RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+}
+\references{
+Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+}
+\seealso{
+Permutation statistics for brain imaging using t scores: \code{\link{brainScores}}
+
+True discovery guarantee for cluster analysis: \code{\link{clusterAnalysis}}
+
+Suprathreshold clusters: \code{\link{findClusters}}
+}
 \author{
 Anna Vesely.
 }

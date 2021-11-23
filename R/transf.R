@@ -32,7 +32,7 @@
 #' @return \code{transf} returns a list containing the truncated and transformed matrix \code{G},
 #' and the transformed truncation parameters \code{truncFrom} and \code{truncTo}.
 #' @author Anna Vesely.
-#' @keywords Internal
+#' @noRd
 #' @importFrom stats qnorm
 #' @importFrom Rcpp sourceCpp
 #' @importFrom Rcpp evalCpp

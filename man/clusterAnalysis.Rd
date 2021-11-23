@@ -34,6 +34,39 @@ This function determines a true discovery guarantee for fMRI cluster analysis.
 It computes confidence bounds for the number of true discoveries and the true discovery proportion
 within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
+\examples{
+# # use data from the package fMRIdata
+# if(!requireNamespace("fMRIdata", quietly = TRUE)){
+#   devtools::install_github("angeella/fMRIdata")
+# }
+# library(fMRIdata)
+# data("Auditory_copes")
+# data("Auditory_mask")
+# data("Auditory_clusterTH3_2")
+
+# # create object of class sumBrain
+# res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
+# res
+# summary(res)
+
+# # confidence bound for the number of true discoveries and the TDP within clusters
+# (may require some minutes)
+# out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
+
+# # write the TDP map as Nifti file: download mask.nii.gz in the working directory
+# # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
+# RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+}
+\references{
+Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+}
+\seealso{
+Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
+
+Suprathreshold clusters: \code{\link{findClusters}}
+}
 \author{
 Anna Vesely.
 }

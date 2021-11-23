@@ -44,7 +44,7 @@
 #' \item \code{truncTo}: transformed second truncation parameter
 #' }
 #' @author Anna Vesely.
-#' @keywords Internal
+#' @noRd
 #' @importFrom RNifti readNifti
 #' @importFrom pARI signTest
 

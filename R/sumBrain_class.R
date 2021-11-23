@@ -14,7 +14,7 @@
 #' @return \code{sumBrain} returns an object of class \code{sumBrain}, containing
 #' \code{statistics} (matrix \code{G}), \code{mask}, \code{alpha}, \code{truncFrom} and \code{truncTo}.
 #' @author Anna Vesely.
-#' @keywords Internal
+#' @noRd
 
 sumBrain <- function(G, mask, alpha, truncFrom, truncTo){
   val <- list("statistics"=G, "mask"=mask, "alpha"=alpha, "truncFrom"=truncFrom, "truncTo"=truncTo)

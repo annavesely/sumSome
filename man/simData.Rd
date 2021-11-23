@@ -4,7 +4,7 @@
 \alias{simData}
 \title{Simulating Matrix of Statistics}
 \usage{
-simData(prop, m = 1000, B = 200, rho = 0, n = 50, alpha = 0.05, power = 0.8, pvalues = TRUE, seed = NULL)
+simData(prop, m, B = 200, rho = 0, n = 50, alpha = 0.05, power = 0.8, pvalues = TRUE, seed = NULL)
 }
 \arguments{
 \item{prop}{proportion of non-null hypotheses.}
@@ -53,7 +53,6 @@ S <- c(1,2)
 # create object of class sumObj
 # combination: harmonic mean (Vovk and Wang with r = -1)
 res <- sumPvals(G, S, alpha = 0.4, r = -1)
-
 res
 summary(res)
 
@@ -65,6 +64,14 @@ tdp(res)
 
 # upper confidence bound for the false discovery proportion in S
 fdp(res)
+}
+\references{
+Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+}
+\seealso{
+True discovery guarantee: \code{\link{sumStats}}, \code{\link{sumPvals}}
 }
 \author{
 Anna Vesely.

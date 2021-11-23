@@ -1,7 +1,7 @@
 #' @title Simulating Matrix of Statistics
 #' @description This function simulates a matrix of permutation statistics,
 #' by performing a t test on normal data.
-#' @usage simData(prop, m = 1000, B = 200, rho = 0, n = 50, alpha = 0.05, power = 0.8, pvalues = TRUE, seed = NULL)
+#' @usage simData(prop, m, B = 200, rho = 0, n = 50, alpha = 0.05, power = 0.8, pvalues = TRUE, seed = NULL)
 #' @param prop proportion of non-null hypotheses.
 #' @param m total number of variables.
 #' @param B number of permutations, including the identity.
@@ -32,7 +32,6 @@
 #' # create object of class sumObj
 #' # combination: harmonic mean (Vovk and Wang with r = -1)
 #' res <- sumPvals(G, S, alpha = 0.4, r = -1)
-#' 
 #' res
 #' summary(res)
 #' 
@@ -44,11 +43,17 @@
 #' 
 #' # upper confidence bound for the false discovery proportion in S
 #' fdp(res)
+#' @references
+#' Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+#' 
+#' Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+#' @seealso
+#' True discovery guarantee: \code{\link{sumStats}}, \code{\link{sumPvals}}
 #' @importFrom pARI signTest
 #' @export
 
 
-simData <- function(prop, m=1000, B=200, rho=0, n=50, alpha=0.05, power=0.8, pvalues=TRUE, seed=NULL){
+simData <- function(prop, m, B=200, rho=0, n=50, alpha=0.05, power=0.8, pvalues=TRUE, seed=NULL){
   
   if(!is.numeric(prop) || !is.finite(prop)){stop("prop must be a number in (0,1)")}
   if(prop < 0 || prop > 1){stop("prop must be a number in [0,1]")}

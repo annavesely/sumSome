@@ -11,7 +11,7 @@
 #' @return \code{sumObj} returns an object of class \code{sumObj}, containing
 #' \code{total}, \code{size}, \code{alpha}, \code{TD}, \code{maxTD} and \code{iterations}.
 #' @author Anna Vesely.
-#' @keywords Internal
+#' @noRd
 
 sumObj <- function(total, size, alpha, TD, maxTD, iterations){
   val <- list("total"=total, "size"=size, "alpha"=alpha, "TD"=TD, "maxTD"=maxTD, "iterations"=iterations)

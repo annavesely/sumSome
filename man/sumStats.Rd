@@ -56,7 +56,6 @@ S <- c(1,2)
  
 # create object of class sumObj
 res <- sumStats(G, S, alpha = 0.4, truncFrom = 0.7, truncTo = 0)
-
 res
 summary(res)
 
@@ -68,6 +67,16 @@ tdp(res)
 
 # upper confidence bound for the false discovery proportion in S
 fdp(res)
+}
+\references{
+Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+}
+\seealso{
+True discovery guarantee using p-values: \code{\link{sumPvals}}
+
+Access a \code{sumObj} object: \code{\link{discoveries}}, \code{\link{tdp}}, \code{\link{fdp}}
 }
 \author{
 Anna Vesely.

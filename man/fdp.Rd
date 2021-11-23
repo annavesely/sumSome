@@ -31,7 +31,6 @@ S <- c(1,2)
 # create object of class sumObj
 # combination: harmonic mean (Vovk and Wang with r = -1)
 res <- sumPvals(G, S, alpha = 0.4, r = -1)
-
 res
 summary(res)
 
@@ -43,6 +42,18 @@ tdp(res)
 
 # upper confidence bound for the false discovery proportion in S
 fdp(res)
+}
+\references{
+Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+}
+\seealso{
+Create a \code{sumObj} object: \code{\link{sumStats}}, \code{\link{sumPvals}}
+
+Lower confidence bound for the number of true discoveries: \code{\link{discoveries}}
+
+Lower confidence bound for the TDP: \code{\link{tdp}}
 }
 \author{
 Anna Vesely.

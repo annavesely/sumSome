@@ -20,6 +20,36 @@
 #' \item \code{dim1}, \code{dim2}, \code{dim3}: coordinates of the center of mass.
 #' }
 #' @author Anna Vesely.
+#' @examples
+#' # # use data from the package fMRIdata
+#' # if(!requireNamespace("fMRIdata", quietly = TRUE)){
+#' #   devtools::install_github("angeella/fMRIdata")
+#' # }
+#' # library(fMRIdata)
+#' # data("Auditory_copes")
+#' # data("Auditory_mask")
+#' # data("Auditory_clusterTH3_2")
+#' 
+#' # # create object of class sumBrain
+#' # res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
+#' # res
+#' # summary(res)
+#' 
+#' # # confidence bound for the number of true discoveries and the TDP within clusters
+#' # (may require some minutes)
+#' # out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
+#' 
+#' # # write the TDP map as Nifti file: download mask.nii.gz in the working directory
+#' # # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
+#' # RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+#' @references
+#' Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+#' 
+#' Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+#' @seealso
+#' Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
+#' 
+#' Suprathreshold clusters: \code{\link{findClusters}}
 #' @importFrom RNifti readNifti
 #' @export
 

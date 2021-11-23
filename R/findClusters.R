@@ -9,6 +9,28 @@
 #' @return \code{findClusters} returns a 3D numeric array, with integer values corresponding to clusters,
 #' and 0 to other voxels.
 #' @author Anna Vesely.
+#' @examples
+#' # # use data from the package fMRIdata
+#' # if(!requireNamespace("fMRIdata", quietly = TRUE)){
+#' #   devtools::install_github("angeella/fMRIdata")
+#' # }
+#' # library(fMRIdata)
+#' # data("Auditory_copes")
+#' # data("Auditory_mask")
+#' 
+#' # # cluster map where t scores are grater than 4, in absolute value
+#' # res <- findClusters(copes = Auditory_copes, mask = Auditory_mask, thr = 4)
+#' 
+#' # # write the cluster map as Nifti file
+#' # RNifti::writeNifti(res$clusters, file = "clMap.nii.gz")
+#' @references
+#' Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+#' 
+#' Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+#' @seealso
+#' Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
+#' 
+#' True discovery guarantee for cluster analysis: \code{\link{clusterAnalysis}}
 #' @export
 #' @importFrom RNifti readNifti
 #' @importFrom pARI signTest
