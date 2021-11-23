@@ -35,27 +35,22 @@ It computes confidence bounds for the number of true discoveries and the true di
 within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \examples{
-# # use data from the package fMRIdata
-# if(!requireNamespace("fMRIdata", quietly = TRUE)){
-#   devtools::install_github("angeella/fMRIdata")
-# }
-# library(fMRIdata)
-# data("Auditory_copes")
-# data("Auditory_mask")
-# data("Auditory_clusterTH3_2")
+# simulate 20 copes with dimensions 10x10x10
+set.seed(42)
+copes <- list()
+for(i in seq(20)){copes[[i]] <- array(rnorm(10^3, mean = -10, sd = 30), dim=c(10,10,10))}
 
-# # create object of class sumBrain
-# res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
-# res
-# summary(res)
+# cluster map where t scores are grater than 2.8, in absolute value
+thr <- 2.8
+cl <- findClusters(copes = copes, thr = thr)
 
-# # confidence bound for the number of true discoveries and the TDP within clusters
-# (may require some minutes)
-# out <- clusterAnalysis(res, clusters = Auditory_clusterTH3_2)
+# create object of class sumBrain
+res <- brainScores(copes = copes, alpha = 0.2, seed = 42, truncFrom = thr)
+res
+summary(res)
 
-# # write the TDP map as Nifti file: download mask.nii.gz in the working directory
-# # from https://github.com/angeella/fMRIdata/blob/master/data-raw/AuditoryData
-# RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = "mask.nii.gz")
+# confidence bound for the number of true discoveries and the TDP within clusters
+out <- clusterAnalysis(res, clusters = cl$clusters)
 }
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.

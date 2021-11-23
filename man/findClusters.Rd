@@ -25,19 +25,22 @@ and 0 to other voxels.
 This function determines spatially connected clusters, where t-scores are more extreme than a given threshold.
 }
 \examples{
-# # use data from the package fMRIdata
-# if(!requireNamespace("fMRIdata", quietly = TRUE)){
-#   devtools::install_github("angeella/fMRIdata")
-# }
-# library(fMRIdata)
-# data("Auditory_copes")
-# data("Auditory_mask")
+# simulate 20 copes with dimensions 10x10x10
+set.seed(42)
+copes <- list()
+for(i in seq(20)){copes[[i]] <- array(rnorm(10^3, mean = -10, sd = 30), dim=c(10,10,10))}
 
-# # cluster map where t scores are grater than 4, in absolute value
-# res <- findClusters(copes = Auditory_copes, mask = Auditory_mask, thr = 4)
+# cluster map where t scores are grater than 2.8, in absolute value
+thr <- 2.8
+cl <- findClusters(copes = copes, thr = thr)
 
-# # write the cluster map as Nifti file
-# RNifti::writeNifti(res$clusters, file = "clMap.nii.gz")
+# create object of class sumBrain
+res <- brainScores(copes = copes, alpha = 0.2, seed = 42, truncFrom = thr)
+res
+summary(res)
+
+# confidence bound for the number of true discoveries and the TDP within clusters
+out <- clusterAnalysis(res, clusters = cl$clusters)
 }
 \seealso{
 Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}

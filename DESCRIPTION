@@ -5,7 +5,7 @@ Version: 1.1.0
 Date: 2021-11-23
 Author: Anna Vesely
 Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
-Description: It contains functions to determine permutation-based true discovery guarantees, when using sum-based statistics.
+Description: It allows to quickly perform permutation-based closed testing by sum-based global tests, and construct lower confidence bounds for the TDP, simultaneously over all subsets of hypotheses. As a main feature, it produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Details may be found in Vesely, Finos, and Goeman (2020) <arXiv:2102.11759>.
 License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),

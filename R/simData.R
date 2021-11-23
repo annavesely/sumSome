@@ -51,24 +51,21 @@
 
 simData <- function(prop, m, B=200, rho=0, n=50, alpha=0.05, pw=0.8, p=TRUE, seed=NULL){
   
-  if(!is.numeric(prop) || !is.finite(prop)){stop("prop must be a number in (0,1)")}
+  if(!is.numeric(prop) || !is.finite(prop)){stop("prop must be a number in [0,1]")}
   if(prop < 0 || prop > 1){stop("prop must be a number in [0,1]")}
   
   # check on m, B, n
   if(!is.numeric(m) || !is.finite(m) || m <= 0){stop("m must be a positive integer")}
   if(!is.numeric(B) || !is.finite(B) || B <= 0){stop("B must be a positive integer")}
-  if(!is.numeric(n) || !is.finite(m) || n <= 0){stop("n must be a finite integer")}
+  if(!is.numeric(n) || !is.finite(n) || n <= 0){stop("n must be a positive integer")}
   m <- round(m)
   B <- round(B)
   n <- round(n)
   
   # check on rho, alpha, pw
-  if(!is.numeric(rho) || !is.finite(rho)){stop("rho must be a number in [-1,1]")}
-  if(!is.numeric(alpha) || !is.finite(alpha)){stop("alpha must be a number in (0,1)")}
-  if(!is.numeric(pw) || !is.finite(pw)){stop("pw must be a number in [0,1]")}
-  if(rho < -1 || rho > 1){stop("rho must be a number in [-1,1]")}
-  if(alpha <= 0 || alpha >= 1){stop("alpha must be a number in (0,1)")}
-  if(pw < 0 || pw > 1){stop("pw must be a number in [0,1]")}
+  if(!is.numeric(rho) || !is.finite(rho) || rho < -1 || rho > 1){stop("rho must be a number in [-1,1]")}
+  if(!is.numeric(alpha) || !is.finite(alpha) || alpha <= 0 || alpha >= 1){stop("alpha must be a number in (0,1)")}
+  if(!is.numeric(pw) || !is.finite(pw) || pw <= 0 || pw >= 1){stop("pw must be a number in [0,1]")}
   
   if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
   else{seed <- sample(seq(10^9), 1)}
