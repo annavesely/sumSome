@@ -4,7 +4,7 @@
 \alias{simData}
 \title{Simulating Matrix of Statistics}
 \usage{
-simData(prop, m, B = 200, rho = 0, n = 50, alpha = 0.05, power = 0.8, pvalues = TRUE, seed = NULL)
+simData(prop, m, B = 200, rho = 0, n = 50, alpha = 0.05, pw = 0.8, p = TRUE, seed = NULL)
 }
 \arguments{
 \item{prop}{proportion of non-null hypotheses.}
@@ -19,16 +19,16 @@ simData(prop, m, B = 200, rho = 0, n = 50, alpha = 0.05, power = 0.8, pvalues = 
 
 \item{alpha}{significance level.}
 
-\item{power}{power of the t test.}
+\item{pw}{power of the t test.}
 
-\item{pvalues}{logical, \code{TRUE} to compute p-values, \code{FALSE} to compute t-scores.}
+\item{p}{logical, \code{TRUE} to compute p-values, \code{FALSE} to compute t-scores.}
 
 \item{seed}{seed.}
 }
 \value{
 \code{simData} returns a matrix where the \code{B} rows correspond to permutations (the first is the identity),
 and the \code{m} columns correspond to variables.
-The matrix contains p-values if \code{pvalues} is \code{TRUE}, and t-scores otherwise.
+The matrix contains p-values if \code{p} is \code{TRUE}, and t-scores otherwise.
 The first columns (a proportion \code{prop}) correspond to non-null hypotheses.
 }
 \description{
@@ -40,7 +40,7 @@ The function applies the one-sample two-sided t test to a matrix of simulated da
 for \code{B} data permutations.
 Data is obtained by simulating \code{n} independent observations from a multivariate normal distribution,
 where a proportion \code{prop} of the variables has non-null mean.
-This mean is such that the one-sample t test with significance level \code{alpha} has power equal to \code{power}.
+This mean is such that the one-sample t test with significance level \code{alpha} has power equal to \code{pw}.
 Each pair of distinct variables has equicorrelation \code{rho}.
 }
 \examples{
@@ -64,11 +64,6 @@ tdp(res)
 
 # upper confidence bound for the false discovery proportion in S
 fdp(res)
-}
-\references{
-Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
-
-Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
 }
 \seealso{
 True discovery guarantee: \code{\link{sumStats}}, \code{\link{sumPvals}}

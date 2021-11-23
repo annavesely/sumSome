@@ -49,7 +49,7 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1), w
 }
 \examples{
 # generate matrix of t-scores for 5 variables and 10 permutations
-G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, pvalues = FALSE, seed = 42)
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = FALSE, seed = 42)
  
 # subset of interest (variables 1 and 2)
 S <- c(1,2)
@@ -69,7 +69,9 @@ tdp(res)
 fdp(res)
 }
 \references{
-Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
+Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
+
+Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
 
 Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
 }

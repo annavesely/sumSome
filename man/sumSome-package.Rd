@@ -6,7 +6,7 @@
   True Discovery Guarantee by Sum-Based Tests
 }
 \description{
-  \code{sumSome} provides permutation-based true discovery guarantees, using sum-based global statistics 
+  It provides permutation-based true discovery guarantees, using sum-based global statistics 
   (sum of t-scores, p-value combinations, etc.). As a main feature, it produces simultaneous lower confidence bounds
   for the number of active voxels in different clusters for fMRI cluster analysis.
 }

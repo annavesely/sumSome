@@ -69,10 +69,10 @@ RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 The analysis employs a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
 
 ``` r 
-G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, pvalues = TRUE, seed = 42)
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = TRUE, seed = 42)
 ```
 
-Then we may analyze any subset of hypotheses, storing the results into a ```sumSome``` object. There are two options, as follows.
+Then we may analyze any subset of hypotheses, storing the results into a ```sumObj``` object. There are two options, as follows.
 
 **1.** The function ```sumStats``` analyzes generic statistics:
 
@@ -92,7 +92,7 @@ res
 summary(res)
 ```
 
-The resulting ```sumSome``` object contains lower confidence bounds for the number of true discoveries and the TDP, as well as upper confidence bounds for the false discovery proportion (FDP). 
+The resulting ```sumObj``` object contains lower confidence bounds for the number of true discoveries and the TDP, as well as upper confidence bounds for the false discovery proportion (FDP). 
 
 ``` r
 discoveries(res) # lower confidence bound for the number of true discoveries
@@ -103,9 +103,9 @@ fdp(res) # upper confidence bound for the FDP
 # References
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 
-Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 80(1):137-155.
+Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
 
-Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print, arXiv: 2102.11759.
+Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
 
 # Did you find some bugs?
 

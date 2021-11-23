@@ -39,11 +39,6 @@ This function determines spatially connected clusters, where t-scores are more e
 # # write the cluster map as Nifti file
 # RNifti::writeNifti(res$clusters, file = "clMap.nii.gz")
 }
-\references{
-Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
-
-Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
-}
 \seealso{
 Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
 
