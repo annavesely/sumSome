@@ -22,7 +22,7 @@
 #' \item Fisher: \code{-log(x)}
 #' \item Pearson: \code{log(1-x)}
 #' \item Liptak: \code{-qnorm(x)}
-#' \item Cauchy: \code{tan(0.5 - x)/x}
+#' \item Cauchy: \code{tan[(0.5 - x)pi]} with \code{pi}=3.142
 #' \item Vovk and Wang: \code{- sign(r)x^r}
 #' }
 #' An error message is returned if the transformation produces infinite values.
@@ -56,7 +56,7 @@ transf <- function(G, truncFrom, truncTo, option, r){
   else if(option == "fisher"){G <- -log(G)}
   else if(option == "pearson"){G <- log(1-G)}
   else if(option == "liptak"){G <- -qnorm(G)}
-  else if(option == "cauchy"){G <- tan(0.5-G)/G}
+  else if(option == "cauchy"){G <- tan((0.5-G)*pi)}
   else if(option == "vovk.wang"){G <- - sign(r) * G^r}
   
   truncation <- (!is.null(truncFrom) && !is.null(truncTo))
@@ -86,8 +86,8 @@ transf <- function(G, truncFrom, truncTo, option, r){
       truncFrom <- qnorm(1-truncFrom)
       truncTo <- qnorm(1-truncTo)
     }else if(option == "cauchy"){
-      truncFrom <- tan(0.5-truncFrom)/truncFrom
-      truncTo <- tan(0.5-truncTo)/truncTo
+      truncFrom <- tan((0.5-truncFrom)*pi)
+      truncTo <- tan((0.5-truncTo)*pi)
     }else if(option == "vovk.wang"){
       truncFrom <- - sign(r) * truncFrom^r
       truncTo <- - sign(r) * truncTo^r

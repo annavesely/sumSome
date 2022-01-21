@@ -22,7 +22,7 @@
 #' \item Fisher: \code{-log(p)}
 #' \item Pearson: \code{log(1-p)}
 #' \item Liptak: \code{-qnorm(p)}
-#' \item Cauchy: \code{tan(0.5 - p)/p}
+#' \item Cauchy: \code{tan[(0.5 - x)pi]} with \code{pi}=3.142
 #' \item Vovk and Wang: \code{- sign(r)p^r}
 #' }
 #' An error message is returned if the transformation produces infinite values.
