@@ -78,7 +78,7 @@ labels <- as.factor(pheno$population) # labels for two populations
 expr <- Biobase::exprs(montpick.eset) # expression data
 
 expr <- log(expr + 1) # log transform
-expr <- ex[rowMeans(expr) > 5, ] # genes with mean expression > threshold
+expr <- ex[rowMeans(expr) > 0, ] # genes with non-null expression
 ```
 
 Analogously to fMRI data analysis, we compute permutation test statistics for each gene, using two-sample t tests, and we store information on the analysis in a ```sumGene``` object. There are two options.
