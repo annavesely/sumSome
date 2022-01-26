@@ -5,7 +5,7 @@ sumSome is the package developed to quickly perform permutation-based closed tes
 
 The method allows to construct lower confidence bounds for the proportion of true discoveries (TDP), simultaneously over all subsets of hypotheses. Simultaneity ensures control of the TDP even when the subset of interest is selected post hoc, after seeing the data.
 
-As a main feature, the package produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Moreover, it allows to analyze data in a general setting, starting from the collection of individual statistics for different transformations of the data.
+As a main feature, the package produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Moreover, it allows to analyze gene expression data and generic permutation statistics.
 
 
 ## Installation
@@ -18,11 +18,10 @@ devtools::install_github("annavesely/sumSome")
 
 
 ## fMRI Data
-The analysis makes use of the list of copes (constrast maps for each subject) and the mask. Different fMRI datasets may be found in the package [fMRIdata](https://github.com/angeella/fMRIdata). As an example, here we use data from the [Auditory dataset](https://openneuro.org/datasets/ds000116/versions/00003).
+To study active voxels in different clusters, we start from the list of copes (constrast maps for each subject) and the mask. Different fMRI datasets may be found in the package [fMRIdata](https://github.com/angeella/fMRIdata). As an example, here we use data from the [Auditory dataset](https://openneuro.org/datasets/ds000116/versions/00003).
 
 ``` r
-if(!requireNamespace("fMRIdata", quietly = TRUE)){devtools::install_github("angeella/fMRIdata")}
-library(fMRIdata)
+require(fMRIdata) # install from https://github.com/angeella/fMRIdata
 data("Auditory_copes") # list of copes
 data("Auditory_mask") # mask
 ```
@@ -52,17 +51,67 @@ Subsequently, we construct lower confidence bounds for the proportion of active 
 
 ``` r
 data("Auditory_clusterTH3_2") # cluster map
-out <- clusterAnalysis(sumBrain = res, clusters = Auditory_clusterTH3_2, nMax = 50, silent = FALSE)
+out <- brainAnalysis(sumBrain = res, clusters = Auditory_clusterTH3_2, nMax = 50, silent = FALSE)
 ```
 
 
 Finally, we may write the TDP map as a Nifti file. In this case, we need the Nifti file for the mask.
 
 ``` r
-library(RNifti)
+require(RNifti)
 maskNifti <- "mask.nii.gz" # name of mask Nifti file
 RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 ```
+
+
+## Gene Expression Data
+To study differences in gene expression between two populations, we use the expression values of different samples. Here we take and pre-process the ```montpick``` dataset from [ReCount](http://bowtie-bio.sourceforge.net/recount/index.shtml).
+
+``` r
+require(BiocManager)
+require(dynamicTreeCut)
+require(Biobase)
+
+load(file=url("http://bowtie-bio.sourceforge.net/recount/ExpressionSets/montpick_eset.RData"))
+pheno <- Biobase::phenoData(montpick.eset)
+labels <- as.factor(pheno$population) # labels for two populations
+expr <- Biobase::exprs(montpick.eset) # expression data
+
+expr <- log(expr + 1) # log transform
+expr <- ex[rowMeans(expr) > 5, ] # genes with mean expression > threshold
+```
+
+Analogously to fMRI data analysis, we compute permutation test statistics for each gene, using two-sample t tests, and we store information on the analysis in a ```sumGene``` object. There are two options.
+
+**1.** The function ```geneScores``` computes t-statistics:
+
+``` r
+res <- geneScores(expr = expr, labels = labels, alternative = "two.sided",
+                   alpha = 0.05, B = 200, seed = 42)
+res
+summary(res)
+```
+
+**2.** The function ```genePvals``` computes p-value combinations:
+
+``` r
+res <- genePvals(expr = expr, labels = labels, alternative = "two.sided",
+                  alpha = 0.05, B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5,
+                  type = "vovk.wang", r = 0)
+res
+summary(res)
+```
+
+Subsequently, we compute lower confidence bounds for the proportion of differentially expressed genes (TDP) inside clusters.
+
+``` r
+eDist <- dist(expr) # distance between genes
+tree <- hclust(eDist, method = "ward.D2")
+clusters <- unname(dynamicTreeCut::cutreeDynamic(tree, distM = as.matrix(eDist)))
+
+out <- geneAnalysis(sumGene=res, clusters=clusters, nMax = 50, silent = FALSE)
+```
+
 
 
 ## General Setting
