@@ -100,6 +100,9 @@ transf <- function(G, truncFrom, truncTo, option, r){
         if(G[b,i] < truncFrom){G[b,i] <- truncTo}
       }
     }
+  }else{
+    truncFrom <- NULL
+    truncTo <- NULL
   }
   
   if(!all(is.finite(G))){stop("Transformation produced infinite values")}

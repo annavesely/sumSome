@@ -1,12 +1,12 @@
 #' @title Suprathreshold Clusters for Brain Imaging
 #' @description This function determines spatially connected clusters, where t-scores are more extreme than a given threshold.
-#' @usage findClusters(copes, mask = NULL, thr = 3.2, alternative = "two.sided", silent = FALSE)
+#' @usage brainClusters(copes, mask = NULL, thr = 3.2, alternative = "two.sided", silent = FALSE)
 #' @param copes list of 3D numeric arrays (contrasts maps for each subject).
 #' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain, or character for a Nifti file name.
 #' @param thr threshold.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param silent logical, \code{FALSE} to print the number of clusters.
-#' @return \code{findClusters} returns a 3D numeric array, with integer values corresponding to clusters,
+#' @return \code{brainClusters} returns a 3D numeric array, with integer values corresponding to clusters,
 #' and 0 to other voxels.
 #' @author Anna Vesely.
 #' @examples
@@ -17,7 +17,7 @@
 #' 
 #' # cluster map where t scores are grater than 2.8, in absolute value
 #' thr <- 2.8
-#' cl <- findClusters(copes = copes, thr = thr)
+#' cl <- brainClusters(copes = copes, thr = thr)
 #' 
 #' # create object of class sumBrain
 #' res <- brainScores(copes = copes, alpha = 0.2, seed = 42, truncFrom = thr)
@@ -25,18 +25,18 @@
 #' summary(res)
 #' 
 #' # confidence bound for the number of true discoveries and the TDP within clusters
-#' out <- clusterAnalysis(res, clusters = cl$clusters)
+#' out <- brainAnalysis(res, clusters = cl$clusters)
 #' @seealso
 #' Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
 #' 
-#' True discovery guarantee for cluster analysis: \code{\link{clusterAnalysis}}
+#' True discovery guarantee for cluster analysis: \code{\link{brainAnalysis}}
 #' @export
 #' @importFrom RNifti readNifti
 #' @importFrom pARI signTest
 #' @importFrom ARIbrain cluster_threshold
 
 
-findClusters <- function(copes, mask=NULL, thr=3.2, alternative="two.sided", silent=FALSE){
+brainClusters <- function(copes, mask=NULL, thr=3.2, alternative="two.sided", silent=FALSE){
   
   # check copes
   if(!is.list(copes)){stop("copes should be a list of arrays")}

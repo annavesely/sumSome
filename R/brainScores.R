@@ -35,7 +35,7 @@
 #' 
 #' # cluster map where t scores are grater than 2.8, in absolute value
 #' thr <- 2.8
-#' cl <- findClusters(copes = copes, thr = thr)
+#' cl <- brainClusters(copes = copes, thr = thr)
 #' 
 #' # create object of class sumBrain
 #' res <- brainScores(copes = copes, alpha = 0.2, seed = 42, truncFrom = thr)
@@ -43,7 +43,7 @@
 #' summary(res)
 #' 
 #' # confidence bound for the number of true discoveries and the TDP within clusters
-#' out <- clusterAnalysis(res, clusters = cl$clusters)
+#' out <- brainAnalysis(res, clusters = cl$clusters)
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 
@@ -53,9 +53,9 @@
 #' @seealso
 #' Permutation statistics for brain imaging using p-values: \code{\link{brainPvals}}
 #' 
-#' True discovery guarantee for cluster analysis: \code{\link{clusterAnalysis}}
+#' True discovery guarantee for cluster analysis: \code{\link{brainAnalysis}}
 #' 
-#' Suprathreshold clusters: \code{\link{findClusters}}
+#' Suprathreshold clusters: \code{\link{brainClusters}}
 #' @export
 
 

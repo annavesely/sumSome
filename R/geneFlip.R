@@ -1,11 +1,11 @@
-#' @title Permutation Statistics for Brain Imaging
+#' @title Permutation Statistics for Gene Expression Data
 #' @description Internal function.
-#' It computes test statistics for different permutations of brain imaging data.
-#' A voxel's statistic is calculated by performing the one-sample t test
-#' for the null hypothesis that its mean contrast over the different subjects is zero.
-#' @usage brainFlip(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues, type, r, squares, rand)
-#' @param copes list of 3D numeric arrays (contrasts maps for each subject).
-#' @param mask 3D logical array, where \code{TRUE} values correspond to voxels inside the brain, or character for a Nifti file name.
+#' It computes test statistics for different permutations of gene expression data.
+#' A gene's statistic is calculated by performing the two-sample t test
+#' for the null hypothesis that the mean expression value is the same between two populations.
+#' @usage geneFlip(expr, labels, alternative, alpha, B, seed, truncFrom, truncTo, pvalues, type, r, squares, rand)
+#' @param expr matrix where rows correspond to genes, and columns to samples.
+#' @param label numeric/character vector with two levels, denoting the population of each sample.
 #' @param alternative direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}).
 #' @param alpha significance level.
 #' @param B number of permutations, including the identity.
@@ -34,38 +34,24 @@
 #' As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
 #' \code{truncTo} should be strictly smaller than 1.
 #' @details The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
-#' @return \code{brainFlip} returns an object of class \code{sumBrain}, containing
+#' @return \code{geneFlip} returns an object of class \code{sumGene}, containing
 #' \itemize{
-#' \item \code{statistics}: numeric matrix of statistics, where columns correspond to voxels inside the brain, and rows to permutations.
+#' \item \code{statistics}: numeric matrix of statistics, where columns correspond to genes, and rows to permutations.
 #' The first permutation is the identity
-#' \item \code{mask}: 3D logical array, where \code{TRUE} values correspond to voxels inside the brain
 #' \item \code{alpha}: significance level
 #' \item \code{truncFrom}: transformed first truncation parameter
 #' \item \code{truncTo}: transformed second truncation parameter
 #' }
 #' @author Anna Vesely.
 #' @noRd
-#' @importFrom RNifti readNifti
-#' @importFrom pARI signTest
+#' @importFrom pARI permTest
 
 
-brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, truncTo, pvalues,
-                              type, r, squares, rand){
+geneFlip <- function(expr, labels, alternative, alpha, B, seed, truncFrom, truncTo, pvalues,
+                      type, r, squares, rand){
   
-  # check copes
-  if(!is.list(copes)){stop("copes should be a list of arrays")}
-  n <- length(copes)
-  if(n==0){stop("copes should be a list of arrays")}
-  imgDim <- dim(copes[[1]]) #(91,109,91)
-  
-  # check mask
-  if(!is.null(mask)){
-    if(!is.character(mask) && !is.array(mask)){stop("mask must be an array or a path")}
-    if(is.character(mask)){mask = RNifti::readNifti(mask)}
-    if(!all(dim(mask) == imgDim)){stop("incompatible dimensions of mask and copes")}
-  }else{
-    mask <- array(1, imgDim)
-  }
+  # check expression matrix
+  if(!is.matrix(expr) || !is.numeric(expr) || !all(is.finite(expr))){stop("expr must be a matrix of finite numbers")}
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
   type <- match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
@@ -81,24 +67,7 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   else{seed <- sample(seq(10^10), 1)}
   set.seed(round(seed))
   
-  # create image
-  img <- array(NA, c(imgDim, n))
-  for (i in seq(n)) {
-    if(!(all(dim(copes[[i]]) == imgDim))){stop("incompatible copes dimensions")}
-    img[,,,i] <- copes[[i]]
-  }
-  rm(copes)
-  
-  # matrix of data (rows = variables, columns = observations)
-  scores <- matrix(img, nrow=(imgDim[1] * imgDim[2] * imgDim[3]), ncol=n)
-  scores[mask==0,] <- NA
-  rm(img)
-  
-  scores <- scores[which(mask != 0),]
-  if(!is.numeric(scores) || !all(is.finite(scores))){stop("copes should contain numeric values for voxels inside the brain")}
-  
-  st <- pARI::signTest(X=scores, B=B, alternative=alternative, seed=seed, rand=rand) # sign flipping
-  rm(scores)
+  st <- pARI::permTest(X=expr, B=B, alternative=alternative, seed=seed, rand=rand, label=labels) # sign flipping
   
   if(!pvalues){
     G <- rbind(st$Test, t(st$Test_H0))
@@ -110,6 +79,6 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   rm(st)
   
   res <- transf(G, truncFrom, truncTo, option, r)
-  out <- sumBrain(res$G, mask, alpha, res$truncFrom, res$truncTo)
+  out <- sumGene(res$G, alpha, res$truncFrom, res$truncTo)
   return(out)
 }

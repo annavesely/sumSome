@@ -1,14 +1,14 @@
-#' @title True Discovery Guarantee for Cluster Analysis
+#' @title True Discovery Guarantee for Cluster Analysis of Brain Imaging Data
 #' @description This function determines a true discovery guarantee for fMRI cluster analysis.
 #' It computes confidence bounds for the number of true discoveries and the true discovery proportion
 #' within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage clusterAnalysis(sumBrain, clusters, nMax = 50, silent = FALSE)
+#' @usage brainAnalysis(sumBrain, clusters, nMax = 50, silent = FALSE)
 #' @param sumBrain an object of class sumBrain, as returned by the functions \code{\link{brainScores}} and \code{\link{brainPvals}}.
 #' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
 #' If NULL, the whole brain is considered.
 #' @param nMax maximum number of iterations per cluster.
 #' @param silent logical, \code{FALSE} to print the summary.
-#' @return \code{clusterAnalysis} returns a list containing \code{summary} (matrix) and
+#' @return \code{brainAnalysis} returns a list containing \code{summary} (matrix) and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
 #' The matrix \code{summary} contains, for each cluster,
 #' \itemize{
@@ -28,7 +28,7 @@
 #' 
 #' # cluster map where t scores are grater than 2.8, in absolute value
 #' thr <- 2.8
-#' cl <- findClusters(copes = copes, thr = thr)
+#' cl <- brainClusters(copes = copes, thr = thr)
 #' 
 #' # create object of class sumBrain
 #' res <- brainScores(copes = copes, alpha = 0.2, seed = 42, truncFrom = thr)
@@ -36,7 +36,7 @@
 #' summary(res)
 #' 
 #' # confidence bound for the number of true discoveries and the TDP within clusters
-#' out <- clusterAnalysis(res, clusters = cl$clusters)
+#' out <- brainAnalysis(res, clusters = cl$clusters)
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 
@@ -46,12 +46,12 @@
 #' @seealso
 #' Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
 #' 
-#' Suprathreshold clusters: \code{\link{findClusters}}
+#' Suprathreshold clusters: \code{\link{brainClusters}}
 #' @importFrom RNifti readNifti
 #' @export
 
 
-clusterAnalysis <- function(sumBrain, clusters, nMax=50, silent=FALSE){
+brainAnalysis <- function(sumBrain, clusters, nMax=50, silent=FALSE){
   
   if(class(sumBrain) != "sumBrain"){stop("sumBrain should be an object of class sumBrain")}
   
@@ -99,7 +99,7 @@ clusterAnalysis <- function(sumBrain, clusters, nMax=50, silent=FALSE){
   vals[length(clusterId)] <- 0
   
   for(i in seq(length(clusterId))){
-    TDPmap[TDPmap==clusterId[i]] <- vals[i]
+    TDPmap[clusters==clusterId[i]] <- vals[i]
   }
   
   if(!silent){print(M)}

@@ -31,7 +31,7 @@ print.sumBrain <- function(x, ...){
   col <- ncol(x$statistics)
   f <- ifelse(col==1, "1 voxel", paste(as.character(col), " voxels", sep=""))
   cat("A sumBrain object containing brain imaging data with ", f, ".\n", sep="")
-  cat("Use clusterAnalysis() for cluster analysis using this object.\n", sep="")
+  cat("Use brainAnalysis() for cluster analysis using this object.\n", sep="")
 }
 
 
