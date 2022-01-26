@@ -23,10 +23,10 @@ Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
 }
 \keyword{ package }
 \seealso{
-  True discovery guarantee: \code{\link{sumStats}}, \code{\link{sumPvals}}
+  Permutation statistics: \code{\link{sumStats}}, \code{\link{sumPvals}}
   
-  Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}
+  Brain imaging cluster analysis: \code{\link{brainScores}}, \code{\link{brainPvals}}, \code{\link{brainAnalysis}}
   
-  True discovery guarantee for cluster analysis: \code{\link{clusterAnalysis}}
+  Gene expression cluster analysis: \code{\link{geneScores}}, \code{\link{genePvals}}, \code{\link{geneAnalysis}}
 }
 
