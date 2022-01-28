@@ -52,6 +52,7 @@ geneFlip <- function(expr, labels, alternative, alpha, B, seed, truncFrom, trunc
   
   # check expression matrix
   if(!is.matrix(expr) || !is.numeric(expr) || !all(is.finite(expr))){stop("expr must be a matrix of finite numbers")}
+  if(length(rownames(expr))==0){rownames(expr) <- seq(nrow(expr))}
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
   type <- match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
@@ -76,7 +77,8 @@ geneFlip <- function(expr, labels, alternative, alpha, B, seed, truncFrom, trunc
     G <- rbind(st$pv, t(st$pv_H0))
     option <- type
   }
-  rm(st)
+  colnames(G) <- rownames(expr)
+  rm(st, expr)
   
   res <- transf(G, truncFrom, truncTo, option, r)
   out <- sumGene(res$G, alpha, res$truncFrom, res$truncTo)

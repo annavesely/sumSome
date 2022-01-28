@@ -41,6 +41,7 @@ summary(res)
 
 # confidence bound for the number of true discoveries and the TDP within clusters
 out <- brainAnalysis(res, clusters = cl$clusters)
+out$summary
 }
 \seealso{
 Permutation statistics for brain imaging: \code{\link{brainScores}}, \code{\link{brainPvals}}

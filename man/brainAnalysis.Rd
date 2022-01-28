@@ -4,7 +4,7 @@
 \alias{brainAnalysis}
 \title{True Discovery Guarantee for Cluster Analysis of Brain Imaging Data}
 \usage{
-brainAnalysis(sumBrain, clusters, nMax = 50, silent = FALSE)
+brainAnalysis(sumBrain, clusters = NULL, nMax = 50, silent = FALSE)
 }
 \arguments{
 \item{sumBrain}{an object of class sumBrain, as returned by the functions \code{\link{brainScores}} and \code{\link{brainPvals}}.}
@@ -14,7 +14,7 @@ If NULL, the whole brain is considered.}
 
 \item{nMax}{maximum number of iterations per cluster.}
 
-\item{silent}{logical, \code{FALSE} to print the summary.}
+\item{silent}{logical, \code{FALSE} to print a summary of active clusters.}
 }
 \value{
 \code{brainAnalysis} returns a list containing \code{summary} (matrix) and
@@ -51,6 +51,7 @@ summary(res)
 
 # confidence bound for the number of true discoveries and the TDP within clusters
 out <- brainAnalysis(res, clusters = cl$clusters)
+out$summary
 }
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.

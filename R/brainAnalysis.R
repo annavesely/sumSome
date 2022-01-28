@@ -2,12 +2,12 @@
 #' @description This function determines a true discovery guarantee for fMRI cluster analysis.
 #' It computes confidence bounds for the number of true discoveries and the true discovery proportion
 #' within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage brainAnalysis(sumBrain, clusters, nMax = 50, silent = FALSE)
+#' @usage brainAnalysis(sumBrain, clusters = NULL, nMax = 50, silent = FALSE)
 #' @param sumBrain an object of class sumBrain, as returned by the functions \code{\link{brainScores}} and \code{\link{brainPvals}}.
 #' @param clusters 3D numeric array of cluster indices, or character for a Nifti file name.
 #' If NULL, the whole brain is considered.
 #' @param nMax maximum number of iterations per cluster.
-#' @param silent logical, \code{FALSE} to print the summary.
+#' @param silent logical, \code{FALSE} to print a summary of active clusters.
 #' @return \code{brainAnalysis} returns a list containing \code{summary} (matrix) and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
 #' The matrix \code{summary} contains, for each cluster,
@@ -37,6 +37,7 @@
 #' 
 #' # confidence bound for the number of true discoveries and the TDP within clusters
 #' out <- brainAnalysis(res, clusters = cl$clusters)
+#' out$summary
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 
@@ -51,7 +52,7 @@
 #' @export
 
 
-brainAnalysis <- function(sumBrain, clusters, nMax=50, silent=FALSE){
+brainAnalysis <- function(sumBrain, clusters=NULL, nMax=50, silent=FALSE){
   
   if(class(sumBrain) != "sumBrain"){stop("sumBrain should be an object of class sumBrain")}
   
@@ -102,6 +103,18 @@ brainAnalysis <- function(sumBrain, clusters, nMax=50, silent=FALSE){
     TDPmap[clusters==clusterId[i]] <- vals[i]
   }
   
-  if(!silent){print(M)}
+  if(!silent){
+    sel <- M[,2]>0
+    if(sum(sel) == 0){
+      print("No active clusters")
+    }else{
+      W <- M[sel,,drop=FALSE]
+      W <- W[order(W[,1], W[,4], decreasing=TRUE),,drop=FALSE]
+      converge <- (W[,2] == W[,3]) + 0
+      W <- cbind(W[,-c(3,5),drop=FALSE], converge)
+      print(W)
+    }
+  }
+  
   return(list("summary" = M, "TDPmap" = TDPmap))
 }

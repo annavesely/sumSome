@@ -44,6 +44,7 @@
 #' 
 #' # confidence bound for the number of true discoveries and the TDP within clusters
 #' out <- brainAnalysis(res, clusters = cl$clusters)
+#' out$summary
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 

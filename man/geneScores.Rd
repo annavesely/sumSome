@@ -5,7 +5,7 @@
 \title{Permutation t-Scores for Gene Expression}
 \usage{
 geneScores(expr, labels, alternative = "two.sided", alpha = 0.05, B = 200, seed = NULL,
-           truncFrom = NULL, truncTo = 0, squares = FALSE)
+           truncFrom = 3.2, truncTo = 0, squares = FALSE)
 }
 \arguments{
 \item{expr}{matrix where rows correspond to genes, and columns to samples.}
@@ -51,19 +51,21 @@ The significance level \code{alpha} should be in the interval [1/\code{B}, 1).
 \examples{
 # simulate 20 samples of 100 genes
 set.seed(42)
-expr <- matrix(c(rnorm(1000, mean = 0, sd = 10), rnorm(1000, mean = 10, sd = 10)), ncol = 20)
+expr <- matrix(c(rnorm(1000, mean = 0, sd = 10), rnorm(1000, mean = 13, sd = 10)), ncol = 20)
+rownames(expr) <- seq(100)
 labels <- rep(c(1,2), each = 10)
 
-# simulate clusters
-clusters <- sample(x = seq(5), size = 100, replace = TRUE)
+# simulate pathways
+pathways <- lapply(seq(3), FUN = function(x) sample(rownames(expr), 3*x))
 
 # create object of class sumGene
 res <- geneScores(expr = expr, labels = labels, alpha = 0.2, seed = 42)
 res
 summary(res)
 
-# confidence bound for the number of true discoveries and the TDP within clusters
-out <- geneAnalysis(res, clusters = clusters)
+# confidence bound for the number of true discoveries and the TDP within pathways
+out <- geneAnalysis(res, pathways = pathways)
+out
 }
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.

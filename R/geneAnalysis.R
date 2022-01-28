@@ -2,14 +2,12 @@
 #' @description This function determines a true discovery guarantee for gene cluster analysis.
 #' It computes confidence bounds for the number of true discoveries and the true discovery proportion
 #' within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage geneAnalysis(sumGene, clusters, nMax = 50, silent = FALSE)
+#' @usage geneAnalysis(sumGene, clusters = NULL, nMax = 50, silent = FALSE)
 #' @param sumGene an object of class sumGene, as returned by the functions \code{\link{geneScores}} and \code{\link{genePvals}}.
-#' @param clusters numeric vector of cluster indices. If NULL, the whole gene set is considered.
+#' @param pathways list of character vectors containing gene names (one vector per pathway). If NULL, the whole gene set is considered.
 #' @param nMax maximum number of iterations per cluster.
-#' @param silent logical, \code{FALSE} to print the summary.
-#' @return \code{geneAnalysis} returns a list containing \code{summary} (matrix) and
-#' \code{TDPmap} (numeric vector of the true discovery proportions).
-#' The matrix \code{summary} contains, for each cluster,
+#' @param silent logical, \code{FALSE} to print a summary of active pathways.
+#' @return \code{geneAnalysis} returns a list matrix containing, for each pathway,
 #' \itemize{
 #' \item \code{size}: size
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
@@ -21,19 +19,21 @@
 #' @examples
 #' # simulate 20 samples of 100 genes
 #' set.seed(42)
-#' expr <- matrix(c(rnorm(1000, mean = 0, sd = 10), rnorm(1000, mean = 10, sd = 10)), ncol = 20)
+#' expr <- matrix(c(rnorm(1000, mean = 0, sd = 10), rnorm(1000, mean = 13, sd = 10)), ncol = 20)
+#' rownames(expr) <- seq(100)
 #' labels <- rep(c(1,2), each = 10)
 #' 
-#' # simulate clusters
-#' clusters <- sample(x = seq(5), size = 100, replace = TRUE)
+#' # simulate pathways
+#' pathways <- lapply(seq(3), FUN = function(x) sample(rownames(expr), 3*x))
 #' 
 #' # create object of class sumGene
 #' res <- geneScores(expr = expr, labels = labels, alpha = 0.2, seed = 42)
 #' res
 #' summary(res)
 #' 
-#' # confidence bound for the number of true discoveries and the TDP within clusters
-#' out <- geneAnalysis(res, clusters = clusters)
+#' # confidence bound for the number of true discoveries and the TDP within pathways
+#' out <- geneAnalysis(res, pathways = pathways)
+#' out
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 
@@ -45,7 +45,7 @@
 #' @export
 
 
-geneAnalysis <- function(sumGene, clusters, nMax=50, silent=FALSE){
+geneAnalysis <- function(sumGene, pathways=NULL, nMax=50, silent=FALSE){
   
   if(class(sumGene) != "sumGene"){stop("sumGene should be an object of class sumGene")}
   
@@ -54,37 +54,43 @@ geneAnalysis <- function(sumGene, clusters, nMax=50, silent=FALSE){
   truncFrom <- sumGene$truncFrom
   truncTo <- sumGene$truncTo
   rm(sumGene)
+  genes <- colnames(G)
   
   # check clusters (if clusters = NULL and thershold != NULL, clusters are computed later)
-  if(!is.null(clusters)){
-    if(!is.vector(clusters)){stop("clusters must be a vector")}
-    if(length(clusters) != ncol(G)){stop("Incorrect clusters dimensions")}
+  if(!is.null(pathways)){
+    if(!is.list(pathways) || length(pathways)==0){stop("pathways must be a list")}
   }else{
-    clusters <- rep(1, ncol(G))
+    pathways <- list("all"=genes)
   }
   
-  clusterId <- sort(unique(clusters), decreasing=TRUE) # define number of clusters
+  if(length(names(pathways))==0){names(pathways) <- paste0("pathway", seq(length(pathways)))}
+  pathId <- names(pathways)
   
-  M <- matrix(NA, nrow=length(clusterId), ncol=5)
+  M <- matrix(NA, nrow=length(pathId), ncol=5)
   colnames(M) <- c("size", "TD", "maxTD", "TDP", "maxTDP")
-  rownames(M) <- paste("cl", clusterId, sep="")
+  rownames(M) <- pathId
   
-  for(i in seq(length(clusterId))){
-    S <- which(clusters == clusterId[i])
+  for(i in seq(length(pathId))){
+    sel <- sapply(genes, FUN=function(x) x %in% pathways[[i]])
+    S <- which(sel)
     out <- sumTest(G, S, alpha, truncFrom, truncTo, nMax)
     
-    # cluster summary
+    # pathway summary
     M[i,] <- c(out$size, out$TD, out$maxTD, round(out$TD/out$size, 3), round(out$maxTD/out$size, 3))
   }
   
-  # write TDPmap
-  TDPmap <- clusters
-  vals <- as.numeric(M[,4])
-  
-  for(i in seq(length(clusterId))){
-    TDPmap[clusters==clusterId[i]] <- vals[i]
+  if(!silent){
+    sel <- M[,2]>0
+    if(sum(sel) == 0){
+      print("No active pathways")
+    }else{
+      W <- M[sel,,drop=FALSE]
+      W <- W[order(W[,1], W[,4], decreasing=TRUE),,drop=FALSE]
+      converge <- (W[,2] == W[,3]) + 0
+      W <- cbind(W[,-c(3,5),drop=FALSE], converge)
+      print(W)
+    }
   }
   
-  if(!silent){print(M)}
-  return(list("summary" = M, "TDPmap" = TDPmap))
+  return(M)
 }

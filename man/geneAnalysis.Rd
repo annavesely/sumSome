@@ -4,21 +4,19 @@
 \alias{geneAnalysis}
 \title{True Discovery Guarantee for Cluster Analysis of Gene Expression Data}
 \usage{
-geneAnalysis(sumGene, clusters, nMax = 50, silent = FALSE)
+geneAnalysis(sumGene, clusters = NULL, nMax = 50, silent = FALSE)
 }
 \arguments{
 \item{sumGene}{an object of class sumGene, as returned by the functions \code{\link{geneScores}} and \code{\link{genePvals}}.}
 
-\item{clusters}{numeric vector of cluster indices. If NULL, the whole gene set is considered.}
+\item{pathways}{list of character vectors containing gene names (one vector per pathway). If NULL, the whole gene set is considered.}
 
 \item{nMax}{maximum number of iterations per cluster.}
 
-\item{silent}{logical, \code{FALSE} to print the summary.}
+\item{silent}{logical, \code{FALSE} to print a summary of active pathways.}
 }
 \value{
-\code{geneAnalysis} returns a list containing \code{summary} (matrix) and
-\code{TDPmap} (numeric vector of the true discovery proportions).
-The matrix \code{summary} contains, for each cluster,
+\code{geneAnalysis} returns a list matrix containing, for each pathway,
 \itemize{
 \item \code{size}: size
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
@@ -35,19 +33,21 @@ within each cluster. The bounds are simultaneous over all sets, and remain valid
 \examples{
 # simulate 20 samples of 100 genes
 set.seed(42)
-expr <- matrix(c(rnorm(1000, mean = 0, sd = 10), rnorm(1000, mean = 10, sd = 10)), ncol = 20)
+expr <- matrix(c(rnorm(1000, mean = 0, sd = 10), rnorm(1000, mean = 13, sd = 10)), ncol = 20)
+rownames(expr) <- seq(100)
 labels <- rep(c(1,2), each = 10)
 
-# simulate clusters
-clusters <- sample(x = seq(5), size = 100, replace = TRUE)
+# simulate pathways
+pathways <- lapply(seq(3), FUN = function(x) sample(rownames(expr), 3*x))
 
 # create object of class sumGene
 res <- geneScores(expr = expr, labels = labels, alpha = 0.2, seed = 42)
 res
 summary(res)
 
-# confidence bound for the number of true discoveries and the TDP within clusters
-out <- geneAnalysis(res, clusters = clusters)
+# confidence bound for the number of true discoveries and the TDP within pathways
+out <- geneAnalysis(res, pathways = pathways)
+out
 }
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
