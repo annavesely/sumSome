@@ -107,7 +107,7 @@ require(ggplot2)
 
 sel <- order(out$TDP, out$size, decreasing=TRUE)[seq(20)]
 out <- out[sel,] # 20 pathways with highest TDP
-out$pathways <- factor(rownames(out), levels=unique(rownames(out)))
+out$pathways <- factor(rownames(out), levels=rev(unique(rownames(out))))
 
 ggplot(data = out, aes(x = TDP, y = pathways)) +
   geom_point(aes(color = size, size = size)) +
