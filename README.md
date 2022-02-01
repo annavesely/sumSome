@@ -65,8 +65,6 @@ RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 To study differences in gene expression between two populations, we use the expression values of different samples. Here we take and pre-process the ```montpick``` dataset from [ReCount](http://bowtie-bio.sourceforge.net/recount/index.shtml).
 
 ``` r
-require(BiocManager)
-require(dynamicTreeCut)
 require(Biobase)
 require(EnrichmentBrowser)
 
