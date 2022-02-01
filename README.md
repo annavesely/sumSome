@@ -31,8 +31,7 @@ First, we compute permutation test statistics for each voxel inside the brain, t
 **1.** The function ```brainScores``` computes t-statistics:
 
 ``` r
-res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided",
-                   alpha = 0.05, B = 200, seed = 42, truncFrom = 3.2, truncTo = 0)
+res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
 res
 summary(res)
 ```
@@ -40,9 +39,7 @@ summary(res)
 **2.** The function ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
 
 ``` r
-res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, alternative = "two.sided",
-                  alpha = 0.05, B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5,
-                  type = "vovk.wang", r = 0)
+res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, seed = 42, type = "vovk.wang", r = 0)
 res
 summary(res)
 ```
@@ -51,7 +48,7 @@ Subsequently, we construct lower confidence bounds for the proportion of active 
 
 ``` r
 data("Auditory_clusterTH3_2") # cluster map
-out <- brainAnalysis(sumBrain = res, clusters = Auditory_clusterTH3_2, nMax = 50, silent = FALSE)
+out <- brainAnalysis(sumBrain = res, clusters = Auditory_clusterTH3_2)
 ```
 
 
@@ -71,14 +68,13 @@ To study differences in gene expression between two populations, we use the expr
 require(BiocManager)
 require(dynamicTreeCut)
 require(Biobase)
+require(EnrichmentBrowser)
 
 load(file=url("http://bowtie-bio.sourceforge.net/recount/ExpressionSets/montpick_eset.RData"))
 pheno <- Biobase::phenoData(montpick.eset)
 labels <- as.factor(pheno$population) # labels for two populations
 expr <- Biobase::exprs(montpick.eset) # expression data
-
-expr <- log(expr + 1) # log transform
-expr <- ex[rowMeans(expr) > 0, ] # genes with non-null expression
+expr <- ex[rowMeans(expr) > 10, ] # selection of genes
 ```
 
 Analogously to fMRI data analysis, we compute permutation test statistics for each gene, using two-sample t tests, and we store information on the analysis in a ```sumGene``` object. There are two options.
@@ -86,8 +82,7 @@ Analogously to fMRI data analysis, we compute permutation test statistics for ea
 **1.** The function ```geneScores``` computes t-statistics:
 
 ``` r
-res <- geneScores(expr = expr, labels = labels, alternative = "two.sided",
-                   alpha = 0.05, B = 200, seed = 42)
+res <- geneScores(expr = expr, labels = labels, seed = 42)
 res
 summary(res)
 ```
@@ -95,9 +90,7 @@ summary(res)
 **2.** The function ```genePvals``` computes p-value combinations:
 
 ``` r
-res <- genePvals(expr = expr, labels = labels, alternative = "two.sided",
-                  alpha = 0.05, B = 200, seed = 42, truncFrom = 0.05, truncTo = 0.5,
-                  type = "vovk.wang", r = -1)
+res <- genePvals(expr = expr, labels = labels, seed = 42, type = "vovk.wang", r = -1)
 res
 summary(res)
 ```
@@ -105,11 +98,8 @@ summary(res)
 Subsequently, we compute lower confidence bounds for the proportion of differentially expressed genes (TDP) inside clusters.
 
 ``` r
-eDist <- dist(expr) # distance between genes
-tree <- hclust(eDist, method = "ward.D2")
-clusters <- unname(dynamicTreeCut::cutreeDynamic(tree, distM = as.matrix(eDist)))
-
-out <- geneAnalysis(sumGene=res, clusters=clusters, nMax = 50, silent = FALSE)
+pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg", gene.id.type = "ENSEMBL")
+out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
 
