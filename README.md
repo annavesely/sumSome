@@ -93,7 +93,7 @@ res
 summary(res)
 ```
 
-Subsequently, we compute lower confidence bounds for the proportion of differentially expressed genes (TDP) inside clusters.
+Subsequently, we compute lower confidence bounds for the proportion of differentially expressed genes (TDP) inside pathways.
 
 ``` r
 pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg", gene.id.type = "ENSEMBL")
