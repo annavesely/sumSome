@@ -4,7 +4,7 @@
 \alias{geneAnalysis}
 \title{True Discovery Guarantee for Cluster Analysis of Gene Expression Data}
 \usage{
-geneAnalysis(sumGene, clusters = NULL, nMax = 50, silent = FALSE)
+geneAnalysis(sumGene, pathways = NULL, nMax = 50, silent = FALSE)
 }
 \arguments{
 \item{sumGene}{an object of class sumGene, as returned by the functions \code{\link{geneScores}} and \code{\link{genePvals}}.}

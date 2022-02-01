@@ -2,7 +2,7 @@
 #' @description This function determines a true discovery guarantee for gene cluster analysis.
 #' It computes confidence bounds for the number of true discoveries and the true discovery proportion
 #' within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage geneAnalysis(sumGene, clusters = NULL, nMax = 50, silent = FALSE)
+#' @usage geneAnalysis(sumGene, pathways = NULL, nMax = 50, silent = FALSE)
 #' @param sumGene an object of class sumGene, as returned by the functions \code{\link{geneScores}} and \code{\link{genePvals}}.
 #' @param pathways list of character vectors containing gene names (one vector per pathway). If NULL, the whole gene set is considered.
 #' @param nMax maximum number of iterations per cluster.
