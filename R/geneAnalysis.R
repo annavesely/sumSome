@@ -73,22 +73,30 @@ geneAnalysis <- function(sumGene, pathways=NULL, nMax=50, silent=FALSE){
   for(i in seq(length(pathId))){
     sel <- sapply(genes, FUN=function(x) x %in% pathways[[i]])
     S <- which(sel)
+    if(length(S)==0){next}
     out <- sumTest(G, S, alpha, truncFrom, truncTo, nMax)
     
     # pathway summary
     M[i,] <- c(out$size, out$TD, out$maxTD, round(out$TD/out$size, 3), round(out$maxTD/out$size, 3))
   }
   
+  tokeep <- !is.na(M[,1])*1
+  if(sum(tokeep) == 0){stop("No intersection between gene set and pathways")}
+  M <- M[tokeep,]
+  
   if(!silent){
     sel <- M[,2]>0
     if(sum(sel) == 0){
-      print("No active pathways")
+      print("No active pathways.")
     }else{
       W <- M[sel,,drop=FALSE]
-      W <- W[order(W[,1], W[,4], decreasing=TRUE),,drop=FALSE]
+      W <- W[order(W[,4], W[,1], decreasing=TRUE),,drop=FALSE]
       converge <- (W[,2] == W[,3]) + 0
       W <- cbind(W[,-c(3,5),drop=FALSE], converge)
-      print(W)
+      cat("Active pathways: ", as.character(nrow(W)), ".\n", sep="")
+      cat("Pathways with highest TDP:\n")
+      cat("\n")
+      print(head(W,20))
     }
   }
   

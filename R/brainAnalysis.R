@@ -106,13 +106,17 @@ brainAnalysis <- function(sumBrain, clusters=NULL, nMax=50, silent=FALSE){
   if(!silent){
     sel <- M[,2]>0
     if(sum(sel) == 0){
-      print("No active clusters")
+      print("No active clusters.")
     }else{
       W <- M[sel,,drop=FALSE]
-      W <- W[order(W[,1], W[,4], decreasing=TRUE),,drop=FALSE]
+      W <- W[order(W[,4], W[,1], decreasing=TRUE),,drop=FALSE]
       converge <- (W[,2] == W[,3]) + 0
       W <- cbind(W[,-c(3,5),drop=FALSE], converge)
-      print(W)
+      
+      cat("Active clusters: ", as.character(nrow(W)), ".\n", sep="")
+      cat("Clusters with highest TDP:\n")
+      cat("\n")
+      print(head(W,20))
     }
   }
   
