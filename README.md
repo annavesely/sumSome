@@ -100,6 +100,20 @@ pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg", gene.id.typ
 out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
+We can finally plot the top pathways, as follows.
+
+``` r
+require(ggplot2)
+
+sel <- order(out$TDP, out$size, decreasing=TRUE)[seq(20)]
+out <- out[sel,] # 20 pathways with highest TDP
+out$pathways <- factor(rownames(out), levels=unique(rownames(out)))
+
+ggplot(data=out, aes(x = TDP, y = pathways)) +
+  geom_point(aes(color = size, size = size)) +
+  guides(color=guide_legend(), size = guide_legend())
+```
+
 
 
 ## General Setting
