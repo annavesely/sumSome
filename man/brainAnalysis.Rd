@@ -17,9 +17,9 @@ If NULL, the whole brain is considered.}
 \item{silent}{logical, \code{FALSE} to print a summary of active clusters.}
 }
 \value{
-\code{brainAnalysis} returns a list containing \code{summary} (matrix) and
+\code{brainAnalysis} returns a list containing \code{summary} (data frame) and
 \code{TDPmap} (3D numeric array of the true discovery proportions).
-The matrix \code{summary} contains, for each cluster,
+The data frame \code{summary} contains, for each cluster,
 \itemize{
 \item \code{size}: size
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries

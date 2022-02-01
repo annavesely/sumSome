@@ -8,9 +8,9 @@
 #' If NULL, the whole brain is considered.
 #' @param nMax maximum number of iterations per cluster.
 #' @param silent logical, \code{FALSE} to print a summary of active clusters.
-#' @return \code{brainAnalysis} returns a list containing \code{summary} (matrix) and
+#' @return \code{brainAnalysis} returns a list containing \code{summary} (data frame) and
 #' \code{TDPmap} (3D numeric array of the true discovery proportions).
-#' The matrix \code{summary} contains, for each cluster,
+#' The data frame \code{summary} contains, for each cluster,
 #' \itemize{
 #' \item \code{size}: size
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
@@ -103,16 +103,17 @@ brainAnalysis <- function(sumBrain, clusters=NULL, nMax=50, silent=FALSE){
     TDPmap[clusters==clusterId[i]] <- vals[i]
   }
   
+  M <- as.data.frame(M)
+  
   if(!silent){
-    sel <- M[,2]>0
+    sel <- M$TD >0
     if(sum(sel) == 0){
       print("No active clusters.")
     }else{
-      W <- M[sel,,drop=FALSE]
-      W <- W[order(W[,4], W[,1], decreasing=TRUE),,drop=FALSE]
-      converge <- (W[,2] == W[,3]) + 0
-      W <- cbind(W[,-c(3,5),drop=FALSE], converge)
-      
+      W <- M[sel,]
+      W <- W[order(W$TDP, W$size, decreasing=TRUE),]
+      W$converge <- (W$TD == W$maxTD) + 0
+      W <- W[,-c(3,5)]
       cat("Active clusters: ", as.character(nrow(W)), ".\n", sep="")
       cat("Clusters with highest TDP:\n")
       cat("\n")

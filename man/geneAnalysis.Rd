@@ -16,7 +16,7 @@ geneAnalysis(sumGene, pathways = NULL, nMax = 50, silent = FALSE)
 \item{silent}{logical, \code{FALSE} to print a summary of active pathways.}
 }
 \value{
-\code{geneAnalysis} returns a list matrix containing, for each pathway,
+\code{geneAnalysis} returns a data frame containing, for each pathway,
 \itemize{
 \item \code{size}: size
 \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries

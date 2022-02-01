@@ -7,7 +7,7 @@
 #' @param pathways list of character vectors containing gene names (one vector per pathway). If NULL, the whole gene set is considered.
 #' @param nMax maximum number of iterations per cluster.
 #' @param silent logical, \code{FALSE} to print a summary of active pathways.
-#' @return \code{geneAnalysis} returns a list matrix containing, for each pathway,
+#' @return \code{geneAnalysis} returns a data frame containing, for each pathway,
 #' \itemize{
 #' \item \code{size}: size
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
@@ -82,17 +82,17 @@ geneAnalysis <- function(sumGene, pathways=NULL, nMax=50, silent=FALSE){
   
   tokeep <- !is.na(M[,1])*1
   if(sum(tokeep) == 0){stop("No intersection between gene set and pathways")}
-  M <- M[tokeep,]
+  M <- as.data.frame(M[tokeep,,drop=FALSE])
   
   if(!silent){
-    sel <- M[,2]>0
+    sel <- M$TD >0
     if(sum(sel) == 0){
       print("No active pathways.")
     }else{
-      W <- M[sel,,drop=FALSE]
-      W <- W[order(W[,4], W[,1], decreasing=TRUE),,drop=FALSE]
-      converge <- (W[,2] == W[,3]) + 0
-      W <- cbind(W[,-c(3,5),drop=FALSE], converge)
+      W <- M[sel,]
+      W <- W[order(W$TDP, W$size, decreasing=TRUE),]
+      W$converge <- (W$TD == W$maxTD) + 0
+      W <- W[,-c(3,5)]
       cat("Active pathways: ", as.character(nrow(W)), ".\n", sep="")
       cat("Pathways with highest TDP:\n")
       cat("\n")
