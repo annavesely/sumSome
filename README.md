@@ -44,7 +44,7 @@ res
 summary(res)
 ```
 
-Subsequently, we construct lower confidence bounds for the proportion of active voxels (TDP) inside different clusters. While the algorithm may require many iterations to converge to full closed testing results, in most cases 50 iterations are sufficient to obtain a TDP very close to that given by closed testing.
+Subsequently, we construct lower confidence bounds for the proportion of active voxels (TDP) inside different clusters. While the algorithm may require many iterations to converge to full closed testing results, in most cases 50 iterations are sufficient to obtain adequate results.
 
 ``` r
 data("Auditory_clusterTH3_2") # cluster map
@@ -52,7 +52,7 @@ out <- brainAnalysis(sumBrain = res, clusters = Auditory_clusterTH3_2)
 ```
 
 
-Finally, we may write the TDP map as a Nifti file. In this case, we need the Nifti file for the mask.
+Finally, we may write the TDP map as a Nifti file. In this case, we need the Nifti file for the mask (e.g., ```mask.nii.gz``` saved in the working directory).
 
 ``` r
 require(RNifti)
@@ -117,7 +117,7 @@ ggplot(data = out, aes(x = TDP, y = pathways)) +
 
 
 ## General Setting
-The analysis employs a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
+In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
 
 ``` r 
 G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = TRUE, seed = 42)
