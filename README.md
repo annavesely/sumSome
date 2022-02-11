@@ -71,7 +71,7 @@ require(EnrichmentBrowser)
 
 d <- curatedTCGAData::curatedTCGAData(diseaseCode = "BRCA", assays = "RNASeq2Gene*", dry.run = FALSE)
 d <- TCGAutils::splitAssays(d, sampleCodes = "01", exclusive = TRUE) # primary solid tumor
-d <- d[ ,d$histological_type %in% c("infiltrating lobular carcinoma", "infiltrating ductal carcinoma")] # type
+d <- d[ ,d$histological_type %in% c("infiltrating lobular carcinoma", "infiltrating ductal carcinoma")]
 labels <- d$histological_type
 
 d <- d[rowMeans(assay(d)) >= 10, ] # select genes with mean expression >= 10
