@@ -62,17 +62,21 @@ RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 
 
 ## Gene Expression Data
-To study differences in gene expression between two populations, we use the expression values of different samples. Here we take and pre-process the ```montpick``` dataset from [ReCount](http://bowtie-bio.sourceforge.net/recount/index.shtml).
+To study differences in gene expression between two populations, we use the expression values of different samples. Here we take and pre-process the ```BRCA``` (Breast Invasive Carcinoma) dataset from [TGCA](https://portal.gdc.cancer.gov/projects/TCGA-BRCA) to compare two types of primary solid tumor: infiltrating lobular carcinoma and infiltrating ductal carcinoma.
 
 ``` r
-require(Biobase)
+require(curatedTCGAData)
+require(TCGAutils)
 require(EnrichmentBrowser)
 
-load(file=url("http://bowtie-bio.sourceforge.net/recount/ExpressionSets/montpick_eset.RData"))
-pheno <- Biobase::phenoData(montpick.eset)
-labels <- as.factor(pheno$population) # labels for two populations
-expr <- Biobase::exprs(montpick.eset) # expression data
-expr <- ex[rowMeans(expr) > 10, ] # selection of genes
+d <- curatedTCGAData::curatedTCGAData(diseaseCode = "BRCA", assays = "RNASeq2Gene*", dry.run = FALSE)
+d <- TCGAutils::splitAssays(d, sampleCodes = "01", exclusive = TRUE) # primary solid tumor
+d <- d[ ,d$histological_type %in% c("infiltrating lobular carcinoma", "infiltrating ductal carcinoma")] # type
+labels <- d$histological_type
+
+d <- d[rowMeans(assay(d)) >= 10, ] # select genes with mean expression >= 10
+d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZID") # map gene ID types
+expr <- assay(d)
 ```
 
 Analogously to fMRI data analysis, we compute permutation test statistics for each gene, using two-sample t tests, and we store information on the analysis in a ```sumGene``` object. There are two options.
@@ -96,7 +100,7 @@ summary(res)
 Subsequently, we compute lower confidence bounds for the proportion of differentially expressed genes (TDP) inside pathways.
 
 ``` r
-pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg", gene.id.type = "ENSEMBL")
+pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg")
 out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
@@ -105,9 +109,9 @@ We can finally plot the top pathways, as follows.
 ``` r
 require(ggplot2)
 
-sel <- order(out$TDP, out$size, decreasing=TRUE)[seq(20)]
-out <- out[sel,] # 20 pathways with highest TDP
-out$pathways <- factor(rownames(out), levels=rev(unique(rownames(out))))
+sel <- order(out$TDP, out$size, decreasing = TRUE)[seq(20)]
+out <- out[sel, ] # 20 pathways with highest TDP
+out$pathways <- factor(rownames(out), levels = rev(unique(rownames(out))))
 
 ggplot(data = out, aes(x = TDP, y = pathways)) +
   geom_point(aes(color = size, size = size)) +
