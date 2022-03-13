@@ -1,9 +1,9 @@
 Package: sumSome
 Type: Package
 Title: Permutation True Discovery Guarantee by Sum-Based Tests
-Version: 1.1.0
+Version: 1.1.1
 Date: 2021-11-23
-Author: Anna Vesely
+Author: Anna Vesely and Xu Chen
 Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
 Description: It allows to quickly perform permutation-based closed testing by sum-based global tests, and construct lower confidence bounds for the TDP, simultaneously over all subsets of hypotheses. As a main feature, it produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Details may be found in Vesely, Finos, and Goeman (2020) <arXiv:2102.11759>.
 License: GPL (>= 2)
@@ -13,7 +13,7 @@ Imports:
     ARIbrain,
     RNifti
 LinkingTo: Rcpp
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2.9000
 Encoding: UTF-8
 Language: en-US
 BugReports: https://github.com/annavesely/sumSome/issues
