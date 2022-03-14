@@ -155,12 +155,29 @@ tdp(res) # lower confidence bound for the TDP
 fdp(res) # upper confidence bound for the FDP
 ```
 
+
+## Linear-time Shortcut for Parametric Inference
+In addition to permutation inference, we also developed a new linear-time shortcut for computing lower confidence bounds for the number of true discoveries when the parametric critical values are available, which is provided with the function ```findDiscSum```. See an example below.
+
+``` r
+# generate matrix of p-values for 5 variables and 10 permutations
+G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = TRUE, seed = 42)
+
+# compute lower confidence bound for the number of true discoveries for the whole set using harmonic mean p-value
+res <- findDiscSum(stats = G[1,], cvs = "hmp.ind")
+res
+```
+
+
 # References
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 
 Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
 
 Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+
+Tian, J., Chen, X., Katsevich, E., Goeman, J. J. and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
+
 
 # Did you find some bugs?
 
