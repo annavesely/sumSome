@@ -45,6 +45,7 @@ transf <- function(G, truncFrom, truncTo, option, r){
   pvalues <- !(option %in% c("greater", "lower", "two.sided", "squares"))
   
   if(!is.matrix(G) || !is.numeric(G) || !all(is.finite(G))){stop("G must be a matrix of finite numbers")}
+  if(ncol(G)==0 || nrow(G)==0){stop("G must be a matrix of finite numbers")}
   if(pvalues && (!all(G >= 0) || !all(G <= 1))){stop("G must be a matrix of pvalues")}
   
   if(!is.numeric(r) || !is.finite(r)){stop("r must be a finite number")}

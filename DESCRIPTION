@@ -1,11 +1,11 @@
 Package: sumSome
 Type: Package
-Title: Permutation True Discovery Guarantee by Sum-Based Tests
+Title: True Discovery Guarantee by Sum-Based Tests
 Version: 1.1.1
 Date: 2021-11-23
 Author: Anna Vesely and Xu Chen
 Maintainer: Anna Vesely <anna.vesely@phd.unipd.it>
-Description: It allows to quickly perform permutation-based closed testing by sum-based global tests, and construct lower confidence bounds for the TDP, simultaneously over all subsets of hypotheses. As a main feature, it produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Details may be found in Vesely, Finos, and Goeman (2020) <arXiv:2102.11759>.
+Description: It allows to quickly perform closed testing by sum-based global tests, and construct lower confidence bounds for the TDP, simultaneously over all subsets of hypotheses. As a main feature, it produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Details may be found in Vesely at al. (2021) <arXiv:2102.11759> and Tian at al. (2021) <arXiv:2102.11253>.
 License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),
