@@ -1,11 +1,9 @@
 # sumSome
 [![DOI](https://zenodo.org/badge/324800427.svg)](https://zenodo.org/badge/latestdoi/324800427)
 
-sumSome is the package developed to quickly perform permutation-based closed testing by sum tests. The procedure applies to any global test which is sum-based, i.e., such that a group statistic may be written as a sum of contributions per feature (sum of t-scores, p-value combinations etc.). It adapts to the unknown joint distribution of the data through random permutations.
+sumSome is the package developed to quickly perform closed testing by sum tests. The procedure applies to any global test which is sum-based, i.e., such that a group statistic may be written as a sum of contributions per feature (sum of t-scores, p-value combinations etc.). The method allows to construct lower confidence bounds for the proportion of true discoveries (TDP), simultaneously over all subsets of hypotheses. Simultaneity ensures control of the TDP even when the subset of interest is selected post hoc, after seeing the data.
 
-The method allows to construct lower confidence bounds for the proportion of true discoveries (TDP), simultaneously over all subsets of hypotheses. Simultaneity ensures control of the TDP even when the subset of interest is selected post hoc, after seeing the data.
-
-As a main feature, the package produces simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI cluster analysis. Moreover, it allows to analyze gene expression data and generic permutation statistics.
+As main features, the package uses permutations to produce simultaneous lower confidence bounds for the proportion of active voxels in different clusters for fMRI data, and for the proportion of differentially expressed genes in different pathways for gene expression data. Moreover, it allows to analyze generic statistics using both permutations and a parametric approach.
 
 
 ## Installation
@@ -120,52 +118,72 @@ ggplot(data = out, aes(x = TDP, y = pathways)) +
 
 
 
-## General Setting
+## General Setting: Permutation Approach
 In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
 
 ``` r 
 G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = TRUE, seed = 42)
+S <- c(1,2) # subset of interest
 ```
 
 Then we may analyze any subset of hypotheses, storing the results into a ```sumObj``` object. There are two options, as follows.
 
-**1.** The function ```sumStats``` analyzes generic statistics:
+**1.** The function ```sumPvals``` analyzes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
 
 ``` r
-S <- c(1,2) # subset of interest
-res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5)
-res
-summary(res)
+res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0)
 ```
 
-**2.** The function ```sumPvals``` analyzes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
+**2.** The function ```sumStats``` analyzes generic statistics:
 
 ``` r
-S <- c(1,2) # subset of interest
-res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0)
-res
-summary(res)
+res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5)
 ```
 
 The resulting ```sumObj``` object contains lower confidence bounds for the number of true discoveries and the TDP, as well as upper confidence bounds for the false discovery proportion (FDP). 
 
 ``` r
+res
+summary(res)
 discoveries(res) # lower confidence bound for the number of true discoveries
 tdp(res) # lower confidence bound for the TDP
 fdp(res) # upper confidence bound for the FDP
 ```
 
 
-## Linear-time Shortcut for Parametric Inference
-In addition to permutation inference, we also developed a new linear-time shortcut for computing lower confidence bounds for the number of true discoveries when the parametric critical values are available, which is provided with the function ```findDiscSum```. See an example below.
+
+## General Setting: Parametric Approach
+The analysis in the parametric framework is similar to that of the previous section. We start with a vector of statistics, each corresponding to a hypothesis. Here we generate p-values corresponding to 5 hypotheses.
+
+``` r 
+g <- as.vector(simData(prop = 0.6, m = 5, B = 1, alpha = 0.4, p = TRUE, seed = 42))
+S <- c(1,2) # subset of interest
+```
+
+Then we may analyze any subset of hypotheses, storing the results into a ```sumObj``` object. There are two options, as follows.
+
+**1.** The function ```psumPvals``` analyzes p-value combinations (harmonic mean under general dependence or independence, Fisher, Cauchy):
 
 ``` r
-# generate matrix of p-values for 5 variables and 10 permutations
-G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = TRUE, seed = 42)
+res <- psumPvals(g = g, S = S, alpha = 0.4, type = "harmonic.dep")
+```
 
-# compute lower confidence bound for the number of true discoveries for the whole set using harmonic mean p-value
-res <- findDiscSum(stats = G[1,], cvs = "hmp.ind")
+**2.** The function ```psumStats``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination):
+
+``` r
+g <- -2 * log(g) # statistics
+cvs <- qchisq(p = 0.4, df = 2 * seq(5), lower.tail=FALSE) # critical values
+res <- psumStats(g = g, S = S, alpha = 0.4, cvs = cvs)
+```
+
+The resulting ```sumObj``` object, containing confidence bounds for the number of true discoveries, the TDP and the FDP, can be accessed as in the previous section.
+
+``` r
 res
+summary(res)
+discoveries(res) # lower confidence bound for the number of true discoveries
+tdp(res) # lower confidence bound for the TDP
+fdp(res) # upper confidence bound for the FDP
 ```
 
 
@@ -174,9 +192,9 @@ Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. 
 
 Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
 
-Vesely, A., Finos, L., and Goeman, J. J. (2020). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
-
 Tian, J., Chen, X., Katsevich, E., Goeman, J. J. and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
+
+Vesely, A., Finos, L., and Goeman, J. J. (2021). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
 
 
 # Did you find some bugs?
