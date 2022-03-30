@@ -102,21 +102,6 @@ pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg")
 out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
-We can finally plot the top pathways, as follows.
-
-``` r
-require(ggplot2)
-
-sel <- order(out$TDP, out$size, decreasing = TRUE)[seq(20)]
-out <- out[sel, ] # 20 pathways with highest TDP
-out$pathways <- factor(rownames(out), levels = rev(unique(rownames(out))))
-
-ggplot(data = out, aes(x = TDP, y = pathways)) +
-  geom_point(aes(color = size, size = size)) +
-  guides(color = guide_legend(), size = guide_legend())
-```
-
-
 
 ## General Setting: Permutation Approach
 In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
