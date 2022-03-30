@@ -30,7 +30,6 @@ First, we compute permutation test statistics for each voxel inside the brain, t
 
 ``` r
 res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
-res
 summary(res)
 ```
 
@@ -38,7 +37,6 @@ summary(res)
 
 ``` r
 res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, seed = 42, type = "vovk.wang", r = 0)
-res
 summary(res)
 ```
 
@@ -83,7 +81,6 @@ Analogously to fMRI data analysis, we compute permutation test statistics for ea
 
 ``` r
 res <- geneScores(expr = expr, labels = labels, seed = 42)
-res
 summary(res)
 ```
 
@@ -91,7 +88,6 @@ summary(res)
 
 ``` r
 res <- genePvals(expr = expr, labels = labels, seed = 42, type = "vovk.wang", r = -1)
-res
 summary(res)
 ```
 
@@ -128,7 +124,6 @@ res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.
 The resulting ```sumObj``` object contains lower confidence bounds for the number of true discoveries and the TDP, as well as upper confidence bounds for the false discovery proportion (FDP). 
 
 ``` r
-res
 summary(res)
 discoveries(res) # lower confidence bound for the number of true discoveries
 tdp(res) # lower confidence bound for the TDP
@@ -164,7 +159,6 @@ res <- psumStats(g = g, S = S, alpha = 0.4, cvs = cvs)
 The resulting ```sumObj``` object, containing confidence bounds for the number of true discoveries, the TDP and the FDP, can be accessed as in the previous section.
 
 ``` r
-res
 summary(res)
 discoveries(res) # lower confidence bound for the number of true discoveries
 tdp(res) # lower confidence bound for the TDP
@@ -184,5 +178,5 @@ Vesely, A., Finos, L., and Goeman, J. J. (2021). Permutation-based true discover
 
 # Did you find some bugs?
 
-Please write to anna.vesely@phd.unipd.it.
+Please write to anna.vesely@unipd.it.
 
