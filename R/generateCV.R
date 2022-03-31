@@ -9,9 +9,9 @@
 #' @details The \code{type} determines the vector of critical values as following.
 #' \itemize{
 #' \item Harmonic mean (dependence): valid under general dependence (Vovk and Wang, 2020)
-#' \item Harmonic mean (independence): valid under independence, anti-conservative under general dependence (Wilson, 2019)
-#' \item Fisher:  valid under independence, anti-conservative under general dependence (Fisher, 1925)
-#' \item Cauchy: valid under independence and perfect dependence, approximately valid under general dependence (Liu and Xie, 2020)
+#' \item Harmonic mean (independence): valid under independence, anti-conservative otherwise (Wilson, 2019)
+#' \item Fisher:  valid under independence, anti-conservative otherwise (Fisher, 1925)
+#' \item Cauchy: valid under independence and perfect dependence, approximately valid otherwise (Liu and Xie, 2020)
 #' }
 #' @return \code{generateCV} returns a numeric vector of critical values of length \code{m}.
 #' @author Xu Chen.
