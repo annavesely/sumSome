@@ -17,8 +17,7 @@
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
-#' @author Xu Chen, Jelle Goeman.
-#' @import FMStable
+#' @author Xu Chen.
 #' @noRd
 
 

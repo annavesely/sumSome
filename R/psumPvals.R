@@ -6,7 +6,7 @@
 #' @param g numeric vector of p-values.
 #' @param S vector of indices for the variables of interest (if not specified, all variables).
 #' @param alpha significance level.
-#' @param type p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher.ind}, \code{cauchy.ind}
+#' @param type p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher}, \code{cauchy}
 #' (see details).
 #' @details A p-value \code{p} is transformed as following.
 #' \itemize{
@@ -17,9 +17,9 @@
 #' An error message is returned if the transformation produces infinite values.
 #' @details The \code{type} determines the vector of critical values as following.
 #' \itemize{
-#' \item Harmonic mean under dependence: valid under general dependence (Vovk and Wang, 2020)
-#' \item Harmonic mean under independence: valid under independence, anti-conservative under general dependence (Wilson, 2019)
-#' \item Fisher under independence:  valid under independence, anti-conservative under general dependence (Fisher, 1925)
+#' \item Harmonic mean (dependence): valid under general dependence (Vovk and Wang, 2020)
+#' \item Harmonic mean (independence): valid under independence, anti-conservative under general dependence (Wilson, 2019)
+#' \item Fisher: valid under independence, anti-conservative under general dependence (Fisher, 1925)
 #' \item Cauchy: valid under independence and perfect dependence, approximately valid under general dependence (Liu and Xie, 2020)
 #' }
 #' @return \code{sumPvalsPar} returns an object of class \code{sumObj}, containing
@@ -31,7 +31,7 @@
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
-#' @author Xu Chen, Jelle Goeman.
+#' @author Xu Chen
 #' @examples
 #' # generate vector of p-values for 5 variables
 #' g <- as.vector(simData(prop = 0.6, m = 5, B = 1, alpha = 0.4, seed = 42))
@@ -73,10 +73,10 @@ psumPvals <- function(g, S=NULL, alpha=0.05, type="harmonic.dep"){
   
   if(is.null(S)){S <- seq(length(g))}
   
-  type = match.arg(tolower(type), c("harmonic.dep", "harmonic.ind", "fisher.ind", "cauchy"))
+  type = match.arg(tolower(type), c("harmonic.dep", "harmonic.ind", "fisher", "cauchy"))
   
   if (type=="harmonic.dep" || type=="harmonic.ind"){g <- 1/g}
-  else if(type=="fisher.ind"){g <- -2*log(g)}
+  else if(type=="fisher"){g <- -2*log(g)}
   else if(type=="cauchy") {g <- tan((0.5 - g)*pi)}
   
   if(!all(is.finite(g))){stop("Transformation produced infinite values")}

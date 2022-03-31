@@ -67,5 +67,5 @@ True discovery guarantee using p-values (parametric): \code{\link{psumPvals}}
 Access a \code{sumObj} object: \code{\link{discoveries}}, \code{\link{tdp}}, \code{\link{fdp}}
 }
 \author{
-Xu Chen, Jelle Goeman.
+Xu Chen.
 }

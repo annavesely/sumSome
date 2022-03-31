@@ -13,7 +13,7 @@ psumPvals(g, S = NULL, alpha = 0.05, type = "harmonic.dep")
 
 \item{alpha}{significance level.}
 
-\item{type}{p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher.ind}, \code{cauchy.ind}
+\item{type}{p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher}, \code{cauchy}
 (see details).}
 }
 \value{
@@ -43,9 +43,9 @@ An error message is returned if the transformation produces infinite values.
 
 The \code{type} determines the vector of critical values as following.
 \itemize{
-\item Harmonic mean under dependence: valid under general dependence (Vovk and Wang, 2020)
-\item Harmonic mean under independence: valid under independence, anti-conservative under general dependence (Wilson, 2019)
-\item Fisher under independence:  valid under independence, anti-conservative under general dependence (Fisher, 1925)
+\item Harmonic mean (dependence): valid under general dependence (Vovk and Wang, 2020)
+\item Harmonic mean (independence): valid under independence, anti-conservative under general dependence (Wilson, 2019)
+\item Fisher: valid under independence, anti-conservative under general dependence (Fisher, 1925)
 \item Cauchy: valid under independence and perfect dependence, approximately valid under general dependence (Liu and Xie, 2020)
 }
 }
@@ -82,5 +82,5 @@ True discovery guarantee using generic statistics (parametric): \code{\link{psum
 Access a \code{sumObj} object: \code{\link{discoveries}}, \code{\link{tdp}}, \code{\link{fdp}}
 }
 \author{
-Xu Chen, Jelle Goeman.
+Xu Chen
 }

@@ -9,9 +9,11 @@ Description: It allows to quickly perform closed testing by sum-based global tes
 License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),
+    stats,
     pARI,
     ARIbrain,
-    RNifti
+    RNifti,
+    FMStable
 LinkingTo: Rcpp
 RoxygenNote: 7.1.2.9000
 Encoding: UTF-8

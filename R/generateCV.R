@@ -3,24 +3,26 @@
 #' It determines a vector of critical values for summed transformed p-values considering \code{1:m} hypotheses.
 #' @usage generateCV(m, type, alpha)
 #' @param m number of hypotheses.
-#' @param type p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher.ind}, \code{cauchy.ind}
+#' @param type p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher}, \code{cauchy}
 #' (see details).
 #' @param alpha significance level.
 #' @details The \code{type} determines the vector of critical values as following.
 #' \itemize{
-#' \item Harmonic mean under dependence: valid under general dependence (Vovk and Wang, 2020)
-#' \item Harmonic mean under independence: valid under independence, anti-conservative under general dependence (Wilson, 2019)
-#' \item Fisher under independence:  valid under independence, anti-conservative under general dependence (Fisher, 1925)
+#' \item Harmonic mean (dependence): valid under general dependence (Vovk and Wang, 2020)
+#' \item Harmonic mean (independence): valid under independence, anti-conservative under general dependence (Wilson, 2019)
+#' \item Fisher:  valid under independence, anti-conservative under general dependence (Fisher, 1925)
 #' \item Cauchy: valid under independence and perfect dependence, approximately valid under general dependence (Liu and Xie, 2020)
 #' }
 #' @return \code{generateCV} returns a numeric vector of critical values of length \code{m}.
-#' @author Xu Chen, Jelle Goeman.
+#' @author Xu Chen.
 #' @noRd
+#' @importFrom FMStable qEstable
+#' @importFrom stats uniroot qchisq qcauchy
 
 
 generateCV <- function(m, type, alpha){
   
-  type = match.arg(tolower(type), c("harmonic.dep", "harmonic.ind", "fisher.ind", "cauchy"))
+  type = match.arg(tolower(type), c("harmonic.dep", "harmonic.ind", "fisher", "cauchy"))
   
   # (1) HMP - Vovk & Wang's (valid for general dep.)
   if(type == "harmonic.dep"){
@@ -44,7 +46,7 @@ generateCV <- function(m, type, alpha){
   }
   
   # (3) Fisher combination test (valid for ind., but anti-conservative for dep.)
-  if(type=="fisher.ind") {
+  if(type=="fisher") {
     out <- qchisq(1-alpha, df=2*(1:m))
     return(out)
   }

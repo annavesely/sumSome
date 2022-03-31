@@ -16,7 +16,7 @@
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
-#' @author Xu Chen, Jelle Goeman.
+#' @author Xu Chen.
 #' @examples
 #' # generate vector of statistics for 5 variables (Fisher transformation of p-values)
 #' g <- as.vector(simData(prop = 0.6, m = 5, B = 1, alpha = 0.4, seed = 42))
