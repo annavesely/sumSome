@@ -1,3 +1,5 @@
+<img src="sticker.png" align="right" alt="" width="200" />
+
 # sumSome
 [![DOI](https://zenodo.org/badge/324800427.svg)](https://zenodo.org/badge/latestdoi/324800427)
 
