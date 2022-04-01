@@ -17,7 +17,7 @@ devtools::install_github("annavesely/sumSome")
 ```
 
 
-## fMRI Data
+## fMRI data
 To study active voxels in different clusters, we start from the list of copes (constrast maps for each subject) and the mask. Different fMRI datasets may be found in the package [fMRIdata](https://github.com/angeella/fMRIdata). As an example, here we use data from the [Auditory dataset](https://openneuro.org/datasets/ds000116/versions/00003).
 
 ``` r
@@ -58,7 +58,7 @@ RNifti::writeNifti(out$TDPmap, file = "TDPmap.nii.gz", template = maskNifti)
 ```
 
 
-## Gene Expression Data
+## Gene expression data
 To study differences in gene expression between two populations, we use the expression values of different samples. Here we take and pre-process the ```BRCA``` (Breast Invasive Carcinoma) dataset from [TGCA](https://portal.gdc.cancer.gov/projects/TCGA-BRCA) to compare two types of primary solid tumor: infiltrating lobular carcinoma and infiltrating ductal carcinoma.
 
 ``` r
@@ -99,9 +99,9 @@ out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
 
-## General Setting
+## General setting
 
-### Permutation Approach
+### Permutation approach
 In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the hypotheses are false.
 
 ``` r 
@@ -134,7 +134,7 @@ fdp(res) # upper confidence bound for the FDP
 
 
 
-### Parametric Approach
+### Parametric approach
 The analysis in the parametric framework is similar to the previous one. We start with a vector of statistics, each corresponding to a hypothesis. Here we generate p-values corresponding to 5 hypotheses.
 
 ``` r 
