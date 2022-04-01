@@ -99,7 +99,9 @@ out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
 
-## General Setting: Permutation Approach
+## General Setting
+
+### Permutation Approach
 In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the hypotheses are false.
 
 ``` r 
@@ -121,7 +123,7 @@ res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type 
 res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5)
 ```
 
-The resulting ```sumObj``` object contains lower confidence bounds for the number of true discoveries and the TDP, as well as upper confidence bounds for the false discovery proportion (FDP). 
+The resulting ```sumObj``` object contains confidence bounds for the number of true discoveries, the TDP and the false discovery proportion (FDP). 
 
 ``` r
 summary(res)
@@ -132,7 +134,7 @@ fdp(res) # upper confidence bound for the FDP
 
 
 
-## General Setting: Parametric Approach
+### Parametric Approach
 The analysis in the parametric framework is similar to the previous one. We start with a vector of statistics, each corresponding to a hypothesis. Here we generate p-values corresponding to 5 hypotheses.
 
 ``` r 
@@ -140,7 +142,7 @@ g <- as.vector(simData(prop = 0.6, m = 5, B = 1, alpha = 0.4, p = TRUE, seed = 4
 S <- c(1,2) # subset of interest
 ```
 
-Then we may analyze any subset of hypotheses. Results are stored into a ```sumObj``` object, that can be accessed using the functions ```discoveries```, ```tdp``` and ```fdp``` introduced in the previous section.
+Then we may analyze any subset of hypotheses, obtaining a ```sumObj``` object.
 
 **1.** ```psumPvals``` analyzes p-value combinations (harmonic mean under general dependence or independence, Fisher, Cauchy):
 
@@ -156,6 +158,14 @@ cvs <- qchisq(p = 0.4, df = 2 * seq(5), lower.tail=FALSE) # critical values
 res <- psumStats(g = g, S = S, alpha = 0.4, cvs = cvs)
 ```
 
+The ```sumObj``` object can be accessed as in the previous section.
+
+``` r
+summary(res)
+discoveries(res) # lower confidence bound for the number of true discoveries
+tdp(res) # lower confidence bound for the TDP
+fdp(res) # upper confidence bound for the FDP
+```
 
 
 # References
