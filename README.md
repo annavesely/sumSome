@@ -26,25 +26,24 @@ data("Auditory_copes") # list of copes
 data("Auditory_mask") # mask
 ```
 
-First, we compute permutation test statistics for each voxel inside the brain, through one-sample t tests. For the usual significance levels (e.g., 5%), 200 permutations are generally suitable, since they provide sufficient power without requiring much computation time. Time may be further reduced by truncating the statistics, so that each value less extreme than a parameter ```truncFrom``` is set to a given value ```truncTo```. We store information on the statistics and other analysis parameters in a ```sumBrain``` object. There are two options, as following.
+First, we compute permutation test statistics for each voxel inside the brain, through one-sample t tests. For the usual significance levels (e.g., 5%), 200 permutations are generally suitable, since they provide sufficient power without requiring much computation time. Time may be further reduced by truncating the statistics, so that each value less extreme than a parameter ```truncFrom``` is set to a given value ```truncTo```. We store information on the statistics and other analysis parameters in a ```sumBrain``` object. There are two options, as follows.
 
-**1.** The function ```brainScores``` computes t-statistics:
+**1.** ```brainScores``` computes t-statistics:
 
 ``` r
 res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
-summary(res)
 ```
 
-**2.** The function ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
+**2.** ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
 
 ``` r
 res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, seed = 42, type = "vovk.wang", r = 0)
-summary(res)
 ```
 
 Subsequently, we construct lower confidence bounds for the proportion of active voxels (TDP) inside different clusters. While the algorithm may require many iterations to converge to full closed testing results, in most cases 50 iterations are sufficient to obtain adequate results.
 
 ``` r
+summary(res)
 data("Auditory_clusterTH3_2") # cluster map
 out <- brainAnalysis(sumBrain = res, clusters = Auditory_clusterTH3_2)
 ```
@@ -77,47 +76,46 @@ d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZ
 expr <- assay(d)
 ```
 
-Analogously to fMRI data analysis, we compute permutation test statistics for each gene, using two-sample t tests, and we store information on the analysis in a ```sumGene``` object. There are two options.
+Analogously to fMRI data analysis, we compute permutation test statistics for each gene, using two-sample t tests, and we store information on the analysis in a ```sumGene``` object.
 
-**1.** The function ```geneScores``` computes t-statistics:
+**1.** ```geneScores``` computes t-statistics:
 
 ``` r
 res <- geneScores(expr = expr, labels = labels, seed = 42)
-summary(res)
 ```
 
-**2.** The function ```genePvals``` computes p-value combinations:
+**2.** ```genePvals``` computes p-value combinations:
 
 ``` r
 res <- genePvals(expr = expr, labels = labels, seed = 42, type = "vovk.wang", r = -1)
-summary(res)
 ```
 
 Subsequently, we compute lower confidence bounds for the proportion of differentially expressed genes (TDP) inside pathways.
 
 ``` r
+summary(res)
 pathways <- EnrichmentBrowser::getGenesets(org = "hsa", db = "kegg")
 out <- geneAnalysis(sumGene = res, pathways = pathways)
 ```
 
 
 ## General Setting: Permutation Approach
-In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the null hypotheses are false.
+In the general setting, we start with a matrix of statistics, where columns correspond to hypotheses, and rows to data transformations (the first is the identity). Such a matrix may be simulated with the function ```simData```. Here, we are generating p-values corresponding to 5 hypotheses and 10 permutations, where 60% of the hypotheses are false.
 
 ``` r 
 G <- simData(prop = 0.6, m = 5, B = 10, alpha = 0.4, p = TRUE, seed = 42)
 S <- c(1,2) # subset of interest
 ```
 
-Then we may analyze any subset of hypotheses, storing the results into a ```sumObj``` object. There are two options, as follows.
+Then we may analyze any subset of hypotheses, storing results into a ```sumObj``` object.
 
-**1.** The function ```sumPvals``` analyzes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
+**1.** ```sumPvals``` analyzes p-value combinations:
 
 ``` r
 res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0)
 ```
 
-**2.** The function ```sumStats``` analyzes generic statistics:
+**2.** ```sumStats``` analyzes generic statistics:
 
 ``` r
 res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5)
@@ -135,22 +133,22 @@ fdp(res) # upper confidence bound for the FDP
 
 
 ## General Setting: Parametric Approach
-The analysis in the parametric framework is similar to that of the previous section. We start with a vector of statistics, each corresponding to a hypothesis. Here we generate p-values corresponding to 5 hypotheses.
+The analysis in the parametric framework is similar to the previous one. We start with a vector of statistics, each corresponding to a hypothesis. Here we generate p-values corresponding to 5 hypotheses.
 
 ``` r 
 g <- as.vector(simData(prop = 0.6, m = 5, B = 1, alpha = 0.4, p = TRUE, seed = 42))
 S <- c(1,2) # subset of interest
 ```
 
-Then we may analyze any subset of hypotheses, storing the results into a ```sumObj``` object. There are two options, as follows.
+Then we may analyze any subset of hypotheses. Results are stored into a ```sumObj``` object, that can be accessed using the functions ```discoveries```, ```tdp``` and ```fdp``` introduced in the previous section.
 
-**1.** The function ```psumPvals``` analyzes p-value combinations (harmonic mean under general dependence or independence, Fisher, Cauchy):
+**1.** ```psumPvals``` analyzes p-value combinations (harmonic mean under general dependence or independence, Fisher, Cauchy):
 
 ``` r
 res <- psumPvals(g = g, S = S, alpha = 0.4, type = "harmonic.dep")
 ```
 
-**2.** The function ```psumStats``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination):
+**2.** ```psumStats``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination of p-values):
 
 ``` r
 g <- -2 * log(g) # statistics
@@ -158,14 +156,6 @@ cvs <- qchisq(p = 0.4, df = 2 * seq(5), lower.tail=FALSE) # critical values
 res <- psumStats(g = g, S = S, alpha = 0.4, cvs = cvs)
 ```
 
-The resulting ```sumObj``` object, containing confidence bounds for the number of true discoveries, the TDP and the FDP, can be accessed as in the previous section.
-
-``` r
-summary(res)
-discoveries(res) # lower confidence bound for the number of true discoveries
-tdp(res) # lower confidence bound for the TDP
-fdp(res) # upper confidence bound for the FDP
-```
 
 
 # References
