@@ -64,16 +64,12 @@ sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
     rem <- which(apply(G, 2, function(x) permMin(x, B, truncTo)))
     rem <- rem[rem > s]
     if(length(rem) > 0){G <- as.matrix(G[,-rem])}
-    f <- ncol(G)
-    
-    # reorder indices in increasing order (obs=truncTo are added at the beginning)
-    minObs <- which(G[1,] == truncTo)
-    otherObs <- setdiff(seq(f), minObs)
-    otherObs <- otherObs[order(G[1, otherObs], decreasing=FALSE)]
-    indices <- c(minObs, otherObs)
-  }else{
-    indices <- order(G[1,], decreasing=FALSE)
   }
+  
+  f <- ncol(G)
+  
+  # order according to observations with respect to mean over permutations
+  indices <- order(G[1,] - colMeans(G), decreasing=FALSE)
   
   # centered test statistics with observations in increasing order
   D <- G[,indices]
@@ -86,7 +82,6 @@ sumTest <- function(G, S, alpha, truncFrom, truncTo, nMax){
   # matrix of indices in R
   I <- matrix(rep(indices, B), ncol=f, byrow=TRUE)
   I <- t(sapply(seq(B), function(x) I[x, o[x,]]))
-  f <- ncol(I)
   
   b <- bisectionTD(D, I, R, s, f, k, B, nMax)
   out <- sumObj(f0, s, alpha, b$TDmin, b$TDmax, b$BAB)
