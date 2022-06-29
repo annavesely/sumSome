@@ -241,9 +241,9 @@ void cumulativeMatrices(NumericMatrix &Asum, NumericMatrix &A, const NumericVect
 //' @noRd
 
 List sortSum(NumericMatrix &Dsum, NumericMatrix &Rsum, const NumericMatrix &D, const IntegerMatrix &I,
-                   const NumericMatrix &R, const NumericVector &fixed, int &j1, int &j2, const int &z,
-                   const int &s, const int &f, const int &B,
-                   const bool getDsum){
+             const NumericMatrix &R, const NumericVector &fixed, int &j1, int &j2, const int &z,
+             const int &s, const int &f, const int &B,
+             const bool getDsum){
   
   LogicalVector sel (f);
   IntegerVector ind = Range(0, f-1); // indices
@@ -587,7 +587,7 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
   NumericMatrix D0sort = clone(D);
   IntegerMatrix I0sort = clone(I0);
   I0sort(0,_) = I(0,_);
-
+  
   int vMin = 0;
   int vMax = f0 - z + 1;
   bool rej = TRUE;
@@ -631,6 +631,7 @@ List checkTD(const int &TD, const NumericMatrix &D0, const IntegerMatrix &I0, co
       R = clone(R0);
       j1 = f0 - z;
       j2 = f0 - z;
+      indSizes = TRUE;
       buildMatrices(Dsum, Rsum, D, I, R, fixed, j1, j2, z, s, f, f0, B, TRUE); // getDsum = TRUE
       computeBounds(vMin, vMax, rej, indSizes, Dsum, Rsum, k, B, j1, j2, TRUE);
       --n;
@@ -733,15 +734,3 @@ List bisectionTD(const NumericMatrix &D0, const IntegerMatrix &I0, const Numeric
   out["TDmin"] = TDmin; out["TDmax"] = TDmax - 1; out["BAB"] = BAB;
   return out;
 }
-
-
-
-
-
-
-
-
-
-
-
-
