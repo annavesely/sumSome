@@ -4,11 +4,11 @@ using namespace Rcpp;
 
 // Calculates the lower bound to the number of false hypotheses
 // [[Rcpp::export]]
-int findDiscov_sum(int                  s,   // size of I
-                   int                  m,   // number of all p-values
-                   Rcpp::NumericVector& u,   // [min(u,v), u, max(u,v)*(m-s+1)]
-                   Rcpp::NumericVector& v,   // [min(u,v), v, max(u,v)*(s+1)]
-                   Rcpp::NumericVector& cs)  // critical values for transformed p-value (1:m)
+int findDiscSum(int                  s,   // size of I
+                int                  m,   // number of all p-values
+                Rcpp::NumericVector& u,   // [min(u,v), u, max(u,v)*(m-s+1)]
+                Rcpp::NumericVector& v,   // [min(u,v), v, max(u,v)*(s+1)]
+                Rcpp::NumericVector& cs)  // critical values for transformed p-value (1:m)
 {
     int    k = 1;
     int    r = -1;

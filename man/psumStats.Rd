@@ -7,13 +7,13 @@
 psumStats(g, S = NULL, alpha = 0.05, cvs)
 }
 \arguments{
+\item{g}{numeric vector of statistics.}
+
 \item{S}{vector of indices for the variables of interest (if not specified, all variables).}
 
 \item{alpha}{significance level.}
 
 \item{cvs}{numeric vector of critical values for summed statistics considering \code{1:m} hypotheses.}
-
-\item{g}{numeric vector of statistics.}
 }
 \value{
 \code{sumStatsPar} returns an object of class \code{sumObj}, containing
@@ -59,7 +59,7 @@ fdp(res)
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
+Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
 }
 \seealso{
 True discovery guarantee using p-values (parametric): \code{\link{psumPvals}}
@@ -67,5 +67,5 @@ True discovery guarantee using p-values (parametric): \code{\link{psumPvals}}
 Access a \code{sumObj} object: \code{\link{discoveries}}, \code{\link{tdp}}, \code{\link{fdp}}
 }
 \author{
-Xu Chen.
+Xu Chen, Anna Vesely.
 }
