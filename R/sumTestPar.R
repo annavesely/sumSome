@@ -3,7 +3,7 @@
 #' It determines confidence bounds for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage psumTest(g, S, alpha, cvs)
+#' @usage sumTestPar(g, S, alpha, cvs)
 #' @param g numeric vector of statistics.
 #' @param S vector of indices for the variables of interest.
 #' @param alpha significance level.
@@ -15,13 +15,13 @@
 #' \item \code{alpha}: significance level
 #' \item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries in \code{S}
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
-#' \item \code{iterations}: number of iterations of the algorithm
+#' \item \code{iterations}: number of iterations of the algorithm (\code{NULL})
 #' }
-#' @author Xu Chen, Anna Vesely.
+#' @author Xu Chen.
 #' @noRd
 
 
-psumTest <- function(g, S, alpha, cvs){
+sumTestPar <- function(g, S, alpha, cvs){
   
   m <- length(g)
   s <- length(S)
