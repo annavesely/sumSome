@@ -6,7 +6,7 @@
   True Discovery Guarantee by Sum-Based Tests
 }
 \description{
-  It provides true discovery guarantees, using sum-based global statistics (sum of t-scores, p-value combinations, etc.). As main features, it produces simultaneous lower confidence bounds for the proportion of active voxels in clusters for fMRI data, and for the proportion of differentially expressed genes in pathways for gene expression data.
+  It provides true discovery guarantees, using sum-based global statistics (sum of t-scores, p-value combinations, etc.). As main features, it produces permutation-based simultaneous lower confidence bounds for the proportion of active voxels in clusters for fMRI data, and for the proportion of differentially expressed genes in pathways for gene expression data.
 }
 \author{
 Anna Vesely and Xu Chen.
@@ -30,6 +30,6 @@ Maintainer: Anna Vesely <anna.vesely@unipd.it>
   
   Gene expression pathway analysis: \code{\link{geneScores}}, \code{\link{genePvals}}, \code{\link{geneAnalysis}}
   
-  General setting : \code{\link{sumStats}} and \code{\link{sumPvals}} (permutations), \code{\link{psumStats}} and \code{\link{psumPvals}} (parametric)
+  General setting: \code{\link{sumStats}} and \code{\link{sumPvals}} (permutations), \code{\link{sumStatsPar}} and \code{\link{sumPvalsPar}} (parametric)
 }
 

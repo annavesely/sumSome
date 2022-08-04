@@ -1,85 +1,87 @@
 #' @title Vector of Critical Values for p-Value Combinations (Parametric)
 #' @description Internal function.
 #' It determines a vector of critical values for summed transformed p-values considering \code{1:m} hypotheses.
-#' @usage generateCV(m, type, alpha, r)
+#' @usage generateCV(m, alpha, type, r, independence)
 #' @param m number of hypotheses.
-#' @param type p-value combination among \code{fisher}, \code{fisher.dep}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang}, \code{harmonic.dep}, \code{harmonic.ind}
-#' (see details).
 #' @param alpha significance level.
-#' @param r parameter for Vovk and Wang's p-value combination for general dependence.
-#' @details The \code{type} determines the vector of critical values as following.
+#' @param type p-value combination among \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy},
+#' \code{harmonic}, \code{vovk.wang} (see details).
+#' @param r parameter for Vovk and Wang's p-value combination.
+#' @param independence logical, \code{TRUE} to assume independence, \code{FALSE} for general dependence structure.
+#' @details A p-value \code{p} is transformed as following.
 #' \itemize{
-#' \item Fisher (independence, \code{fisher}): valid under independence, anti-conservative otherwise (Fisher, 1925)
-#' \item Fisher (dependence, \code{fisher.dep}): valid under general dependence (Vovk and Wang, 2020)
-#' \item Pearson (\code{pearson}): valid under independence, anti-conservative otherwise (Pearson, 1933)
-#' \item Liptak (\code{liptak}): valid under independence, conservative or anti-conservative otherwise depending on the dependence structure among the tests (Liptak, 1958; unweighted version, same as Stouffer’s method (Stouffer et al., 1949))
-#' \item Cauchy (\code{cauchy}): valid under independence and perfect dependence, approximately valid otherwise under bivariate normality assumption (Liu and Xie, 2020)
-#' \item P-value combination for general dependence (\code{vovk.wang}): valid under general dependence (Vovk and Wang, 2020)
-#' \item Harmonic mean (dependence, \code{harmonic.dep}): valid under general dependence (Vovk and Wang, 2020)
-#' \item Harmonic mean (independence, \code{harmonic.ind}): valid under independence, anti-conservative otherwise (Wilson, 2019)
+#' \item Fisher: \code{-2log(p)} (Fisher, 1925)
+#' \item Pearson: \code{2log(1-p)} (Pearson, 1933)
+#' \item Liptak: \code{qnorm(1-p)} (Liptak, 1958; Stouffer et al., 1949)
+#' \item Cauchy: \code{tan[(0.5-p)pi]} with \code{pi=3.142} (Liu and Xie, 2020)
+#' \item Harmonic mean: \code{1/p} (Wilson, 2019)
+#' \item Vovk and Wang: \code{p^r} (\code{log(p)} for \code{r}=0) (Vovk and Wang, 2020)
 #' }
+#' An error message is returned if the transformation produces infinite values.
+#' @details For \code{vovk.wang}, \code{r=-Inf} and \code{r=Inf} correspond to taking the minimum and the maximum
+#' of the p-values, respectively.
+#' @details Under general dependence, the test is defined only for \code{fisher}, \code{harmonic} and \code{vovk.wang}.
+#' The latter always assumes general dependence.
 #' @return \code{generateCV} returns a numeric vector of critical values of length \code{m}.
-#' @author Xu Chen, Anna Vesely.
+#' @author Xu Chen.
 #' @noRd
 #' @importFrom FMStable qEstable
 #' @importFrom stats uniroot qchisq qcauchy
 
 
-generateCV <- function(m, type, alpha, r){
-
-  type = match.arg(tolower(type), c("fisher",
-                                    "fisher.dep",
-                                    "pearson", 
-                                    "liptak",
-                                    "cauchy", 
-                                    "vovk.wang",
-                                    "harmonic.dep", 
-                                    "harmonic.ind"))
+generateCV <- function(m, alpha, type, r, independence){
   
-  # (1) Fisher (independence)
+  
+  # Fisher (independence)
   if(type=="fisher") {
     out <- qchisq(alpha, df=2*(1:m), lower.tail=FALSE)
     return(out)
   }
   
-  # (2) Fisher (dependence)
-  if(type=="fisher.dep") {
-    an <- c(1, rep(exp(1),m-1))
-    if (m >= 2) {
-      for (i in 2:min(16,m)){
-        root  <- uniroot(function(x) log(1/x-(i-1)) - i + i^2*x, lower=0, upper=1/i-1e-8, tol=1e-30)$root
-        an[i] <- 1/root * exp(-(i-1)*(1-i*root))
-      }
-    }
-    out <- -2 * (1:m) * log(alpha/an)
-    return(out)
-  }
   
-  # (3) Pearson
+  # Pearson (independence)
   if(type=="pearson") {
     out <- -qchisq(alpha, df=2*(1:m))
     return(out)
   }
   
-  # (4) Liptak
+  
+  # Liptak (independence)
   if(type=="liptak") {
     out <- sqrt(1:m)*qnorm(alpha, lower.tail=FALSE)
     return(out)
   }
   
-  # (5) Cauchy
+  
+  # Cauchy (independence)
   if(type=="cauchy"){
     out <- (1:m)*qcauchy(alpha, location=0, scale=1, lower.tail=FALSE)
     return(out)
   }
   
-  # (6) P-value combination for general dependence
+  
+  
+  # Harmonic mean (independence)
+  if(type == "harmonic"){
+    out <- rep(1/alpha, m)
+    if (m >= 2) {
+      for (i in 2:m) {
+        out[i] <- i * FMStable::qEstable(alpha, FMStable::setParam(alpha=1, location=(log(i)+1+digamma(1)-log(2/pi)), logscale=log(pi/2), pm=0), lower.tail=FALSE)
+      }
+    }
+    return(out)
+  }
+  
+  
+  
+  # GENERAL DEPENDENCE
+  
   if(type=="vovk.wang"){
     
     # compute an
-    if (m == 1) {
+    if(m == 1){
       an <- 1
-    } else if (m >= 2) {
+    }else{
       if(r == Inf){ # precise
         an <- rep(1,m)
       }else if(r == -Inf){ # precise
@@ -117,30 +119,5 @@ generateCV <- function(m, type, alpha, r){
     }
     return(out)
   }
-  
-  # (7) Harmonic mean (dependence)
-  if(type == "harmonic.dep"){
-    an <- 1:m
-    if (m >= 3) {
-      for (i in 3:m) {
-        root  <- uniroot(function(x) x^2-i*(x+1)*log(x+1)+i*x, lower=i/2-1, upper=1e8, tol=1e-30)$root
-        an[i] <- (root+i)^2/(root+1)/i
-      }
-    }
-    out <- (1:m)*an/alpha
-    return(out)
-  }
-  
-  # (8) Harmonic mean (independence)
-  if(type == "harmonic.ind"){
-    out <- rep(1/alpha, m)
-    if (m >= 2) {
-      for (i in 2:m) {
-        out[i] <- i * FMStable::qEstable(alpha, FMStable::setParam(alpha=1, location=(log(i)+1+digamma(1)-log(2/pi)), logscale=log(pi/2), pm=0), lower.tail=FALSE)
-        #out[i] <- i * FMStable::qEstable(1-alpha, FMStable::setParam(alpha=1, location=(log(i)+1+digamma(1)-log(2/pi)), logscale=log(pi/2), pm=0))
-      }
-    }
-    return(out)
-  }
-  
 }
+
