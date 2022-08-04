@@ -144,7 +144,7 @@ S <- c(1,2) # subset of interest
 
 Then we may analyze any subset of hypotheses, obtaining a ```sumObj``` object.
 
-**1.** ```psumPvals``` analyzes p-value combinations (harmonic mean under general dependence or independence, Fisher, Cauchy):
+**1.** ```psumPvals``` analyzes p-value combinations (Fisher under general dependence or independence, Pearson, Liptak, Cauchy, generalized p-value combination for general dependence, harmonic mean under general dependence or independence):
 
 ``` r
 res <- psumPvals(g = g, S = S, alpha = 0.4, type = "harmonic.dep")
@@ -173,7 +173,7 @@ Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. 
 
 Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J. and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
+Tian, J., Chen, X., Katsevich, E., Goeman, J. J. and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
 
 Vesely, A., Finos, L., and Goeman, J. J. (2021). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
 

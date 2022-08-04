@@ -4,7 +4,7 @@
 \alias{psumPvals}
 \title{True Discovery Guarantee for p-Value Combinations - Parametric}
 \usage{
-psumPvals(g, S = NULL, alpha = 0.05, type = "harmonic.dep")
+psumPvals(g, S = NULL, alpha = 0.05, type = "harmonic.dep", r = NULL)
 }
 \arguments{
 \item{g}{numeric vector of p-values.}
@@ -13,8 +13,10 @@ psumPvals(g, S = NULL, alpha = 0.05, type = "harmonic.dep")
 
 \item{alpha}{significance level.}
 
-\item{type}{p-value combination among \code{harmonic.dep}, \code{harmonic.ind}, \code{fisher}, \code{cauchy}
+\item{type}{p-value combination among \code{fisher}, \code{fisher.dep}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang}, \code{harmonic.dep}, \code{harmonic.ind}
 (see details).}
+
+\item{r}{parameter for Vovk and Wang's p-value combination for general dependence.}
 }
 \value{
 \code{sumPvalsPar} returns an object of class \code{sumObj}, containing
@@ -35,18 +37,25 @@ The bounds are simultaneous over all sets, and remain valid under post-hoc selec
 \details{
 A p-value \code{p} is transformed as following.
 \itemize{
-\item Harmonic mean: \code{1/p}
 \item Fisher: \code{-2log(p)}
-\item Cauchy: \code{tan[(0.5 - p)pi]} with \code{pi}=3.142
+\item Pearson: \code{2log(1-p)}
+\item Liptak: \code{qnorm(1-p)}
+\item Cauchy: \code{tan[(0.5-p)pi]} with \code{pi=3.142}
+\item P-value combination for general dependence: \code{-sign(r)*p^r} for \code{r!=0} & \code{-log(p)} for \code{r=0}
+\item Harmonic mean: \code{1/p}
 }
 An error message is returned if the transformation produces infinite values.
 
 The \code{type} determines the vector of critical values as following.
 \itemize{
-\item Harmonic mean (dependence): valid under general dependence (Vovk and Wang, 2020)
-\item Harmonic mean (independence): valid under independence, anti-conservative otherwise (Wilson, 2019)
-\item Fisher: valid under independence, anti-conservative otherwise (Fisher, 1925)
-\item Cauchy: valid under independence and perfect dependence, approximately valid otherwise (Liu and Xie, 2020)
+\item Fisher (independence, \code{fisher}): valid under independence, anti-conservative otherwise (Fisher, 1925)
+\item Fisher (dependence, \code{fisher.dep}): valid under general dependence (Vovk and Wang, 2020)
+\item Pearson (\code{pearson}): valid under independence, anti-conservative otherwise (Pearson, 1933)
+\item Liptak (\code{liptak}): valid under independence, conservative or anti-conservative otherwise depending on the dependence structure among the tests (Liptak, 1958; unweighted version, same as Stouffer’s method (Stouffer et al., 1949))
+\item Cauchy (\code{cauchy}): valid under independence and perfect dependence, approximately valid otherwise under bivariate normality assumption (Liu and Xie, 2020)
+\item P-value combination for general dependence (\code{vovk.wang}): valid under general dependence (Vovk and Wang, 2020)
+\item Harmonic mean (dependence, \code{harmonic.dep}): valid under general dependence (Vovk and Wang, 2020)
+\item Harmonic mean (independence, \code{harmonic.ind}): valid under independence, anti-conservative otherwise (Wilson, 2019)
 }
 }
 \examples{
@@ -74,7 +83,7 @@ fdp(res)
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
+Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
 }
 \seealso{
 True discovery guarantee using generic statistics (parametric): \code{\link{psumStats}}
@@ -82,5 +91,5 @@ True discovery guarantee using generic statistics (parametric): \code{\link{psum
 Access a \code{sumObj} object: \code{\link{discoveries}}, \code{\link{tdp}}, \code{\link{fdp}}
 }
 \author{
-Xu Chen
+Xu Chen, Anna Vesely.
 }

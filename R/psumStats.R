@@ -16,7 +16,7 @@
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
-#' @author Xu Chen.
+#' @author Xu Chen, Anna Vesely.
 #' @examples
 #' # generate vector of statistics for 5 variables (Fisher transformation of p-values)
 #' g <- as.vector(simData(prop = 0.6, m = 5, B = 1, alpha = 0.4, seed = 42))
@@ -44,7 +44,7 @@
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 
-#' Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
+#' Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
 #' 
 #' @seealso
 #' True discovery guarantee using p-values (parametric): \code{\link{psumPvals}}
@@ -53,15 +53,22 @@
 #' @export
 
 
-psumStats <- function(G, S=NULL, alpha=0.05, cvs){
+psumStats <- function(g, S=NULL, alpha=0.05, cvs){
   
   if(!is.vector(g) || !is.numeric(g) || !all(is.finite(g))){stop("g must be a vector of finite numbers")}
   if(length(g)==0){stop("g must be a vector of finite numbers")}
   
   if(is.null(S)){S <- seq(length(g))}
+  if(!is.vector(S) || !is.numeric(S) || !all(is.finite(S))){stop("S must be a vector of finite integers")}
+  if(!all(floor(S)==S)){stop("S must be a vector of finite integers")}
+  if(!all(S >= 0) || !all(S <= length(g))){stop("S must contain indices between 1 and the total number of variables")}
+  S <- unique(S)
+  
+  if(!is.numeric(alpha) || !is.finite(alpha)){stop("alpha must be a number in (0,1)")}
+  if(alpha <= 0 || alpha >= 1){stop("alpha must be a number in (0,1)")}
   
   if(!is.vector(cvs) || !is.numeric(cvs) || !all(is.finite(cvs))){stop("cvs must be a vector of finite numbers")}
-  if(length(cvs) != length(cvs)){stop("Invalid dimensions: g and cvs must have the same length")}
+  if(length(g) != length(cvs)){stop("Invalid dimensions: g and cvs must have the same length")}
   
   out <- psumTest(g, S, alpha, cvs)
   return(out)

@@ -10,9 +10,9 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// findDiscov_sum
-int findDiscov_sum(int s, int m, Rcpp::NumericVector& u, Rcpp::NumericVector& v, Rcpp::NumericVector& cs);
-RcppExport SEXP _sumSome_findDiscov_sum(SEXP sSEXP, SEXP mSEXP, SEXP uSEXP, SEXP vSEXP, SEXP csSEXP) {
+// findDiscSum
+int findDiscSum(int s, int m, Rcpp::NumericVector& u, Rcpp::NumericVector& v, Rcpp::NumericVector& cs);
+RcppExport SEXP _sumSome_findDiscSum(SEXP sSEXP, SEXP mSEXP, SEXP uSEXP, SEXP vSEXP, SEXP csSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,7 +21,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type u(uSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type v(vSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type cs(csSEXP);
-    rcpp_result_gen = Rcpp::wrap(findDiscov_sum(s, m, u, v, cs));
+    rcpp_result_gen = Rcpp::wrap(findDiscSum(s, m, u, v, cs));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -58,7 +58,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_sumSome_findDiscov_sum", (DL_FUNC) &_sumSome_findDiscov_sum, 5},
+    {"_sumSome_findDiscSum", (DL_FUNC) &_sumSome_findDiscSum, 5},
     {"_sumSome_permMin", (DL_FUNC) &_sumSome_permMin, 3},
     {"_sumSome_bisectionTD", (DL_FUNC) &_sumSome_bisectionTD, 8},
     {NULL, NULL, 0}

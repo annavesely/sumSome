@@ -17,7 +17,7 @@
 #' \item \code{maxTD}: maximum value of \code{TD} that could be found under convergence of the algorithm
 #' \item \code{iterations}: number of iterations of the algorithm
 #' }
-#' @author Xu Chen.
+#' @author Xu Chen, Anna Vesely.
 #' @noRd
 
 
@@ -32,7 +32,7 @@ psumTest <- function(g, S, alpha, cvs){
   u <- c(v0, sort(g[S]), rep(u0+1, m-s+1))
   v <- c(v0, sort(g[notS]), rep(u0+1, s+1))
   
-  td <- findDiscov_sum(s, m, u, v, cvs)
+  td <- findDiscSum(s, m, u, v, cvs)
   out <- sumObj(m, s, alpha, td, td, NULL)
   return(out)
 }
