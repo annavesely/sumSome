@@ -111,16 +111,16 @@ S <- c(1,2) # subset of interest
 
 Then we may analyze any subset of hypotheses, storing results into a ```sumObj``` object.
 
-**1.** ```sumPvals``` analyzes p-value combinations:
-
-``` r
-res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0)
-```
-
-**2.** ```sumStats``` analyzes generic statistics:
+**1.** ```sumStats``` analyzes generic statistics:
 
 ``` r
 res <- sumStats(G = G, S = S, alternative = "lower", alpha = 0.4, truncFrom = 0.4, truncTo = 0.5)
+```
+
+**2.** ```sumPvals``` analyzes p-value combinations:
+
+``` r
+res <- sumPvals(G = G, S = S, alpha = 0.4, truncFrom = 0.4, truncTo = 0.5, type = "vovk.wang", r = 0)
 ```
 
 The resulting ```sumObj``` object contains confidence bounds for the number of true discoveries, the TDP and the false discovery proportion (FDP). 
@@ -144,18 +144,18 @@ S <- c(1,2) # subset of interest
 
 Then we may analyze any subset of hypotheses, obtaining a ```sumObj``` object.
 
-**1.** ```sumPvalsPar``` analyzes p-value combinations (Fisher, Pearson, Liptak, Cauchy, harmonic mean, Vovk and Wang with parameter ```r```), either under the assumption of independence or for general dependence structures:
-
-``` r
-res <- psumPvals(g = g, S = S, alpha = 0.4, type = "harmonic", independence = FALSE)
-```
-
-**2.** ```sumStatsPar``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination of p-values):
+**1.** ```sumStatsPar``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination of p-values):
 
 ``` r
 g <- -2 * log(g) # statistics
-cvs <- qchisq(p = 0.4, df = 2 * seq(5), lower.tail=FALSE) # critical values
-res <- psumStats(g = g, S = S, alpha = 0.4, cvs = cvs)
+cvs <- qchisq(p = 0.4, df = 2 * seq(5), lower.tail = FALSE) # critical values
+res <- sumStatsPar(g = g, S = S, alpha = 0.4, cvs = cvs)
+```
+
+**2.** ```sumPvalsPar``` analyzes p-value combinations (Fisher, Pearson, Liptak, Cauchy, harmonic mean, Vovk and Wang with parameter ```r```), either under the assumption of independence or for general dependence structures:
+
+``` r
+res <- sumPvalsPar(g = g, S = S, alpha = 0.4, type = "harmonic", independence = FALSE)
 ```
 
 The ```sumObj``` object can be accessed as in the previous section.
