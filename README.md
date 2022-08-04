@@ -34,7 +34,7 @@ First, we compute permutation test statistics for each voxel inside the brain, t
 res <- brainScores(copes = Auditory_copes, mask = Auditory_mask, seed = 42)
 ```
 
-**2.** ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, Vovk and Wang with parameter ```r```):
+**2.** ```brainPvals``` computes p-value combinations (Fisher, Pearson, Liptak, Edgington, Cauchy, harmonic mean, Vovk and Wang with parameter ```r```):
 
 ``` r
 res <- brainPvals(copes = Auditory_copes, mask = Auditory_mask, seed = 42, type = "vovk.wang", r = 0)
@@ -144,13 +144,13 @@ S <- c(1,2) # subset of interest
 
 Then we may analyze any subset of hypotheses, obtaining a ```sumObj``` object.
 
-**1.** ```psumPvals``` analyzes p-value combinations (Fisher under general dependence or independence, Pearson, Liptak, Cauchy, generalized p-value combination for general dependence, harmonic mean under general dependence or independence):
+**1.** ```sumPvalsPar``` analyzes p-value combinations (Fisher, Pearson, Liptak, Cauchy, harmonic mean, Vovk and Wang with parameter ```r```), either under the assumption of independence or for general dependence structures:
 
 ``` r
-res <- psumPvals(g = g, S = S, alpha = 0.4, type = "harmonic.dep")
+res <- psumPvals(g = g, S = S, alpha = 0.4, type = "harmonic", independence = FALSE)
 ```
 
-**2.** ```psumStats``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination of p-values):
+**2.** ```sumStatsPar``` analyzes generic statistics, relying on a user-defined vector of critical values (e.g., here we consider Fisher combination of p-values):
 
 ``` r
 g <- -2 * log(g) # statistics
