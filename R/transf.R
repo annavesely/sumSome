@@ -9,7 +9,7 @@
 #' If \code{NULL}, statistics are not truncated.
 #' @param option direction of the alternative hypothesis (\code{greater}, \code{lower}, \code{two.sided}),
 #' or transformation (\code{squares} for generic statistics,
-#' and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{harmonic}, \code{vovk.wang} for p-values).
+#' and \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak}, \code{cauchy}, \code{vovk.wang} for p-values).
 #' @param r parameter for Vovk and Wang's p-value combination.
 #' @details Transformations are defined so that the most extreme values of the new statistics are always the greatest.
 #' A generic statistic \code{x} is transformed as following.
@@ -23,7 +23,6 @@
 #' \item Pearson: \code{log(1-x)}
 #' \item Liptak: \code{-qnorm(x)}
 #' \item Cauchy: \code{tan[(0.5 - x)pi]} with \code{pi}=3.142
-#' \item Harmonic: \code{1/x}
 #' \item Vovk and Wang: \code{- sign(r)x^r}
 #' }
 #' An error message is returned if the transformation produces infinite values.
@@ -51,10 +50,6 @@ transf <- function(G, truncFrom, truncTo, option, r){
   
   if(!is.numeric(r) || !is.finite(r)){stop("r must be a finite number")}
   if(option=="vovk.wang" && r==0){option <- "fisher"}
-  if(option=="harmonic"){
-    option <- "vovk.wang"
-    r <- -1
-  }
   
   if(option == "lower" || option == "edgington"){G <- - G}
   else if(option == "two.sided"){G <- abs(G)}

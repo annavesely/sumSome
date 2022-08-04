@@ -27,7 +27,7 @@ If \code{NULL}, it is set to \code{alpha}.}
 If \code{NULL}, p-values are not truncated.}
 
 \item{type}{p-value combination among \code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
-\code{cauchy}, \code{harmonic}, \code{vovk.wang} (see details).}
+\code{cauchy}, \code{vovk.wang} (see details).}
 
 \item{r}{parameter for Vovk and Wang's p-value combination.}
 
@@ -51,13 +51,12 @@ for the null hypothesis that the mean expression value is the same between two p
 \details{
 A p-value \code{p} is transformed as following.
 \itemize{
-\item Edgington: \code{p} (Edgington, 1972)
-\item Fisher: \code{-2log(p)} (Fisher, 1925)
-\item Pearson: \code{2log(1-p)} (Pearson, 1933)
-\item Liptak: \code{qnorm(1-p)} (Liptak, 1958; Stouffer et al., 1949)
-\item Cauchy: \code{tan[(0.5-p)pi]} with \code{pi=3.142} (Liu and Xie, 2020)
-\item Harmonic mean: \code{1/p} (Wilson, 2019)
-\item Vovk and Wang: \code{p^r} (\code{log(p)} for \code{r}=0) (Vovk and Wang, 2020)
+\item Edgington: \code{-p}
+\item Fisher: \code{-log(p)}
+\item Pearson: \code{log(1-p)}
+\item Liptak: \code{-qnorm(p)}
+\item Cauchy: \code{tan[(0.5 - p)pi]} with \code{pi}=3.142
+\item Vovk and Wang: \code{- sign(r)p^r}
 }
 An error message is returned if the transformation produces infinite values.
 

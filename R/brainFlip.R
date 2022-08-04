@@ -22,13 +22,12 @@
 #' @param rand logical, \code{TRUE} to compute p-values by permutation distribution.
 #' @details A p-value \code{p} is transformed as following.
 #' \itemize{
-#' \item Edgington: \code{p} (Edgington, 1972)
-#' \item Fisher: \code{-2log(p)} (Fisher, 1925)
-#' \item Pearson: \code{2log(1-p)} (Pearson, 1933)
-#' \item Liptak: \code{qnorm(1-p)} (Liptak, 1958; Stouffer et al., 1949)
-#' \item Cauchy: \code{tan[(0.5-p)pi]} with \code{pi=3.142} (Liu and Xie, 2020)
-#' \item Harmonic mean: \code{1/p} (Wilson, 2019)
-#' \item Vovk and Wang: \code{p^r} (\code{log(p)} for \code{r}=0) (Vovk and Wang, 2020)
+#' \item Edgington: \code{-p}
+#' \item Fisher: \code{-log(p)}
+#' \item Pearson: \code{log(1-p)}
+#' \item Liptak: \code{-qnorm(p)}
+#' \item Cauchy: \code{tan[(0.5 - p)pi]} with \code{pi}=3.142
+#' \item Vovk and Wang: \code{- sign(r)p^r}
 #' }
 #' An error message is returned if the transformation produces infinite values.
 #' @details Truncation parameters should be such that \code{truncTo} is not more extreme than \code{truncFrom}.
@@ -69,7 +68,7 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   }
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
-  type <- match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "harmonic", "vovk.wang"))
+  type <- match.arg(tolower(type), c("fisher", "pearson", "liptak", "edgington", "cauchy", "vovk.wang"))
   
   # check alpha and B
   if(!is.numeric(alpha) || !is.finite(alpha)){stop("alpha must be a number in (0,1)")}
