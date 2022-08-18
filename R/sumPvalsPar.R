@@ -85,8 +85,6 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
   
   if(!is.numeric(r)){stop("r must be a real number")}
   
-  if(type == "vovk.wang"){independence <- FALSE}
-  
   # switch to Vovk and Wang for general dependence
   if(!independence){
     if(type == "fisher"){r <- 0}
@@ -95,6 +93,16 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
       stop("The method is not defined under general dependence for this p-value combination")
     }
     type <- "vovk.wang"
+    warning("The critical values under general dependence are used for this p-value combination method")
+  }
+  
+  # switch to Fisher & Harmonic mean for independence
+  if(type == "vovk.wang" && independence){
+    if(r == 0){type = "fisher"}
+    else if(r == -1){type == "harmonic"}
+    else if(!(r %in% c(0, -1))){
+      stop("'Vovk and Wang' can not be implemented for independence for this r")
+    }
   }
   
   # transform p-values
