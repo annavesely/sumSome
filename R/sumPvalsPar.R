@@ -23,7 +23,6 @@
 #' @details For \code{vovk.wang}, \code{r=-Inf} and \code{r=Inf} correspond to taking the minimum and the maximum
 #' of the p-values, respectively.
 #' @details Under general dependence, the test is defined only for \code{fisher}, \code{harmonic} and \code{vovk.wang}.
-#' The latter always assumes general dependence.
 #' @return \code{sumPvalsPar} returns an object of class \code{sumObj}, containing
 #' \itemize{
 #' \item \code{total}: total number of variables (length of \code{g})
@@ -93,15 +92,16 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
       stop("The method is not defined under general dependence for this p-value combination")
     }
     type <- "vovk.wang"
-    warning("The critical values under general dependence are used for this p-value combination method")
+    #warning("The critical values under general dependence are used for this p-value combination method")
   }
   
   # switch to Fisher & Harmonic mean for independence
   if(type == "vovk.wang" && independence){
-    if(r == 0){type = "fisher"}
-    else if(r == -1){type == "harmonic"}
-    else if(!(r %in% c(0, -1))){
-      stop("'Vovk and Wang' can not be implemented for independence for this r")
+    if(r == 0){type <- "fisher"}
+    else if(r == -1){type <- "harmonic"}
+    else{
+      #stop("'Vovk and Wang' can not be implemented for independence for this r")
+      warning("The critical values under general dependence are used for this p-value combination method")
     }
   }
   

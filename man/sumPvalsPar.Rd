@@ -52,7 +52,6 @@ For \code{vovk.wang}, \code{r=-Inf} and \code{r=Inf} correspond to taking the mi
 of the p-values, respectively.
 
 Under general dependence, the test is defined only for \code{fisher}, \code{harmonic} and \code{vovk.wang}.
-The latter always assumes general dependence.
 }
 \examples{
 # generate vector of p-values for 5 variables
