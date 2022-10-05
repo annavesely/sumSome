@@ -67,6 +67,8 @@
 
 sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independence = FALSE){
   
+  # change lines 95 and 104
+  
   if(!is.vector(g) || !is.numeric(g) || !all(is.finite(g))){stop("g must be a vector of finite numbers")}
   if(length(g)==0){stop("g must be a vector of finite numbers")}
   if(!all(g >= 0) || !all(g <= 1)){stop("g must be a vector of p-values")}
