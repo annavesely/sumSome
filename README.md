@@ -72,7 +72,7 @@ d <- TCGAutils::splitAssays(d, sampleCodes = "01", exclusive = TRUE) # primary s
 d <- d[ ,d$histological_type %in% c("infiltrating lobular carcinoma", "infiltrating ductal carcinoma")]
 labels <- d$histological_type
 
-d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZID") # map gene ID types
+d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZID") # map ID types
 mexpr <- rowMeans(assay(d)) # mean expression across subjects
 thr <- sort(mexpr)[ceiling(length(mexpr) * 0.1)] # to remove the 10% of genes with lowest mexpr
 
@@ -184,5 +184,5 @@ Vesely, A., Finos, L., and Goeman, J. J. (2021). Permutation-based true discover
 
 # Did you find some bugs?
 
-Please write to anna.vesely@unipd.it.
+Please write to vesely@uni-bremen.de.
 
