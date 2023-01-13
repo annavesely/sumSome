@@ -66,7 +66,8 @@ require(curatedTCGAData)
 require(TCGAutils)
 require(EnrichmentBrowser)
 
-d <- curatedTCGAData::curatedTCGAData(diseaseCode = "BRCA", assays = "RNASeq2Gene*", version="2.0.1", dry.run = FALSE)
+d <- curatedTCGAData::curatedTCGAData(diseaseCode = "BRCA", assays = "RNASeq2Gene*",
+     version="2.0.1", dry.run = FALSE)
 d <- TCGAutils::splitAssays(d, sampleCodes = "01", exclusive = TRUE) # primary solid tumor
 d <- d[ ,d$histological_type %in% c("infiltrating lobular carcinoma", "infiltrating ductal carcinoma")]
 labels <- d$histological_type
