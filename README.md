@@ -74,7 +74,7 @@ labels <- d$histological_type
 
 d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZID") # map gene ID types
 mexpr <- rowMeans(assay(d)) # mean expression across subjects
-thr <- sort(mexpr)[ceiling(length(mexpr) * 0.1)] # threshold to remove the 10% of genes with lowest mexpr
+thr <- sort(mexpr)[ceiling(length(mexpr) * 0.1)] # to remove the 10% of genes with lowest mexpr
 
 d <- d[mexpr > thr,] # select genes with mean expression > thr
 expr <- assay(d)
