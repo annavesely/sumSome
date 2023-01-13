@@ -66,7 +66,7 @@ geneFlip <- function(expr, labels, alternative, alpha, B, seed, truncFrom, trunc
   if(B < (1/alpha)){stop("1/alpha cannot exceed the number of transformations")}
   
   if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
-  else{seed <- sample(seq(10^10), 1)}
+  else{seed <- sample(seq(.Machine$integer.max), 1)}
   set.seed(round(seed))
   
   st <- pARI::permTest(X=expr, B=B, alternative=alternative, seed=seed, rand=rand, label=labels) # sign flipping

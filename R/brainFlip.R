@@ -79,22 +79,19 @@ brainFlip <- function(copes, mask, alternative, alpha, B, seed, truncFrom, trunc
   if(B < (1/alpha)){stop("1/alpha cannot exceed the number of transformations")}
   
   if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
-  else{seed <- sample(seq(10^10), 1)}
+  else{seed <- sample(seq(.Machine$integer.max), 1)}
   set.seed(round(seed))
   
-  # create image
-  img <- array(NA, c(imgDim, n))
+  # matrix of data (rows = variables, columns = observations)
+  scores <- matrix(NA, nrow=(imgDim[1] * imgDim[2] * imgDim[3]), ncol=n)
+  
   for (i in seq(n)) {
     if(!(all(dim(copes[[i]]) == imgDim))){stop("incompatible copes dimensions")}
-    img[,,,i] <- copes[[i]]
+    scores[,i] <- as.vector(copes[[i]])
   }
   rm(copes)
   
-  # matrix of data (rows = variables, columns = observations)
-  scores <- matrix(img, nrow=(imgDim[1] * imgDim[2] * imgDim[3]), ncol=n)
-  scores[mask==0,] <- NA
-  rm(img)
-  
+  # keep only voxels inside the brain
   scores <- scores[which(mask != 0),]
   if(!is.numeric(scores) || !all(is.finite(scores))){stop("copes should contain numeric values for voxels inside the brain")}
   
