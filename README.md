@@ -66,15 +66,14 @@ require(curatedTCGAData)
 require(TCGAutils)
 require(EnrichmentBrowser)
 
-d <- curatedTCGAData::curatedTCGAData(diseaseCode = "BRCA", assays = "RNASeq2Gene*",
-     version="2.0.1", dry.run = FALSE)
+d <- curatedTCGAData::curatedTCGAData(diseaseCode = "BRCA", assays = "RNASeq2Gene*", version="2.0.1", dry.run = FALSE)
 d <- TCGAutils::splitAssays(d, sampleCodes = "01", exclusive = TRUE) # primary solid tumor
 d <- d[ ,d$histological_type %in% c("infiltrating lobular carcinoma", "infiltrating ductal carcinoma")]
 labels <- d$histological_type
 
-d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZID") # map ID types
+d <- EnrichmentBrowser::idMap(d[[1]], org = "hsa", from = "SYMBOL", to = "ENTREZID") # map gene ID types
 mexpr <- rowMeans(assay(d)) # mean expression across subjects
-thr <- sort(mexpr)[ceiling(length(mexpr) * 0.1)] # to remove the 10% of genes with lowest mexpr
+thr <- sort(mexpr)[ceiling(length(mexpr) * 0.1)] # threshold to remove the 10% of genes with lowest mean expression
 
 d <- d[mexpr > thr,] # select genes with mean expression > thr
 expr <- assay(d)
