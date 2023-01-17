@@ -4,7 +4,7 @@
 \alias{sumPvalsPar}
 \title{True Discovery Guarantee for p-Value Combinations - Parametric}
 \usage{
-sumPvalsPar(g, S = NULL, alpha = 0.05, type = "vovk.wang", r = 0, independence = FALSE)
+sumPvalsPar(g, S = NULL, alpha = 0.05, type = "vovk.wang", r = 0, independence = NULL)
 }
 \arguments{
 \item{g}{numeric vector of p-values.}
@@ -18,7 +18,8 @@ sumPvalsPar(g, S = NULL, alpha = 0.05, type = "vovk.wang", r = 0, independence =
 
 \item{r}{parameter for Vovk and Wang's p-value combination.}
 
-\item{independence}{logical, \code{TRUE} to assume independence, \code{FALSE} for general dependence structure.}
+\item{independence}{logical, \code{TRUE} to assume independence, \code{FALSE} for general dependence structure.
+If not specified, it is set to \code{FALSE} for \code{vovk.wang}, and \code{TRUE} otherwise.}
 }
 \value{
 \code{sumPvalsPar} returns an object of class \code{sumObj}, containing
@@ -32,8 +33,9 @@ sumPvalsPar(g, S = NULL, alpha = 0.05, type = "vovk.wang", r = 0, independence =
 }
 }
 \description{
-This function determines confidence bounds for the number of true discoveries, the true discovery proportion
-and the false discovery proportion within a set of interest, when using p-values as test statistics.
+This function uses p-values to determine confidence bounds
+for the number of true discoveries, the true discovery proportion
+and the false discovery proportion within a set of interest.
 The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
 \details{
@@ -48,10 +50,16 @@ A p-value \code{p} is transformed as following.
 }
 An error message is returned if the transformation produces infinite values.
 
-For \code{vovk.wang}, \code{r=-Inf} and \code{r=Inf} correspond to taking the minimum and the maximum
-of the p-values, respectively.
+For Vovk and Wang, \code{r=-Inf} corresponds to the minimum p-value, \code{r=Inf} to the maximum p-value,
+\code{r=0} to Fisher, and \code{r=-1} to the harmonic mean.
 
-Under general dependence, the test is defined only for \code{fisher}, \code{harmonic} and \code{vovk.wang}.
+Under independence, for Vovk and Wang the test is defined only
+for \code{r=0} and \code{r=1}. Under general dependence, the test is defined only for
+Fisher, the harmonic mean and Vovk and Wang.
+
+For combinations that are not implemented, if the vector of critical values is known
+the method can be applied through \code{\link{sumStatsPar}}.
+Please contact us to implement other known vectors of critical values that do not currently appear.
 }
 \examples{
 # generate vector of p-values for 5 variables
@@ -78,7 +86,7 @@ fdp(res)
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
+Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2022). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, 1-47.
 }
 \seealso{
 True discovery guarantee using generic statistics (parametric): \code{\link{sumStatsPar}}

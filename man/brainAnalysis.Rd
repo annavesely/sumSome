@@ -30,7 +30,8 @@ The data frame \code{summary} contains, for each cluster,
 }
 }
 \description{
-This function determines a true discovery guarantee for fMRI cluster analysis.
+This function uses permutation t-statistics/p-values to determine a true discovery guarantee
+for fMRI cluster analysis.
 It computes confidence bounds for the number of true discoveries and the true discovery proportion
 within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }

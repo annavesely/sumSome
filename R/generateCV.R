@@ -1,4 +1,4 @@
-#' @title Vector of Critical Values for p-Value Combinations (Parametric)
+#' @title Vector of Critical Values for p-Value Combinations - Parametric
 #' @description Internal function.
 #' It determines a vector of critical values for summed transformed p-values considering \code{1:m} hypotheses.
 #' @usage generateCV(m, alpha, type, r, independence)
@@ -18,10 +18,7 @@
 #' \item Vovk and Wang: \code{p^r} (\code{log(p)} for \code{r}=0) (Vovk and Wang, 2020)
 #' }
 #' An error message is returned if the transformation produces infinite values.
-#' @details For \code{vovk.wang}, \code{r=-Inf} and \code{r=Inf} correspond to taking the minimum and the maximum
-#' of the p-values, respectively.
-#' @details Under general dependence, the test is defined only for \code{fisher}, \code{harmonic} and \code{vovk.wang}.
-#' The latter always assumes general dependence.
+#' @details For Vovk and Wang, \code{r=0} corresponds to Fisher, and \code{r=-1} to the harmonic mean.
 #' @return \code{generateCV} returns a numeric vector of critical values of length \code{m}.
 #' @author Xu Chen.
 #' @noRd

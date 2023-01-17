@@ -2,7 +2,7 @@
 % Please edit documentation in R/sumStats.R
 \name{sumStats}
 \alias{sumStats}
-\title{True Discovery Guarantee for Generic Statistics}
+\title{True Discovery Guarantee for Generic Statistics - Permutation}
 \usage{
 sumStats(G, S = NULL, alternative = "greater", alpha = 0.05,
          truncFrom = NULL, truncTo = NULL, nMax = 50)
@@ -37,7 +37,8 @@ If \code{NULL}, statistics are not truncated.}
 }
 }
 \description{
-This function determines confidence bounds for the number of true discoveries, the true discovery proportion
+This function uses generic permutation statistics to determine confidence bounds
+for the number of true discoveries, the true discovery proportion
 and the false discovery proportion within a set of interest.
 The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }

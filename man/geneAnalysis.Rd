@@ -2,7 +2,7 @@
 % Please edit documentation in R/geneAnalysis.R
 \name{geneAnalysis}
 \alias{geneAnalysis}
-\title{True Discovery Guarantee for Cluster Analysis of Gene Expression Data}
+\title{True Discovery Guarantee for Pathway Analysis of Gene Expression Data}
 \usage{
 geneAnalysis(sumGene, pathways = NULL, nMax = 50, silent = FALSE)
 }
@@ -26,7 +26,8 @@ geneAnalysis(sumGene, pathways = NULL, nMax = 50, silent = FALSE)
 }
 }
 \description{
-This function determines a true discovery guarantee for gene cluster analysis.
+This function uses permutation t-statistics/p-values to determine a true discovery guarantee
+for gene pathway analysis.
 It computes confidence bounds for the number of true discoveries and the true discovery proportion
 within each cluster. The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }

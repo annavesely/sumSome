@@ -1,5 +1,6 @@
-#' @title True Discovery Guarantee for Generic Statistics
-#' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
+#' @title True Discovery Guarantee for Generic Statistics - Permutation
+#' @description This function uses generic permutation statistics to determine confidence bounds
+#' for the number of true discoveries, the true discovery proportion
 #' and the false discovery proportion within a set of interest.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 #' @usage sumStats(G, S = NULL, alternative = "greater", alpha = 0.05,

@@ -1,8 +1,9 @@
 #' @title True Discovery Guarantee for p-Value Combinations - Parametric
-#' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
-#' and the false discovery proportion within a set of interest, when using p-values as test statistics.
+#' @description This function uses p-values to determine confidence bounds
+#' for the number of true discoveries, the true discovery proportion
+#' and the false discovery proportion within a set of interest.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
-#' @usage sumPvalsPar(g, S = NULL, alpha = 0.05, type = "vovk.wang", r = 0, independence = FALSE)
+#' @usage sumPvalsPar(g, S = NULL, alpha = 0.05, type = "vovk.wang", r = 0, independence = NULL)
 #' @param g numeric vector of p-values.
 #' @param S vector of indices for the variables of interest (if not specified, all variables).
 #' @param alpha significance level.
@@ -10,6 +11,7 @@
 #' \code{harmonic}, \code{vovk.wang} (see details).
 #' @param r parameter for Vovk and Wang's p-value combination.
 #' @param independence logical, \code{TRUE} to assume independence, \code{FALSE} for general dependence structure.
+#' If not specified, it is set to \code{FALSE} for \code{vovk.wang}, and \code{TRUE} otherwise.
 #' @details A p-value \code{p} is transformed as following.
 #' \itemize{
 #' \item Fisher: \code{-2log(p)} (Fisher, 1925)
@@ -20,9 +22,14 @@
 #' \item Vovk and Wang: \code{p^r} (\code{log(p)} for \code{r}=0) (Vovk and Wang, 2020)
 #' }
 #' An error message is returned if the transformation produces infinite values.
-#' @details For \code{vovk.wang}, \code{r=-Inf} and \code{r=Inf} correspond to taking the minimum and the maximum
-#' of the p-values, respectively.
-#' @details Under general dependence, the test is defined only for \code{fisher}, \code{harmonic} and \code{vovk.wang}.
+#' @details For Vovk and Wang, \code{r=-Inf} corresponds to the minimum p-value, \code{r=Inf} to the maximum p-value,
+#' \code{r=0} to Fisher, and \code{r=-1} to the harmonic mean.
+#' @details Under independence, for Vovk and Wang the test is defined only
+#' for \code{r=0} and \code{r=1}. Under general dependence, the test is defined only for
+#' Fisher, the harmonic mean and Vovk and Wang.
+#' @details For combinations that are not implemented, if the vector of critical values is known
+#' the method can be applied through \code{\link{sumStatsPar}}.
+#' Please contact us to implement other known vectors of critical values that do not currently appear.
 #' @return \code{sumPvalsPar} returns an object of class \code{sumObj}, containing
 #' \itemize{
 #' \item \code{total}: total number of variables (length of \code{g})
@@ -57,7 +64,7 @@
 #' @references
 #' Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 #' 
-#' Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
+#' Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2022). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, 1-47.
 #' 
 #' @seealso
 #' True discovery guarantee using generic statistics (parametric): \code{\link{sumStatsPar}}
@@ -65,7 +72,7 @@
 #' Access a \code{sumObj} object: \code{\link{discoveries}}, \code{\link{tdp}}, \code{\link{fdp}}
 #' @export
 
-sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independence = FALSE){
+sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independence=NULL){
   
   # change lines 95 and 104
   
@@ -86,15 +93,21 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
   
   if(!is.numeric(r)){stop("r must be a real number")}
   
+  # if independence is not specified, we assume it is TRUE unless the type is Vovk and Wang
+  if(is.null(independence)){
+    independence <- (type != "vovk.wang")
+  }
+  
   # switch to Vovk and Wang for general dependence
-  if(!independence){
+  if(type != "vovk.wang" && !independence){
     if(type == "fisher"){r <- 0}
     else if(type == "harmonic"){r <- -1}
     else if(type %in% c("pearson", "liptak", "cauchy")){
-      stop("The method is not defined under general dependence for this p-value combination")
+      stop("The method is not implemented under general dependence for this p-value combination.
+  Use independence = TRUE to assume independence.
+  Otherwise, refer to sumStatsPar() to manually input a vector of critical values.")
     }
     type <- "vovk.wang"
-    #warning("The critical values under general dependence are used for this p-value combination method")
   }
   
   # switch to Fisher & Harmonic mean for independence
@@ -102,8 +115,9 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
     if(r == 0){type <- "fisher"}
     else if(r == -1){type <- "harmonic"}
     else{
-      #stop("'Vovk and Wang' can not be implemented for independence for this r")
-      warning("The critical values under general dependence are used for this p-value combination method")
+      stop("The method is not implemented under independence for this p-value combination.
+  Use independence = FALSE to assume general dependence.
+  Otherwise, refer to sumStatsPar() to manually input a vector of critical values.")
     }
   }
   

@@ -63,6 +63,8 @@ A p-value \code{p} is transformed as following.
 }
 An error message is returned if the transformation produces infinite values.
 
+For Vovk and Wang, \code{r=0} corresponds to Fisher, and \code{r=-1} to the harmonic mean.
+
 Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
 As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
 \code{truncTo} should be strictly smaller than 1.

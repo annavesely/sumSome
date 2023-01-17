@@ -27,7 +27,8 @@ sumStatsPar(g, S = NULL, alpha = 0.05, cvs)
 }
 }
 \description{
-This function determines confidence bounds for the number of true discoveries, the true discovery proportion
+This function uses generic statistics and a suitable vector of critical values
+to determine confidence bounds for the number of true discoveries, the true discovery proportion
 and the false discovery proportion within a set of interest.
 The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 }
@@ -59,7 +60,7 @@ fdp(res)
 \references{
 Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
+Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2022). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, 1-47.
 }
 \seealso{
 True discovery guarantee using p-values (parametric): \code{\link{sumPvalsPar}}

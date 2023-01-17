@@ -1,6 +1,7 @@
-#' @title True Discovery Guarantee for p-Value Combinations
-#' @description This function determines confidence bounds for the number of true discoveries, the true discovery proportion
-#' and the false discovery proportion within a set of interest, when using p-values as test statistics.
+#' @title True Discovery Guarantee for p-Value Combinations - Permutation
+#' @description This function uses permutation p-values to determine confidence bounds
+#' for the number of true discoveries, the true discovery proportion
+#' and the false discovery proportion within a set of interest.
 #' The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
 #' @usage sumPvals(G, S = NULL, alpha = 0.05, truncFrom = NULL, truncTo = 0.5,
 #'          type = "vovk.wang", r = 0, nMax = 50)
@@ -27,6 +28,7 @@
 #' \item Vovk and Wang: \code{p^r} (\code{log(p)} for \code{r}=0) (Vovk and Wang, 2020)
 #' }
 #' An error message is returned if the transformation produces infinite values.
+#' @details For Vovk and Wang, \code{r=0} corresponds to Fisher, and \code{r=-1} to the harmonic mean.
 #' @details Truncation parameters should be such that \code{truncTo} is not smaller than \code{truncFrom}.
 #' As Pearson's and Liptak's transformations produce infinite values in 1, for such methods
 #' \code{truncTo} should be strictly smaller than 1.
