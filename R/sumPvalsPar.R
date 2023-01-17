@@ -98,18 +98,6 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
     independence <- (type != "vovk.wang")
   }
   
-  # switch to Vovk and Wang for general dependence
-  if(type != "vovk.wang" && !independence){
-    if(type == "fisher"){r <- 0}
-    else if(type == "harmonic"){r <- -1}
-    else if(type %in% c("pearson", "liptak", "cauchy")){
-      stop("The method is not implemented under general dependence for this p-value combination.
-  Use independence = TRUE to assume independence.
-  Otherwise, refer to sumStatsPar() to manually input a vector of critical values.")
-    }
-    type <- "vovk.wang"
-  }
-  
   # switch to Fisher & Harmonic mean for independence
   if(type == "vovk.wang" && independence){
     if(r == 0){type <- "fisher"}
@@ -119,6 +107,18 @@ sumPvalsPar <- function(g, S=NULL, alpha=0.05, type="vovk.wang", r=0, independen
   Use independence = FALSE to assume general dependence.
   Otherwise, refer to sumStatsPar() to manually input a vector of critical values.")
     }
+  }
+  
+  # switch to Vovk and Wang for general dependence
+  if(type != "vovk.wang" && !independence){
+    if(type == "fisher"){r <- 0}
+    else if(type == "harmonic"){r <- -1}
+    else{
+      stop("The method is not implemented under general dependence for this p-value combination.
+  Use independence = TRUE to assume independence.
+  Otherwise, refer to sumStatsPar() to manually input a vector of critical values.")
+    }
+    type <- "vovk.wang"
   }
   
   # transform p-values
