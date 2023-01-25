@@ -62,18 +62,17 @@ brainClusters <- function(copes, mask=NULL, thr=3.2, alternative="two.sided", si
   
   alternative <- match.arg(tolower(alternative), c("greater", "lower", "two.sided"))
   
-  # create image
-  img <- array(NA, c(imgDim, n))
+  # matrix of data (rows = variables, columns = observations)
+  scores <- matrix(NA, nrow=(imgDim[1] * imgDim[2] * imgDim[3]), ncol=n)
+  
   for (i in seq(n)) {
     if(!(all(dim(copes[[i]]) == imgDim))){stop("incompatible copes dimensions")}
-    img[,,,i] <- copes[[i]]
+    scores[,i] <- as.vector(copes[[i]])
   }
   rm(copes)
   
-  # matrix of data (rows = variables, columns = observations)
-  scores <- matrix(img, nrow=(imgDim[1] * imgDim[2] * imgDim[3]), ncol=n)
+  # NA for voxels not in the brain
   scores[mask==0,] <- NA
-  rm(img)
   
   # if needed, create clusters
   if(is.null(clusters)){
