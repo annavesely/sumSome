@@ -68,7 +68,7 @@ simData <- function(prop, m, B=200, rho=0, n=50, alpha=0.05, pw=0.8, p=TRUE, see
   if(!is.numeric(pw) || !is.finite(pw) || pw <= 0 || pw >= 1){stop("pw must be a number in [0,1]")}
   
   if(!is.null(seed)){if(!is.numeric(seed) || !is.finite(seed)){stop("seed must be a finite integer")}}
-  else{seed <- sample(seq(10^9), 1)}
+  else{seed <- sample(seq(.Machine$integer.max), 1)}
   set.seed(round(seed))
   
   pi0 <- 1 - prop
