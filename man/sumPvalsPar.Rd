@@ -84,9 +84,9 @@ tdp(res)
 fdp(res)
 }
 \references{
-Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
+Goeman J. J. and Solari A. (2011). Multiple testing for exploratory research. Statistical Science, doi: 10.1214/11-STS356.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2022). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, 1-47.
+Tian J., Chen X., Katsevich E., Goeman J. J. and Ramdas A. (2022). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, doi: 10.1111/sjos.12614.
 }
 \seealso{
 True discovery guarantee using generic statistics (parametric): \code{\link{sumStatsPar}}
