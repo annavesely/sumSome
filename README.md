@@ -172,13 +172,11 @@ fdp(res) # upper confidence bound for the FDP
 
 
 # References
-Goeman, J. J. and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science, 26(4):584-597.
+Goeman J. J. and Solari A. (2011). Multiple testing for exploratory research. Statistical Science, doi: 10.1214/11-STS356.
 
-Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
+Tian J., Chen X., Katsevich E., Goeman J. J. and Ramdas A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, doi: 10.1111/sjos.12614.
 
-Tian, J., Chen, X., Katsevich, E., Goeman, J. J. and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, to appear. (Pre-print arXiv:2102.11253)
-
-Vesely, A., Finos, L., and Goeman, J. J. (2021). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+Vesely A., Finos L., and Goeman J. J. (2021). Permutation-based true discovery guarantee by sum tests. Journal of the Royal Statistical Society, Series B (Statistical Methodology), doi: 10.1093/jrsssb/qkad019.
 
 
 # Did you find some bugs?
