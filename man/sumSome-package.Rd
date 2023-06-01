@@ -11,17 +11,14 @@
 \author{
 Anna Vesely and Xu Chen.
 
-Maintainer: Anna Vesely <anna.vesely@unipd.it>
+Maintainer: Anna Vesely <anna.vesely@uni-bremen.de>
 }
 \references{
+  Goeman J. J. and Solari A. (2011). Multiple testing for exploratory research. Statistical Science, doi: 10.1214/1-STS356.
 
-  Goeman, J. J., and Solari, A. (2011). Multiple testing for exploratory research. Statistical Science 26 (4) 584-597.
-  
-  Hemerik, J. and Goeman, J. J. (2018). False discovery proportion estimation by permutations: confidence for significance analysis of microarrays. JRSS B, 80(1):137-155.
-  
-  Tian, J., Chen, X., Katsevich, E., Goeman, J. J., and Ramdas, A. (2021). Large-scale simultaneous inference under dependence. Pre-print arXiv:2102.11253.
-  
-  Vesely, A., Finos, L., and Goeman, J. J. (2021). Permutation-based true discovery guarantee by sum tests. Pre-print arXiv:2102.11759.
+  Tian J., Chen X., Katsevich E., Goeman J. J. and Ramdas A. (2022). Large-scale simultaneous inference under dependence. Scandinavian Journal of Statistics, doi: 10.1111/sjos.12614.
+
+  Vesely A., Finos L., and Goeman J. J. (2023). Permutation-based true discovery guarantee by sum tests. Journal of the Royal Statistical Society, Series B (Statistical Methodology), doi: 10.1093/jrsssb/qkad019.
 }
 \keyword{ package }
 \seealso{
