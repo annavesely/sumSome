@@ -1,11 +1,14 @@
-#' @title Confidence Bound for the Number of True Discoveries
-#' @description This function determines a lower confidence bound for the number of true discoveries
-#' within a set of interest. The bound remains valid under post-hoc selection.
+#' @title True discovery guarantee
+#' @name true-discovery-guarantee
+#' @rdname true-discovery-guarantee
+#' @description These functions determine a lower confidence bound for the number of true discoveries,
+#' a lower confidence bound for the true discovery proportion (TDP),
+#' and an upper confidence bound for the false discovery proportion (FDP)
+#' within a set of interest. The bounds remain valid under post-hoc selection.
 #' @usage discoveries(object)
 #' @param object an object of class \code{sumObj}, as returned by
 #' the functions \code{\link{sumStats}} and \code{\link{sumPvals}}.
-#' @return \code{discoveries} returns a lower (1-\code{alpha})-confidence bound
-#' for the number of true discoveries in the set.
+#' @return \code{discoveries}, \code{tdp} and \code{fdp} return a (1-\code{alpha})-confidence bound for the corresponding quantity in the subset.
 #' @author Anna Vesely.
 #' @examples
 #' # generate matrix of p-values for 5 variables and 10 permutations
@@ -30,10 +33,6 @@
 #' fdp(res)
 #' @seealso
 #' Create a \code{sumObj} object: \code{\link{sumStats}}, \code{\link{sumPvals}}
-#' 
-#' Lower confidence bound for the TDP: \code{\link{tdp}}
-#' 
-#' Upper confidence bound for the FDP: \code{\link{fdp}}
 #' @export
 
 discoveries <- function(object){
@@ -41,10 +40,40 @@ discoveries <- function(object){
 }
 
 
-
-#' @rdname discoveries
 #' @export
 
 discoveries.sumObj = function(object) {
   return(object$TD)
+}
+
+
+
+#' @rdname true-discovery-guarantee
+#' @usage tdp(object)
+#' @export
+
+tdp <- function(object){
+  UseMethod("tdp")
+}
+
+#' @export
+
+tdp.sumObj = function(object) {
+  return(object$TD/object$size)
+}
+
+
+#' @rdname true-discovery-guarantee
+#' @usage fdp(object)
+#' @export
+
+fdp <- function(object){
+  UseMethod("fdp")
+}
+
+
+#' @export
+
+fdp.sumObj = function(object) {
+  return(1- object$TD/object$size)
 }
