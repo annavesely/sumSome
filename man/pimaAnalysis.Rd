@@ -54,7 +54,7 @@ and rows to data transformations (e.g. permutations). The first transformation i
 }
 }
 \examples{
-# generate matrix of t-scores for 6 variables (e.g, 2 coefficients X and Z within 3 models)
+# generate matrix of statistics for 2 coefficients X and Z within 3 models
 G <- simData(prop = 0.6, m = 6, B = 50, alpha = 0.4, p = FALSE, seed = 42)
 colnames(G) <- rep(c("X","Z"),3)
  
@@ -64,7 +64,7 @@ summary_table <- data.frame(
   Coeff = colnames(G)
 )
 
-# list containing the test statistics and the summary
+# list of Tspace and summary_table
 obj <- list(Tspace = as.data.frame(G), summary_table = summary_table)
 
 # significant effects overall (sum of test statistics)
