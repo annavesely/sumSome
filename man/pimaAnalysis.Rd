@@ -4,16 +4,17 @@
 \alias{pimaAnalysis}
 \title{True discovery guarantee in multiverse analysis}
 \usage{
-pimaAnalysis(pima, by = NULL, type = "sum", r = 0, alpha = 0.05, ...)
+pimaAnalysis(obj, by = NULL, type = "sum", r = 0, alpha = 0.05, ...)
 }
 \arguments{
-\item{pima}{an object of class \code{pima}, as obtained from the function \code{\link[pima]{pima}}.}
+\item{obj}{an object of class \code{jointest}, as obtained from the functions \code{pima} (package \strong{pima}) or \code{join_flipscores} (\strong{jointest}).}
 
 \item{by}{name of grouping element among \code{Coeff} and \code{Model}. If not specified, all coefficients of interest
 in all models are considered together.}
 
-\item{type}{combining function: \code{sum} uses the sum of scores as in \code{\link[sumSome]{sumStats}},
-while different p-value combinations are defined as in \code{\link[sumSome]{sumPvals}}.}
+\item{type}{combining function: \code{sum} uses the sum of test statistics as in \code{sumStats},
+while different p-value combinations are defined as in \code{sumPvals} (\code{edgington}, \code{fisher}, \code{pearson}, \code{liptak},
+\code{cauchy}, \code{harmonic}, \code{vovk.wang}).}
 
 \item{r}{parameter for Vovk and Wang's p-value combination.}
 
@@ -22,15 +23,15 @@ while different p-value combinations are defined as in \code{\link[sumSome]{sumP
 \item{...}{further parameters of \code{sumStats} or \code{sumPvals} (truncation parameters and maximum number of iterations of the algorithm).}
 }
 \value{
-Returns a data frame containing a summary for each subset:
+\code{pimaAnalysis} returns a data frame containing a summary for each subset:
 \itemize{
 \item \code{size}: number of considered coefficients
-\item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of true discoveries
-\item \code{TDP}: lower (1-\code{alpha})-confidence bound for the true discovery proportion
+\item \code{TD}: lower (1-\code{alpha})-confidence bound for the number of significant effects
+\item \code{TDP}: lower (1-\code{alpha})-confidence bound for the proportion of significant effects
 }
 }
 \description{
-This function uses permutation score statistics/p-values to determine a true discovery guarantee for multiverse analysis,
+This function uses permutation statistics/p-values to determine a true discovery guarantee for multiverse analysis,
 when studying one or more parameters of interest within a multiverse of models.
 It computes confidence bounds for the number of true discoveries and the true discovery proportion overall or within different groups.
 The bounds are simultaneous over all sets, and remain valid under post-hoc selection.
@@ -39,14 +40,48 @@ The bounds are simultaneous over all sets, and remain valid under post-hoc selec
 In the default \code{by = NULL}, the procedure computes lower confidence bounds for the
 number/proportion of significant effects (non-null coefficients) among all.
 Other inputs of the argument \code{by} return analogous bounds, defined by coefficient (\code{"Coeff"}) or by model (\code{"Model"}).
+While the bounds are simultaneous over all possible groupings,
+the combining function \code{type} should be fixed in advance.
 
-If truncation parameters are not specified, scores/p-values are not truncated.
+If truncation parameters are not specified among the further parameters,
+statistics/p-values are not truncated.
+
+More generically, \code{obj} can be any list containing:
+\itemize{
+\item \code{Tspace}: data frame of statistics, where columns correspond to variables,
+and rows to data transformations (e.g. permutations). The first transformation is the identity.
+\item \code{summary_table}: data frame of summary information where rows correspond to variables.
+}
 }
 \examples{
-# COPIARE PARTE DELL'ESEMPIO DELLA FUNZIONE pima()
+# generate matrix of t-scores for 6 variables (e.g, 2 coefficients X and Z within 3 models)
+G <- simData(prop = 0.6, m = 6, B = 50, alpha = 0.4, p = FALSE, seed = 42)
+colnames(G) <- rep(c("X","Z"),3)
+ 
+# summary table
+summary_table <- data.frame(
+  Model = rep(c("mod1","mod2","mod3"), each=2),
+  Coeff = colnames(G)
+)
+
+# list containing the test statistics and the summary
+obj <- list(Tspace = as.data.frame(G), summary_table = summary_table)
+
+# significant effects overall (sum of test statistics)
+pimaAnalysis(obj, alpha = 0.4)
+
+# significant effects by coefficient (sum of test statistics)
+pimaAnalysis(obj, by = "Model", alpha = 0.4)
+
+# significant effects by model (Fisher's combination of p-values)
+pimaAnalysis(obj, by = "Coeff", type = "fisher", alpha = 0.4)
+
 }
 \references{
 Girardi, Vesely, Lakens, Altoè, Pastore, Calcagnì, Finos (2024). Post-selection Inference in Multiverse Analysis (PIMA): An Inferential Framework Based on the Sign Flipping Score Test. Psychometrika, doi: 10.1007/s11336-024-09973-6.
 
 Vesely, Finos, Goeman (2023). Permutation-based true discovery guarantee by sum tests. Journal of the Royal Statistical Society, Series B (Statistical Methodology), doi: 10.1093/jrsssb/qkad019
+}
+\seealso{
+True discovery guarantees: \code{\link{sumStats}}, \code{\link{sumPvals}}
 }
