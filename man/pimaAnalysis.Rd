@@ -72,10 +72,10 @@ obj <- list(Tspace = as.data.frame(G), summary_table = summary_table)
 pimaAnalysis(obj, alpha = 0.4)
 
 # significant effects by coefficient (sum of test statistics)
-pimaAnalysis(obj, by = "Model", alpha = 0.4)
+pimaAnalysis(obj, by = "Coeff", alpha = 0.4)
 
 # significant effects by model (Fisher's combination of p-values)
-pimaAnalysis(obj, by = "Coeff", type = "fisher", alpha = 0.4)
+pimaAnalysis(obj, by = "Model", type = "fisher", alpha = 0.4)
 
 }
 \references{
