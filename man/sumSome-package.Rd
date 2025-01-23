@@ -6,12 +6,12 @@
   True Discovery Guarantee by Sum-Based Tests
 }
 \description{
-  It provides true discovery guarantees, using sum-based global statistics (sum of t-scores, p-value combinations, etc.). As main features, it produces permutation-based simultaneous lower confidence bounds for the proportion of active voxels in clusters for fMRI data, and for the proportion of differentially expressed genes in pathways for gene expression data.
+  It provides true discovery guarantees, using sum-based global statistics (sum of t-scores, p-value combinations, etc.). As main features, it produces permutation-based simultaneous lower confidence bounds for the proportion of active voxels in clusters for fMRI data, differentially expressed genes in pathways for gene expression data, and significant effects for multiverse analysis.
 }
 \author{
 Anna Vesely and Xu Chen.
 
-Maintainer: Anna Vesely <anna.vesely@uni-bremen.de>
+Maintainer: Anna Vesely <anna.vesely2@unibo.it>
 }
 \references{
   Goeman J. J. and Solari A. (2011). Multiple testing for exploratory research. Statistical Science, doi: 10.1214/1-STS356.
@@ -26,6 +26,8 @@ Maintainer: Anna Vesely <anna.vesely@uni-bremen.de>
   fMRI cluster analysis: \code{\link{brainScores}}, \code{\link{brainPvals}}, \code{\link{brainClusters}}, \code{\link{brainAnalysis}}
   
   Gene expression pathway analysis: \code{\link{geneScores}}, \code{\link{genePvals}}, \code{\link{geneAnalysis}}
+  
+  Multiverse analysis: \code{\link{pimaAnalysis}}
   
   General setting: \code{\link{sumStats}} and \code{\link{sumPvals}} (permutations), \code{\link{sumStatsPar}} and \code{\link{sumPvalsPar}} (parametric)
 }

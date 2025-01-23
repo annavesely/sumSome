@@ -5,7 +5,7 @@ Version: 1.1.1
 Date: 2021-11-23
 Author: Anna Vesely and Xu Chen
 Maintainer: Anna Vesely <anna.vesely@uni-bremen.de>
-Description: It allows to quickly perform closed testing by sum-based global tests, and construct lower confidence bounds for the TDP, simultaneously over all subsets of hypotheses. As main features, it produces permutation-based simultaneous lower confidence bounds for the proportion of active voxels in clusters for fMRI data, and for the proportion of differentially expressed genes in pathways for gene expression data. Details may be found in Vesely at al. (2021) <arXiv:2102.11759> and Tian at al. (2021) <arXiv:2102.11253>.
+Description: It allows to quickly perform closed testing by sum-based global tests, and construct lower confidence bounds for the TDP, simultaneously over all subsets of hypotheses. As main features, it produces permutation-based simultaneous lower confidence bounds for the proportion of active voxels in clusters for fMRI data, differentially expressed genes in pathways for gene expression data, and significant effects for multiverse analysis. Details may be found in Vesely at al. (2023) < doi:10.1093/jrsssb/qkad019> and Tian at al. (2022) <doi:10.1111/sjos.12614>.
 License: GPL (>= 2)
 Imports: 
     Rcpp (>= 1.0.5),

@@ -50,8 +50,9 @@ More generically, \code{obj} can be any list containing:
 \itemize{
 \item \code{Tspace}: data frame of statistics, where columns correspond to variables,
 and rows to data transformations (e.g. permutations). The first transformation is the identity.
-\item \code{summary_table}: data frame of summary information where rows correspond to variables.
+\item \code{summary_table}: summary data frame where rows correspond to variables.
 }
+In this framework, the grouping element \code{by} is the name of a column of \code{summary_table}.
 }
 \examples{
 # generate matrix of statistics for 2 coefficients X and Z within 3 models
@@ -78,9 +79,9 @@ pimaAnalysis(obj, by = "Coeff", type = "fisher", alpha = 0.4)
 
 }
 \references{
-Girardi, Vesely, Lakens, Altoè, Pastore, Calcagnì, Finos (2024). Post-selection Inference in Multiverse Analysis (PIMA): An Inferential Framework Based on the Sign Flipping Score Test. Psychometrika, doi: 10.1007/s11336-024-09973-6.
+Girardi P., Vesely A., Lakens D., Altoè G., Pastore M., Calcagnì A., and Finos L. (2024). Post-selection Inference in Multiverse Analysis (PIMA): An Inferential Framework Based on the Sign Flipping Score Test. Psychometrika, doi: 10.1007/s11336-024-09973-6.
 
-Vesely, Finos, Goeman (2023). Permutation-based true discovery guarantee by sum tests. Journal of the Royal Statistical Society, Series B (Statistical Methodology), doi: 10.1093/jrsssb/qkad019
+Vesely A., Finos L., and Goeman J. J. (2023). Permutation-based true discovery guarantee by sum tests. Journal of the Royal Statistical Society, Series B (Statistical Methodology), doi: 10.1093/jrsssb/qkad019.
 }
 \seealso{
 True discovery guarantees: \code{\link{sumStats}}, \code{\link{sumPvals}}
